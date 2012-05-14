@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin
+   id="codegenie"
+   name="CodeGenie Plug-in"
+   version="1.0.0"
+
+   class="edu.uci.ics.mondego.codegenie.CodeGeniePlugin">
+   <runtime>
+      <library name="codegenie.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/ms.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jaxb-api.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jaxb-impl.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/activation.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jsr173_1.0_api.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jaxb-xjc.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.jdt.junit"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jdt.core.manipulation"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.eclipse.ltk.core.refactoring"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.search"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.junit4"/>
+   </requires>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="mondego.codegenie.popupcontribution"
+            objectClass="org.eclipse.jdt.core.IType">
+         <menu
+               id="mondego.codegenie.searchmenu"
+               label="CodeGenie"
+               path="additions">
+            <separator name="searchgroup"/>
+         </menu>
+         <action
+               class="edu.uci.ics.mondego.codegenie.popup.actions.SearchAction"
+               enablesFor="1"
+               icon="icons/lamp_icon.gif"
+               id="mondego_codegenie.Search"
+               label="Search"
+               menubarPath="mondego.codegenie.searchmenu/searchgroup"/>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="mondego-codegenie.popupSliceContribution"
+            nameFilter="*.zip"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               id="mondego.codegenie.searchmenu"
+               label="CodeGenie"
+               path="additions">
+            <groupMarker name="separator"/>
+         </menu>
+         <action
+               class="edu.uci.ics.mondego.codegenie.popup.actions.IncludeSliceAction"
+               enablesFor="1"
+               id="mondego_codegenie.ActionInclude"
+               label="Include slice in build"
+               menubarPath="mondego.codegenie.searchmenu/separator"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="mondego-codegenie.popupSliceContribution2"
+            nameFilter="*.zip"
+            objectClass="mondegocodegenie.IFile">
+         <action
+               class="edu.uci.ics.mondego.codegenie.popup.actions.IncludeAndTestSliceAction"
+               enablesFor="1"
+               id="mondego_codegenie.ActionIncludeAndTest"
+               label="Include, weave and test"
+               menubarPath="mondego.codegenie.searchmenu/separator"/>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="mondego-codegenie.popupSliceContribution"
+            objectClass="org.eclipse.jdt.core.IPackageFragmentRoot">
+         <menu
+               id="mondego.codegenie.searchmenu"
+               label="CodeGenie"
+               path="additions">
+            <separator name="separator"/>
+         </menu>
+         <action
+               class="edu.uci.ics.mondego.codegenie.popup.actions.WeaveSliceAction"
+               enablesFor="1"
+               id="mondego_codegenie.ActionWeave"
+               label="Weave slice"
+               menubarPath="mondego.codegenie.searchmenu/separator"/>
+         <action
+               class="edu.uci.ics.mondego.codegenie.popup.actions.UnweaveSliceAction"
+               enablesFor="1"
+               id="mondego_codegenie.ActionUnweave"
+               label="Unweave slice"
+               menubarPath="mondego.codegenie.searchmenu/separator"/>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.search.searchResultViewPages">
+      <viewPage
+            class="edu.uci.ics.mondego.codegenie.search.results.TDSearchResultPage"
+            id="mondego-codegenie.SearchResultPage"
+            searchResultClass="edu.uci.ics.mondego.codegenie.search.TestDrivenSearchResult"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="codegenie.view.category"
+            name="Codegenie"/>
+      <view
+            class="edu.uci.ics.mondego.codegenie.views.RepositoryView"
+            id="codegenie.view.RepositoryView"
+            name="CodeGenie Repository View"/>
+      <view
+            allowMultiple="false"
+            category="codegenie.view.category"
+            class="edu.uci.ics.mondego.codegenie.views.SnippetView"
+            icon="icons/lamp_glasses.gif"
+            id="mondego-codegenie.SnippetView"
+            name="Snippet Viewer"/>
+   </extension>
+   <extension
+         point="org.eclipse.jdt.junit.testRunListeners">
+      <testRunListener class="edu.uci.ics.mondego.codegenie.test.TestRunListener"/>
+   </extension>
+   <extension
+         id="codegenie-preferences"
+         name="CodeGenie"
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="edu.uci.ics.mondego.codegenie.preferences.CodeGeniePreferencePage"
+            id="codegenie-preferences.prefpage"
+            name="CodeGenie"/>
+   </extension>
+   
+<!--
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            id="codegenie.preferences.CodeGeniePreferencePage"
+            name="CodeGenie"/>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer class="edu.uci.ics.mondego.codegenie.preferences.PreferenceInitializer"/>
+   </extension>
+-->
+
+<!--
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="mondego-codegenie.ActionSet"
+            label="CodeGenie"
+            visible="false">
+         <action
+               class="edu.uci.ics.mondego.codegenie.dialogs.OpenTermExplorerAction"
+               icon="icons/lamp_cloud.gif"
+               id="mondego-codegenie.TermExplorerAction"
+               label="Term Explorer"
+               style="push"
+               toolbarPath="codegenieGroup"/>
+      </actionSet>
+         
+   </extension>
+-->
+</plugin>
