@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+	<display-name>SynonymsSearch</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+
+	<servlet>
+		<display-name>GetSynonyms</display-name>
+		<servlet-name>GetSynonyms</servlet-name>
+		<servlet-class>br.com.unifesp.servlets.GetSynonymsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetSynonyms</servlet-name>
+		<url-pattern>/GetSynonyms</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<display-name>SaveSynonym</display-name>
+		<servlet-name>SaveSynonym</servlet-name>
+		<servlet-class>br.com.unifesp.servlets.SaveSyServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SaveSynonym</servlet-name>
+		<url-pattern>/SaveSynonym</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<display-name>RemoveSynonym</display-name>
+		<servlet-name>RemoveSynonym</servlet-name>
+		<servlet-class>br.com.unifesp.servlets.RemoveSyServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>RemoveSynonym</servlet-name>
+		<url-pattern>/RemoveSynonym</url-pattern>
+	</servlet-mapping>
+</web-app>

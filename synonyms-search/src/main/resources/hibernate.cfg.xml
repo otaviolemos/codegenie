@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+
+<!-- Configuração do Banco -->
+<hibernate-configuration>
+	<session-factory>
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://200.133.202.158/synonyms</property>
+		<property name="hibernate.connection.username">codegenie</property>
+		<property name="hibernate.connection.password">codegenie</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="show_sql">true</property>
+		
+<!-- Mapeado do Hibernate 
+
+TODO: Spring é melhor para fazer esse tipo de coisa
+Mas como projeto é pequeno, isso é desnecessário
+-->
+	    <mapping class="br.com.unifesp.domain.Word"/>
+	    <mapping class="br.com.unifesp.domain.Synonym"/>
+	</session-factory>
+</hibernate-configuration>
+
