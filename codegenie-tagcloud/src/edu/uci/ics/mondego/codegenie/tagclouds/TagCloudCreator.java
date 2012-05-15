@@ -64,8 +64,10 @@ public class TagCloudCreator {
 		InputStream ins = null;
 		try {
 			ins = new URL("http://" + url + "/ws-search/search?qry="
-					+ "contents:" + word.replaceAll(" ", "%20") + ")%20"
-					+ "%20OR%20short_name:(" + word.replaceAll(" ", "%20")
+//					+ "contents:" + word.replaceAll(" ", "%20") + ")%20"
+//					+ "%20OR%20short_name:(" + word.replaceAll(" ", "%20")
+					// changing the search based on fqns to only the method name
+					+ "short_name:(" + word.replaceAll(" ", "%20")
 					+ ")%20" + "&pid=" + 1 + "&epp=" + MAX_RESULTS + "&client=ne")
 					.openStream();
 		} catch (MalformedURLException e) {
