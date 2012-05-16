@@ -23,7 +23,7 @@ public class SynonymsServices {
 	public List<Term> searchForSynonyms(String word)
 			throws MalformedURLException, IOException, JAXBException {
 		InputStream ins = new URL(
-				"http://localhost:8080/SynonymsSearch/GetSynonyms?word=" + word
+				"http://localhost:8080/synonyms-search/GetSynonyms?word=" + word
 						+ "&singleWord=1").openStream();
 		JAXBContext context = JAXBContext
 				.newInstance(SynonymsSearchResult.class);
