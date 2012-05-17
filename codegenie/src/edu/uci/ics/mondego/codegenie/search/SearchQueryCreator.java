@@ -25,23 +25,37 @@ public class SearchQueryCreator {
 		String message = null;
 		int start = 0, end = 0;
 		try {
-		  // get the first error message through the markers
+		  // // get the first error message through the markers
+			//Get the problem messages
 		  IResource javaSourceFile = myTestType.getUnderlyingResource();
-		  markers = 
-			javaSourceFile.findMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER,
-			true, 
-			IResource.DEPTH_INFINITE);
-		  start = Integer.MAX_VALUE;
+		  markers = javaSourceFile.findMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, true, IResource.DEPTH_INFINITE);
+//		  start = Integer.MAX_VALUE;
+		  
+		  /** Código novo **/
+		  start = Integer.MIN_VALUE;
+		  /**            **/
+		  
 		  int myIndex = -1;
+		  
 		  for(int i = 0; i < markers.length; i++) {
-			  if (((Integer) markers[i].getAttribute(IMarker.CHAR_START)).intValue() < start) {
-			    start = ((Integer) markers[0].getAttribute(IMarker.CHAR_START)).intValue();
+			  if (((Integer) markers[i].getAttribute(IMarker.CHAR_START)).intValue() > start) {
+			    start = ((Integer) markers[i].getAttribute(IMarker.CHAR_START)).intValue();
 			    myIndex = i;
 			  }
+			  
+			  /** Código novo **/
+			  message = (String) markers[myIndex].getAttribute(IMarker.MESSAGE);
+			  start = ((Integer) markers[myIndex].getAttribute(IMarker.CHAR_START)).intValue();
+			  end = ((Integer) markers[myIndex].getAttribute(IMarker.CHAR_END)).intValue();
+			  /**            **/
+			  
+			  if((message.endsWith("cannot be resolved")) || (message.endsWith("cannot be resolved to a type")) || 
+					  (message.indexOf("is undefined for the type") != -1))
+				  break;
 		  }
-		  message = (String) markers[myIndex].getAttribute(IMarker.MESSAGE);
-		  start = ((Integer) markers[myIndex].getAttribute(IMarker.CHAR_START)).intValue();
-		  end = ((Integer) markers[myIndex].getAttribute(IMarker.CHAR_END)).intValue();
+//		  message = (String) markers[myIndex].getAttribute(IMarker.MESSAGE);
+//		  start = ((Integer) markers[myIndex].getAttribute(IMarker.CHAR_START)).intValue();
+//		  end = ((Integer) markers[myIndex].getAttribute(IMarker.CHAR_END)).intValue();
 		} catch (Exception e) {}
 		String myCode = "";
 		try {
