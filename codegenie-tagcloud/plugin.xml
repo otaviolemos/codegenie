@@ -28,6 +28,16 @@
       <library name="lib/jaxb-xjc.jar">
          <export name="*"/>
       </library>
+      <library name="lib/cloudio.jar">
+         <export
+               name="*">
+         </export>
+      </library>
+      <library name="lib/jaxb1-impl.jar">
+         <export
+               name="*">
+         </export>
+      </library>
    </runtime>
    <requires>
       <import plugin="org.eclipse.core.runtime"/>

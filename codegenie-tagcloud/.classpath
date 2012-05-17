@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="srctest"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb1-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb-xjc.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jsr173_1.0_api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/activation.jar"/>
