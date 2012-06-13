@@ -9,13 +9,7 @@ package ict.seg.codegenie.ie;
 import ict.seg.codegenie.ie.permutationGenerator.PermutationGenerator;
 import ict.seg.codegenie.ie.typeCompatibility.CompatibilityLevel;
 import ict.seg.codegenie.ie.typeCompatibility.Type;
-
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Vector;
-
-import javax.swing.JOptionPane;
-
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -250,6 +244,7 @@ public class IEUtil {
 		
 		ArrayList<String> items = new ArrayList<String>();
 		ArrayList<Type> typesInInterface = new ArrayList<Type>();
+		String initialInterface;
 		
 		//Build the searched interface
 		String parametersAux = new String(" (");
@@ -261,6 +256,7 @@ public class IEUtil {
 		}
 		parametersAux += ")";
 		items.add(new String(returnTypeName + " " + methodName + parametersAux));
+		initialInterface = items.get(0);
 		
 		//Getting all diferent types in searched interface
 		typesInInterface.add(Type.getTypePerName(returnTypeName));
@@ -272,6 +268,8 @@ public class IEUtil {
 				typesInInterface.add(typeAux);
 		}
 		
+		
+		
 		//For each type in interface
 		for(int i = 0; i < typesInInterface.size(); i++){
 			
@@ -279,28 +277,19 @@ public class IEUtil {
 			
 			//For each compative type to a actual type of interface
 			for(int j = 0; j < compativeTypesToActualType.size(); j++){
-				//Aplly replace in all items util now
-				int numberOfItems = items.size();
-				for(int k = 0; k < numberOfItems; k++){
 					String antiqueTerm = typesInInterface.get(i).getName();
 					String newTerm = compativeTypesToActualType.get(j).getName();
-								
+					
 					if(countBrackets(antiqueTerm) > 0 && countBrackets(newTerm) > 0)// if the antiqueTerm and the newTerm have brackets
-						items.add(items.get(k).replaceAll(removeBrackets(antiqueTerm), removeBrackets(newTerm)));
+						items.add(initialInterface.replaceAll(removeBrackets(antiqueTerm), removeBrackets(newTerm)));
 					else
 						if(countBrackets(antiqueTerm) > 0)//if just the antiqueTerm have brackets
-							items.add(removeBrackets(items.get(k).replaceAll(removeBrackets(antiqueTerm), newTerm)));
+							items.add(removeBrackets(initialInterface.replaceAll(removeBrackets(antiqueTerm), newTerm)));
 						else//if just the newTerm have brackets
-							items.add(items.get(k).replaceAll(antiqueTerm, newTerm));
-							
-					
-//					items.add(items.get(k).replaceAll(typesInInterface.get(i).getName(), compativeTypesToActualType.get(j).getName()));
-				}
+							items.add(initialInterface.replaceAll(antiqueTerm, newTerm));
 			}
 		}
-		
-		System.out.println("Itens com repetição: " + items.size());
-		
+
 		//Removing the equal items
 		for(int i = 0; i < items.size(); i++)
 			for(int j = (i+1); j < items.size(); j++)
@@ -308,8 +297,6 @@ public class IEUtil {
 					items.remove(j);
 					j--;
 				}
-		
-		System.out.println("Itens sem repetição: " + items.size());
 		
 		return items;
 		

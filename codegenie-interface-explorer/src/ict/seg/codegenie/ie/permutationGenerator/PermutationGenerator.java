@@ -7,7 +7,6 @@
 
 package ict.seg.codegenie.ie.permutationGenerator;
 
-
 import java.math.BigInteger;
 import java.util.ArrayList;
 

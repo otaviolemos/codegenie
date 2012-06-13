@@ -8,9 +8,7 @@ package ict.seg.codegenie.ie.search;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.search.ui.NewSearchUI;
-
 import edu.uci.ics.mondego.codegenie.CodeGeniePlugin;
 import edu.uci.ics.mondego.codegenie.search.TestDrivenSearchQuery;
 import edu.uci.ics.mondego.codegenie.search.results.TDSearchResultPage;

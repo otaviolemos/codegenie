@@ -170,6 +170,21 @@ public class Type{
 	}
 	
 	
+	@Override
+	public boolean equals(Object o){
+		
+		boolean equal = true;
+		Type type = (Type) o;
+		
+		if(!name.equals(type.getName()))
+			equal = false;
+		
+		if(id != type.getId())
+			equal = false;
+		
+		return equal;
+	}
+	
 	
 	
 	
@@ -184,7 +199,9 @@ public class Type{
 		ArrayList<Type> limitedCompativeTypesList = new ArrayList<Type>();
 		
 		for(int i = 0; i < sortedArrayOfCompativesTypes.length && this.getCompatibility(sortedArrayOfCompativesTypes[i]) >= minimumScore; i++)
-			limitedCompativeTypesList.add(sortedArrayOfCompativesTypes[i]);
+			if(!sortedArrayOfCompativesTypes[i].equals(this))
+				limitedCompativeTypesList.add(sortedArrayOfCompativesTypes[i]);
+			
 			
 		return limitedCompativeTypesList;
 	}

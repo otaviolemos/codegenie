@@ -63,6 +63,4 @@ public class OpenIEAction implements IObjectActionDelegate{
 		ie.openIE(wantedMethodInterface[1], wantedMethodInterface[3], wantedMethodInterface[2], wantedMethodInterface[4].substring(1), jp, currentSelection);
 		
 	}
-
-
 }
