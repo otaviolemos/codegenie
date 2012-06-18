@@ -25,7 +25,7 @@ public class SearchQueryCreator {
 		String message = null;
 		int start = 0, end = 0;
 		try {
-		  // // get the first error message through the markers
+		    // get the first error message through the markers
 			//Get the problem messages
 		  IResource javaSourceFile = myTestType.getUnderlyingResource();
 		  markers = javaSourceFile.findMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, true, IResource.DEPTH_INFINITE);
