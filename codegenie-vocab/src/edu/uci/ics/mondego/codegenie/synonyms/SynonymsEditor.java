@@ -75,7 +75,7 @@ public class SynonymsEditor {
 	    data.width = 200;
 	    data.height = 30;
 	    addTerm.setLayoutData(data);
-	    addTerm.setText("Adicionar");
+	    addTerm.setText("Add");
 	    addTerm.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
 				if(termToAdd.getText().isEmpty())
@@ -99,7 +99,7 @@ public class SynonymsEditor {
 	    data.width = 200;
 	    data.height = 30;
 	    removeButton.setLayoutData(data);
-	    removeButton.setText("Remover");
+	    removeButton.setText("Remove");
 	    removeButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent arg0) {
 				String[] selected = list.getSelection();
