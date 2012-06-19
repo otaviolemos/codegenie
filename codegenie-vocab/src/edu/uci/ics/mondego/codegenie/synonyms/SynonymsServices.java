@@ -12,6 +12,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import edu.smu.tspell.wordnet.NounSynset;
+import edu.smu.tspell.wordnet.Synset;
+import edu.smu.tspell.wordnet.SynsetType;
+import edu.smu.tspell.wordnet.VerbSynset;
+import edu.smu.tspell.wordnet.WordNetDatabase;
 import edu.uci.ics.mondego.codegenie.tagclouds.Term;
 /**
  * Faz comunicação com servlets de sinônimos
@@ -22,23 +27,35 @@ public class SynonymsServices {
 
 	public List<Term> searchForSynonyms(String word)
 			throws MalformedURLException, IOException, JAXBException {
-		InputStream ins = new URL(
-				"http://localhost:8080/synonyms-search/GetSynonyms?word=" + word
-						+ "&singleWord=1").openStream();
-		JAXBContext context = JAXBContext
-				.newInstance(SynonymsSearchResult.class);
-		Unmarshaller marshaller = context.createUnmarshaller();
-		SynonymsSearchResult result = (SynonymsSearchResult) marshaller
-				.unmarshal(ins);
-		if (result == null || result.getSynonyms() == null)
-			return new ArrayList<Term>();
+		
+		
+		System.setProperty("wordnet.database.dir", "/Users/otaviolemos/Documents/WordNet-3.0/dict");
+		NounSynset nounSynset; 
+		VerbSynset verbSynset;
+
+		WordNetDatabase database = WordNetDatabase.getFileInstance(); 
+		Synset[] synsetsN = database.getSynsets(word, SynsetType.NOUN); 
+		Synset[] synsetsV = database.getSynsets(word, SynsetType.VERB); 
 		List<Term> synonyms = new ArrayList<Term>();
-		for (Iterator iterator = result.getSynonyms().iterator(); iterator
-				.hasNext();) {
-			SynonymDTO synonym = (SynonymDTO) iterator.next();
-			boolean removable = synonym.getUserId().equals(1);
-			synonyms.add(new Term(synonym.getValue(), 0d, 0, removable));
+		List<String> synonymStrings = new ArrayList<String>();
+		
+		for (int i = 0; i < synsetsN.length; i++) { 
+		    nounSynset = (NounSynset)(synsetsN[i]); 
+		    String syn = nounSynset.getWordForms()[0];
+		    if(!synonymStrings.contains(syn) && !syn.equals(word))
+		    	synonymStrings.add(syn);
 		}
+		
+		for (int i = 0; i < synsetsV.length; i++) { 
+		    verbSynset = (VerbSynset)(synsetsV[i]); 
+		    String syn = verbSynset.getWordForms()[0];
+		    if(!synonymStrings.contains(syn) && !syn.equals(word))
+		    	synonymStrings.add(syn);
+		}
+		
+		for(String s : synonymStrings)
+			synonyms.add(new Term(s, 0d, 0, false));
+		
 		return synonyms;
 	}
 
