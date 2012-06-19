@@ -15,7 +15,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import edu.uci.ics.mondego.codegenie.synonyms.SynonymsEditor;
 import edu.uci.ics.mondego.codegenie.tagclouds.TagCloudCreator;
 
 public class CreateTagCloudAction implements IEditorActionDelegate{

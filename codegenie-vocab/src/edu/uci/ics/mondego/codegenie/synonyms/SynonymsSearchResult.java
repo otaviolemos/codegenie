@@ -1,5 +1,6 @@
 package edu.uci.ics.mondego.codegenie.synonyms;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -13,14 +14,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class SynonymsSearchResult {
 	
 	
-	private List<SynonymDTO> synonyms;
+	private List<String> synonyms = new ArrayList<String>();
 
 	@XmlElement(name="synonym")
-	public List<SynonymDTO> getSynonyms() {
+	public List<String> getSynonyms() {
 		return synonyms;
 	}
 
-	public void setSynonyms(List<SynonymDTO> synonyms) {
+	public void setSynonyms(List<String> synonyms) {
 		this.synonyms = synonyms;
 	}
 

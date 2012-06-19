@@ -34,7 +34,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.zest.cloudio.TagCloud;
 import org.eclipse.zest.cloudio.TagCloudViewer;
 
-import edu.uci.ics.mondego.codegenie.synonyms.SynonymsEditor;
+import edu.uci.ics.mondego.codegenie.CodeGeniePlugin;
 import edu.uci.ics.mondego.codegenie.synonyms.SynonymsServices;
 import edu.uci.ics.mondego.codegenie.util.JavaTermExtractor;
 import edu.uci.ics.mondego.search.model.SearchResult;
@@ -50,7 +50,7 @@ public class TagCloudCreator {
 
 	private static final int MIN_WEIGHT = 1;
 	private static final int MAX_WEIGHT = 6;
-	private String url = "sourcerer.ics.uci.edu:8080/sourcerer";
+	private String url = CodeGeniePlugin.getPlugin().getSourcererURL();
 	private static final int MAX_RESULTS = 100;
 	private Shell shell;
 
@@ -113,7 +113,7 @@ public class TagCloudCreator {
 		data.width = 500;
 		data.height = 500;
 		cloud.setLayoutData(data);
-		shell.setBounds(100, 100,550,690);
+		shell.setBounds(100, 100, 530, 630);
 		cloud.setBounds(0,0, shell.getBounds().width, shell.getBounds().height-30);
 	    final TagCloudViewer viewer = new TagCloudViewer(cloud);
 	    
@@ -167,7 +167,7 @@ public class TagCloudCreator {
 	    data.width = 200;
 	    data.height = 30;
 	    createOtherCloud.setLayoutData(data);
-	    createOtherCloud.setText("Criar Nova Nuvem");
+	    createOtherCloud.setText("Create tag cloud");
 	    createOtherCloud.addSelectionListener(new SelectionListener() {
 			
 			public void widgetSelected(SelectionEvent arg0) {
@@ -184,38 +184,13 @@ public class TagCloudCreator {
 			}
 		});
 	    
-	    //CRIA BOTAO de sinonimos
-	    final Button editSynonymsBtn = new Button(shell,SWT.PUSH);
-	    editSynonymsBtn.setSize(200, 30);
-	    data = new RowData();
-	    data.width = 200;
-	    data.height = 30;
-	    editSynonymsBtn.setLayoutData(data);
-	    editSynonymsBtn.setText("Editar Sinonimos");
-	    editSynonymsBtn.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent arg0) {
-				SynonymsEditor editor = new SynonymsEditor();
-				try {
-					editor.createEditorWindow(word);
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (JAXBException e) {
-					e.printStackTrace();
-				}
-			}
-			public void widgetDefaultSelected(SelectionEvent event) {
-			}
-		});
-
-			replaceButton.setEnabled(false);
+	    replaceButton.setEnabled(false);
 			replaceButton.setSize(200, 30);
 		    data = new RowData();
 		    data.width = 200;
 		    data.height = 30;
 		    replaceButton.setLayoutData(data);
-		    replaceButton.setText("Substituir Termo");
+		    replaceButton.setText("Replace term");
 		    replaceButton.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent arg0) {
 					IEditorPart editor =  PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
@@ -238,7 +213,7 @@ public class TagCloudCreator {
 			});
 
 	    
-	    shell.setText("Nuvem de termos para \"" + word + "\".");
+	    shell.setText("Tag cloud for \"" + word + "\".");
 		
 		shell.open();
 	}

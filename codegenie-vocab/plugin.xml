@@ -185,15 +185,9 @@
                path="additions">
             <separator name="separator"/>
         </menu>
-        <action
-  		      id="editSynonymsAcrion" 
-   		      label="Editar Sinônimos"
-  		      menubarPath="mondego.codegenie.editormenu/separator" 
-              class="edu.uci.ics.mondego.codegenie.popup.actions.EditSynonymsAction"> 
-        </action> 
  		<action
   		      id="criarTagCloudsAction" 
-   		      label="Criar Nuvem de Sinônimos"
+   		      label="Generate tag cloud"
   		      menubarPath="mondego.codegenie.editormenu/separator" 
               class="edu.uci.ics.mondego.codegenie.popup.actions.CreateTagCloudAction"> 
         </action> 
