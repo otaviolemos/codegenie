@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -30,27 +31,35 @@ public class SynonymsServices {
 		
 		
 		System.setProperty("wordnet.database.dir", "/Users/otaviolemos/Documents/WordNet-3.0/dict");
-		NounSynset nounSynset; 
 		VerbSynset verbSynset;
 
 		WordNetDatabase database = WordNetDatabase.getFileInstance(); 
-		Synset[] synsetsN = database.getSynsets(word, SynsetType.NOUN); 
 		Synset[] synsetsV = database.getSynsets(word, SynsetType.VERB); 
 		List<Term> synonyms = new ArrayList<Term>();
 		List<String> synonymStrings = new ArrayList<String>();
-		
-		for (int i = 0; i < synsetsN.length; i++) { 
-		    nounSynset = (NounSynset)(synsetsN[i]); 
-		    String syn = nounSynset.getWordForms()[0];
-		    if(!synonymStrings.contains(syn) && !syn.equals(word))
-		    	synonymStrings.add(syn);
-		}
-		
+				
 		for (int i = 0; i < synsetsV.length; i++) { 
 		    verbSynset = (VerbSynset)(synsetsV[i]); 
-		    String syn = verbSynset.getWordForms()[0];
-		    if(!synonymStrings.contains(syn) && !syn.equals(word))
-		    	synonymStrings.add(syn);
+		    String[] syns = verbSynset.getWordForms();
+		    for(int j = 0; j < syns.length; j++) {
+		      String syn = syns[j];
+		      if(!synonymStrings.contains(syn) && !syn.equals(word)) {
+		    	if (syn.contains(" ")) {
+		    	  String result = new String();
+		    	  StringTokenizer tkn = new StringTokenizer(syn);
+		    	  String second;
+		    	  while(tkn.hasMoreTokens()) {
+		    	    result += tkn.nextToken();
+		    	    if(tkn.hasMoreTokens()) {
+		    	    	second = tkn.nextToken();
+		    	    	result += second.substring(0,1).toUpperCase();
+		    	    	result += second.substring(1);
+		    	    }
+		    	    synonymStrings.add(result);
+		    	  }
+		    	} else synonymStrings.add(syn);
+		      }
+		    }
 		}
 		
 		for(String s : synonymStrings)

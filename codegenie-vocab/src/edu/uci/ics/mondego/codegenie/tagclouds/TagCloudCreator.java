@@ -88,8 +88,8 @@ public class TagCloudCreator {
 		for (int i = 0; i < untokenizedTerms.length; i++) {
 			for (Iterator iterator = synonyms.iterator(); iterator.hasNext();) {
 				Term synonym = (Term) iterator.next();
-				if (untokenizedTerms[i].toUpperCase().contains(
-						synonym.getTerm())) {
+				if (untokenizedTerms[i].contains(
+						synonym.getTerm().toUpperCase())) {
 					synonym.setWeight(synonym.getWeight() + weight);
 					synonym.setHits(synonym.getHits() + 1);
 				}
