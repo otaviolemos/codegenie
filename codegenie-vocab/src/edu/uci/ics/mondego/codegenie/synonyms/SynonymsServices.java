@@ -20,29 +20,27 @@ import edu.uci.ics.mondego.codegenie.tagclouds.Term;
  *
  */
 public class SynonymsServices {
-  
+
   private static String url = "snake.ics.uci.edu:8080";
 
-	public List<Term> searchForSynonyms(String word) throws MalformedURLException, IOException, JAXBException {
-		
-		InputStream ins = new URL(
-				"http://" + url + "/synonyms-service/GetSynonyms?word=" + word).openStream();
-		JAXBContext context = JAXBContext
-				.newInstance(SynonymsSearchResult.class);
-		Unmarshaller marshaller = context.createUnmarshaller();
-		SynonymsSearchResult result = (SynonymsSearchResult) marshaller
-				.unmarshal(ins);
-		
-   if (result == null || (result.getVerbs() == null && result.getNouns() == null))
-			return new ArrayList<Term>();
-		
-		List<String> verbs = result.getVerbs();
- 		
-		List<Term> synonyms = new ArrayList<Term>();
+  public List<Term> searchForSynonyms(String word) throws MalformedURLException, IOException, JAXBException {
+    InputStream ins = new URL(
+        "http://" + url + "/synonyms-service/GetSynonyms?word=" + word).openStream();
+    JAXBContext context = JAXBContext
+        .newInstance(SynonymsSearchResult.class);
+    Unmarshaller marshaller = context.createUnmarshaller();
+    SynonymsSearchResult result = (SynonymsSearchResult) marshaller
+        .unmarshal(ins);
 
-		for(String s : verbs)
-			synonyms.add(new Term(s, 0d, 0, false));
-		
-		return synonyms;
-	}
+    if (result == null || (result.getVerbs() == null && result.getNouns() == null))
+      return new ArrayList<Term>();
+
+    List<String> verbs = result.getVerbs();
+    List<Term> synonyms = new ArrayList<Term>();
+
+    for(String s : verbs)
+      synonyms.add(new Term(s, 0d, 0, false));
+
+    return synonyms;
+  }
 }
