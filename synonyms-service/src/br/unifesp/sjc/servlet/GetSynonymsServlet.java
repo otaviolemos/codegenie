@@ -14,6 +14,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import edu.smu.tspell.wordnet.NounSynset;
 import edu.smu.tspell.wordnet.Synset;
 import edu.smu.tspell.wordnet.SynsetType;
 import edu.smu.tspell.wordnet.VerbSynset;
@@ -41,15 +42,20 @@ public class GetSynonymsServlet extends HttpServlet {
 			HttpServletResponse response) {
 		String toSearch = request.getParameter("word");
 		
-		List<String> result = getSynonyms(toSearch);
+		List<List<String>> result = getSynonyms(toSearch);
 		
 		response.setContentType("text/xml");
 		try {
 			PrintWriter out = response.getWriter();
 
 			SynonymsSearchResult searchResult = new SynonymsSearchResult();
-			for (String synonym : result) 
-				searchResult.getSynonyms().add(synonym);
+			
+			for(String s : result.get(0))
+			  searchResult.getVerbs().add(s);
+			
+      for(String s : result.get(1))
+        searchResult.getNouns().add(s);
+			
 			JAXBContext context  = JAXBContext.newInstance(SynonymsSearchResult.class);
 			Marshaller marshaller = context.createMarshaller();
 			marshaller.marshal(searchResult, out);
@@ -61,33 +67,56 @@ public class GetSynonymsServlet extends HttpServlet {
 		}
 	}
 
-	private List<String> getSynonyms(String word) {
+	private List<List<String>> getSynonyms(String word) {
 		System.setProperty("wordnet.database.dir", "/home/sourcerer/WordNet");
 		VerbSynset verbSynset;
+		NounSynset nounSynset;
 
 		if(detectCamel(word))
 			word = camelCaseSplit(word);
 
 		WordNetDatabase database = WordNetDatabase.getFileInstance(); 
 		Synset[] synsetsV = database.getSynsets(word, SynsetType.VERB);
+		Synset[] synsetsN = database.getSynsets(word, SynsetType.NOUN);
 
-		List<String> synonymStrings = new ArrayList<String>();
+		List<String> verbSyns = new ArrayList<String>();
 
 		for (int i = 0; i < synsetsV.length; i++) { 
 			verbSynset = (VerbSynset)(synsetsV[i]); 
 			String[] syns = verbSynset.getWordForms();
 			for(int j = 0; j < syns.length; j++) {
 				String syn = syns[j];
-				if(!synonymStrings.contains(syn) && !syn.equals(word)) {
+				if(!verbSyns.contains(syn) && !syn.equals(word)) {
 					if (syn.contains(" ")) 
 						syn = camelCaseJoin(syn);
 					else 
-						synonymStrings.add(syn);
+						verbSyns.add(syn);
 				}
 			}
 		}
-	
-		return synonymStrings;
+		
+		List<String> nounSyns = new ArrayList<String>();
+
+    for (int i = 0; i < synsetsN.length; i++) { 
+      nounSynset = (NounSynset)(synsetsN[i]); 
+      String[] syns = nounSynset.getWordForms();
+      for(int j = 0; j < syns.length; j++) {
+        String syn = syns[j];
+        if(!nounSyns.contains(syn) && !syn.equals(word)) {
+          if (syn.contains(" ")) 
+            syn = camelCaseJoin(syn);
+          else 
+            nounSyns.add(syn);
+        }
+      }
+    }
+    
+    List<List<String>> ret = new ArrayList<List<String>>();
+    
+    ret.add(verbSyns);
+    ret.add(nounSyns);    
+    
+		return ret;
 	}
 
 	private String camelCaseSplit(String word) {
