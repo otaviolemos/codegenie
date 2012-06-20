@@ -6,23 +6,33 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 /**
- * DTO de synonyms
- * @author gustavo
+ * DTO do Synonym
+ * @author Otavio Lemos
  *
  */
 @XmlRootElement(name="synonymsSearch")
 public class SynonymsSearchResult {
 	
 	
-	private List<String> synonyms = new ArrayList<String>();
+	private List<String> verbs = new ArrayList<String>();
+	private List<String> nouns = new ArrayList<String>();
 
-	@XmlElement(name="synonym")
-	public List<String> getSynonyms() {
-		return synonyms;
+	@XmlElement(name="nounSynonym")
+	public List<String> getNouns() {
+    return nouns;
+  }
+
+  public void setNouns(List<String> nounSynonyms) {
+    this.nouns = nounSynonyms;
+  }
+  
+  @XmlElement(name="verbSynonym")
+  public List<String> getVerbs() {
+		return verbs;
 	}
 
-	public void setSynonyms(List<String> synonyms) {
-		this.synonyms = synonyms;
+	public void setVerbs(List<String> verbSynonyms) {
+		this.verbs = verbSynonyms;
 	}
 
 	

@@ -88,9 +88,6 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
 	public String getLabel() {
 		updateQueryLabel();
 		return searchLabel; 
-		
-		//querySpec[1] +  " " + querySpec[2] + " ret:(" + querySpec[3] +
-		//  ")" + " args:" + querySpec[4] + ")";
 	}
 
 	public ISearchResult getSearchResult() {

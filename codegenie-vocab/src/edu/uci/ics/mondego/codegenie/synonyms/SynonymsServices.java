@@ -32,50 +32,17 @@ public class SynonymsServices {
 		Unmarshaller marshaller = context.createUnmarshaller();
 		SynonymsSearchResult result = (SynonymsSearchResult) marshaller
 				.unmarshal(ins);
-		if (result == null || result.getSynonyms() == null)
+		
+   if (result == null || (result.getVerbs() == null && result.getNouns() == null))
 			return new ArrayList<Term>();
 		
-		List<String> synonymStrings = result.getSynonyms();
-		
+		List<String> verbs = result.getVerbs();
+ 		
 		List<Term> synonyms = new ArrayList<Term>();
 
-		for(String s : synonymStrings)
+		for(String s : verbs)
 			synonyms.add(new Term(s, 0d, 0, false));
-
+		
 		return synonyms;
-	}
-
-
-
-	public void removeSynonyms(String word, java.util.List<String> synonyms) {
-		String url = "http://localhost:8080/SynonymsSearch/RemoveSynonym?word="
-				+ word;
-		for (Iterator iterator = synonyms.iterator(); iterator.hasNext();) {
-			String string = (String) iterator.next();
-			url = url.concat("&synonym=" + string);
-		}
-		try {
-			InputStream ins = new URL(url).openStream();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void saveSynonyms(String word, java.util.List<String> synonyms) {
-		String url = "http://localhost:8080/SynonymsSearch/SaveSynonym?word="
-				+ word;
-		for (Iterator iterator = synonyms.iterator(); iterator.hasNext();) {
-			String string = (String) iterator.next();
-			url = url.concat("&synonym=" + string);
-		}
-		try {
-			InputStream ins = new URL(url).openStream();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 }
