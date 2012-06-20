@@ -113,7 +113,7 @@ public class TagCloudCreator {
 		data.width = 500;
 		data.height = 500;
 		cloud.setLayoutData(data);
-		shell.setBounds(100, 100, 530, 630);
+		shell.setBounds(100, 100, 510, 620);
 		cloud.setBounds(0,0, shell.getBounds().width, shell.getBounds().height-30);
 	    final TagCloudViewer viewer = new TagCloudViewer(cloud);
 	    

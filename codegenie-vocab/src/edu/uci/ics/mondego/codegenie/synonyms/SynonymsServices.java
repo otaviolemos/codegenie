@@ -20,11 +20,13 @@ import edu.uci.ics.mondego.codegenie.tagclouds.Term;
  *
  */
 public class SynonymsServices {
+  
+  private static String url = "snake.ics.uci.edu:8080";
 
 	public List<Term> searchForSynonyms(String word) throws MalformedURLException, IOException, JAXBException {
 		
 		InputStream ins = new URL(
-				"http://localhost:8080/synonyms-service/GetSynonyms?word=" + word).openStream();
+				"http://" + url + "/synonyms-service/GetSynonyms?word=" + word).openStream();
 		JAXBContext context = JAXBContext
 				.newInstance(SynonymsSearchResult.class);
 		Unmarshaller marshaller = context.createUnmarshaller();
