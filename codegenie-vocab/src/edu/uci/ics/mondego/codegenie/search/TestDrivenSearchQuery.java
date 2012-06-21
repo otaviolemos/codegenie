@@ -169,15 +169,17 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
   }
 
   public String getSourcererQuery() {
-    String query = "", methodTerms = "", fqnTerms = "", methodSynTerms = "";
+    String query = "", fqnTerms = "";
     searchLabel = "";
 
     if (consideringNames) {
-      methodTerms = JavaTermExtractor.getFQNTermsAsString(querySpec[2]);
+      fqnTerms = JavaTermExtractor.getFQNTermsAsString(querySpec[2]);
+      if (consideringMissingClassName) 
+        fqnTerms += " " + JavaTermExtractor.getFQNTermsAsString(querySpec[1]); 
       
       try {
-        methodSynTerms = SynonymUtils.getSynonyms(methodTerms);
-        fqnTerms += " AND (" + methodSynTerms + ")";
+        if(consideringSynonyms)
+          fqnTerms = SynonymUtils.getSynonymsAsQueryPart(fqnTerms);
       } catch (MalformedURLException e) {
         System.out.println("Could not search for synonyms: Malformed url.");
       } catch (IOException e) {
@@ -186,19 +188,10 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
         System.out.println("Could not search for synonyms: JAXB exception.");
       }
       
-      if (consideringMissingClassName) 
-        fqnTerms =  JavaTermExtractor.getFQNTermsAsString(querySpec[1]) + 
-          " AND (" + methodSynTerms + ")"; 
-      
       // TODO: Term or exact?
       
       searchLabel += "Name terms: \'" + fqnTerms + "\' ";
-      searchLabel += "Method terms: \'" + methodSynTerms + "\'";
-
       query += " fqn_contents:(" + fqnTerms + ")";
-      
-      if(methodSynTerms != "")
-        query += " short_name_contents:(" + methodSynTerms + ")";
     }
 
     if (consideringReturnType) {

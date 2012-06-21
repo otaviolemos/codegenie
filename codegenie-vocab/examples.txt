@@ -1,0 +1,15 @@
+
+
+- Examples:
+
+Util.roman
+Roman.convert
+Util.toRoman
+Util.asRoman
+Roman.change
+
+- Interesting examples where synonyms help:
+
+- String Roman.change(int) - no results without synonyms
+
+- assertEquals("fa81d96a3e887bca856310f9512d05a3", Util.calculateHash(new URL("http:\\www.google.com")));

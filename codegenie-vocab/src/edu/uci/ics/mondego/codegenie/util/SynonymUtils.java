@@ -17,12 +17,12 @@ public class SynonymUtils {
   
   private static String url = "snake.ics.uci.edu:8080";
   
-  public static String getSynonyms(String terms) throws MalformedURLException, IOException, JAXBException {
+  public static String getSynonymsAsQueryPart(String terms) throws MalformedURLException, IOException, JAXBException {
     String ret = "";
     StringTokenizer tkn = new StringTokenizer(terms);
     
     while(tkn.hasMoreTokens()) {
-      // iterate through terms searching for a verb
+      // iterate through terms
       String tok = tkn.nextToken();
       InputStream ins = new URL(
           "http://" + url + "/synonyms-service/GetSynonyms?word=" + tok).openStream();
@@ -32,15 +32,26 @@ public class SynonymUtils {
       SynonymsSearchResult result = (SynonymsSearchResult) marshaller
           .unmarshal(ins);
       
-      // if it is a verb, add all synonyms to the terms
       ArrayList<String> v = new ArrayList<String>(result.getVerbs());
-      if(ret != "") ret += " OR ";
-      ret += tok;
+      ArrayList<String> n = new ArrayList<String>(result.getNouns());
+      
+      if(ret != "") ret += " AND ";
+      ret += "(" + tok;
+      
       if(!v.isEmpty()) {
         ret += " OR ";
         for(int i = 0; i < v.size() - 1; i++) 
           ret += v.get(i) + " OR ";
-        ret += v.get(v.size()-1);
+        ret += v.get(v.size()-1) + ")";
+      } else {
+        if(!n.isEmpty()) {
+          ret += " OR ";
+          for(int i = 0; i < n.size() - 1; i++) 
+            ret += n.get(i) + " OR ";
+          ret += n.get(n.size()-1) + ")";
+        } else {
+          ret += ")";
+        }
       }
       
     }
