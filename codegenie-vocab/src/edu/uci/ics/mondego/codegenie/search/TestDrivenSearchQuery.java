@@ -53,7 +53,7 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
   private boolean consideringArguments = true;
   private boolean consideringReturnType = true;
   private boolean consideringNames = true;
-  private boolean consideringSynonyms = true;
+  private boolean consideringSynonyms = false;
 
   private boolean[] lastQueryType = 
     {consideringReturnType, consideringNames, consideringArguments, consideringMissingClassName}; 
