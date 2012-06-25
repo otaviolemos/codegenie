@@ -21,7 +21,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 
 import edu.uci.ics.mondego.codegenie.CodeGeniePlugin;
-import edu.uci.ics.mondego.search.model.SearchResultEntry;
+import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 
 public class Util {
 
@@ -52,8 +52,6 @@ public class Util {
 	{
 		IFile file = null;
 		
-		if (searchResultEntry.getEntry().getFilePath() == null) return null;
-		
 		try
 		{
 			IFolder sourcererFolder = getFolder(".sourcerer", project);
@@ -65,15 +63,18 @@ public class Util {
 				sourcererFolder.create(true, true, null);
 			}
 
-			file = getIFileFromFilePath(searchResultEntry.getEntry().getFilePath(), sourcererFolder);
+			// TODO: FIX THIS!
+			//file = getIFileFromFilePath(searchResultEntry.getEntry().getFilePath(), sourcererFolder);
 			
 			if (!file.exists())
 			{
 				try
 				{
-					String filepath = 
-						CodeGeniePlugin.getPlugin().getSourcererURL() + "/repodata/resource?rp=" 
-						+ searchResultEntry.getEntry().getFilePath();
+				  // TODO: remove this!
+				  String filepath = "test123";
+					//String filepath = 
+					//	CodeGeniePlugin.getPlugin().getSourcererURL() + "/repodata/resource?rp=" 
+					//	+ searchResultEntry.getEntry().getFilePath();
 					URL u = new URL ("http://" + filepath + "&client=codegenie");
 					file.create(u.openStream(), IFile.FORCE, null);
 					return file;
@@ -104,23 +105,21 @@ public class Util {
 		boolean problems = false;
 		IFile file = null;
 		
-		if (searchResultEntry.getEntry().getFilePath() == null) return null;
-		
 		try
 		{
 			IFolder sliceFolder = getFolder(CodeGeniePlugin.getSliceDirName(), project);
 			if (sliceFolder == null) return null;
 			if (query != null)
-				file = sliceFolder.getFile(searchResultEntry.getEntry().getEntityId() + "." +
+				file = sliceFolder.getFile(searchResultEntry.getEntry().getEntityID() + "." +
 					query[0] + "." + query[1] + "." + query[2] + ".zip");
 			else
-				file = sliceFolder.getFile(searchResultEntry.getEntry().getEntityId() + ".zip");
+				file = sliceFolder.getFile(searchResultEntry.getEntry().getEntityID() + ".zip");
 			if (!file.exists())
 			{
 				try
 				{
 					String filepath = 
-						CodeGeniePlugin.getPlugin().getSourcererURL() + "/slicer/slice?eid=" + searchResultEntry.getEntry().getEntityId();
+						CodeGeniePlugin.getPlugin().getSourcererURL() + "/slicer/slice?eid=" + searchResultEntry.getEntry().getEntityID();
 					URL u = new URL ("http://" + filepath +  "&client=codegenie");
 					file.create(u.openConnection().getInputStream(), IFile.FORCE, null);
 					return file;

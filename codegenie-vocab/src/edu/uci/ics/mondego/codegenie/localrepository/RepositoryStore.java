@@ -18,7 +18,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.IPage;
 
-import edu.uci.ics.mondego.codegenie.views.RepositoryView;
+//import edu.uci.ics.mondego.codegenie.views.RepositoryView;
 import edu.uci.ics.mondego.codegenie.search.SearchResultEntryWrapper;
 
 
@@ -63,7 +63,7 @@ public class RepositoryStore implements IPartListener {
 
 	public void addEntity (SearchResultEntryWrapper entry)
 	{
-		Object o = entityMap.get(new Long(entry.getEntry().getEntityId()));
+		Object o = entityMap.get(new Long(entry.getEntry().getEntityID()));
 		
 		if (o != null) 
 		{
@@ -77,7 +77,7 @@ public class RepositoryStore implements IPartListener {
 			entity.localRepositoryFile = null;
 			entity.searchResultEntry = entry;
 			
-			entityMap.put(new Long (entry.getEntry().getEntityId()), entity);
+			entityMap.put(new Long (entry.getEntry().getEntityID()), entity);
 
 			triggerEntityAddedToRepositoryStoreEvent(entity);
 		}
@@ -137,17 +137,17 @@ public class RepositoryStore implements IPartListener {
 	 
 	 public void partClosed(IWorkbenchPart part)
 	 {
-		 if (part.getSite().getId().equals(RepositoryView.VIEWPART_ID))
-		 {
+		 //if (part.getSite().getId().equals(RepositoryView.VIEWPART_ID))
+		 //{
 			 listenerOk = false;
-		 }		 
+		 //}		 
 	 }
 	 
 	 public void partOpened(IWorkbenchPart part)
 	 {
-		 if (part.getSite().getId().equals(RepositoryView.VIEWPART_ID))
-		 {
+		 //if (part.getSite().getId().equals(RepositoryView.VIEWPART_ID))
+		 //{
 			 listenerOk = true;
-		 }
+		 //}
 	 }
 }

@@ -74,7 +74,7 @@ public class UnweaveSliceAction extends SelectionDispatchAction {
 		
 		Composition c = new Composition(project);
 		try {
-			c.unweave(sourceFolderName, new Long(searchResultEntry.getEntry().getEntityId()).toString(),
+			c.unweave(sourceFolderName, new Long(searchResultEntry.getEntry().getEntityID()).toString(),
 					false);
 		} catch(Exception e) {
 			e.printStackTrace();

@@ -37,9 +37,12 @@ import org.eclipse.zest.cloudio.TagCloudViewer;
 import edu.uci.ics.mondego.codegenie.CodeGeniePlugin;
 import edu.uci.ics.mondego.codegenie.synonyms.SynonymsServices;
 import edu.uci.ics.mondego.codegenie.util.JavaTermExtractor;
-import edu.uci.ics.mondego.search.model.SearchResult;
-import edu.uci.ics.mondego.search.model.SearchResultEntry;
-import edu.uci.ics.mondego.wsclient.common.SearchResultUnMarshaller;
+//import edu.uci.ics.sourcerer.services.search.adapter.*;
+
+import edu.uci.ics.sourcerer.services.search.adapter.SearchResult;
+import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
+import edu.uci.ics.sourcerer.services.search.adapter.SearchAdapter;
+
 /**
  * Cria tela com nuvem de termos.
  * 
@@ -61,22 +64,10 @@ public class TagCloudCreator {
 	 * @return
 	 */
 	private SearchResult searchInSourcerer(String word) {
-		InputStream ins = null;
-		try {
-			ins = new URL("http://" + url + "/ws-search/search?qry="
-//					+ "contents:" + word.replaceAll(" ", "%20") + ")%20"
-//					+ "%20OR%20short_name:(" + word.replaceAll(" ", "%20")
-					// changing the search based on fqns to only the method name
-					+ "short_name:(" + word.replaceAll(" ", "%20")
-					+ ")%20" + "&pid=" + 1 + "&epp=" + MAX_RESULTS + "&client=ne")
-					.openStream();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		SearchResult srcResult = SearchResultUnMarshaller
-				.unMarshallSearchResults(ins);
+	  String query = "short_name:(" + word.replaceAll(" ", "%20") + ")";
+	  String url = "snake.ics.uci.edu:8080";
+	  SearchAdapter s = SearchAdapter.create(url);
+	  SearchResult srcResult = s.search(query);
 		return srcResult;
 	}
 
@@ -228,9 +219,9 @@ public class TagCloudCreator {
 		}
 		synonyms.add(new Term(word, 0,0, false));
 		SearchResult sr = searchInSourcerer(JavaTermExtractor.toSearchQueryFormat(synonyms));
-		if (sr.getEntries() != null) {
-			for (SearchResultEntry sre : sr.getEntries())
-				addTerms(sre.getEntityName(),synonyms);
+		if (sr.getNumFound() != 0) {
+			for (SingleResult sre : sr.getResults(0, MAX_RESULTS-1))
+				addTerms(JavaTermExtractor.getNameAndParams(sre),synonyms);
 		}
 		drawCloud(word, synonyms);
 		

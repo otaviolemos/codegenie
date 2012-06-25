@@ -179,7 +179,7 @@ public class TreeContentProvider extends ContentProvider implements ITreeContent
 		{
 		case TDSearchResultPage.GROUP_BY_TYPE:
 
-			GroupTreeNode group = getGroupTreeNode(entry.getEntry().getEntityTypeId());
+			GroupTreeNode group = getGroupTreeNode(entry.getEntry().getRank());
 
 			if (viewer.testFindItem(group) == null)
 			{
@@ -321,7 +321,7 @@ public class TreeContentProvider extends ContentProvider implements ITreeContent
 		
 		((FolderTreeNode)parent).isFile = true;
 
-		Object obj = parent.getChild(String.valueOf(entry.getEntry().getEntityId()));
+		Object obj = parent.getChild(String.valueOf(entry.getEntry().getEntityID()));
 		EntryResultTreeNode child = null;
 		
 		if (obj == null || obj instanceof FolderTreeNode)

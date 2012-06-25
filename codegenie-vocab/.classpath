@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="edu/uci/ics/mondego/codegenie/search/TestDrivenSearchQueryNEW.java|edu/uci/ics/mondego/codegenie/search/results/TreeContentProvider.java|edu/uci/ics/mondego/codegenie/views/RepositoryView.java" kind="src" path="src"/>
 	<classpathentry kind="src" path="srctest"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb1-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb-xjc.jar"/>
@@ -9,8 +9,8 @@
 	<classpathentry exported="true" kind="lib" path="lib/jaxb-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb-api.jar"/>
 	<classpathentry kind="lib" path="lib/cloudio.jar"/>
+	<classpathentry kind="lib" path="lib/sourcerer-search.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="lib/ms.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

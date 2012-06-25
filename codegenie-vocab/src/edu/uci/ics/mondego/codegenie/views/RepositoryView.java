@@ -40,7 +40,7 @@ import edu.uci.ics.mondego.codegenie.localrepository.LocalRepositoryTreeNode;
 import edu.uci.ics.mondego.codegenie.search.TreeObjectBase;
 import edu.uci.ics.mondego.codegenie.search.results.Entity;
 import edu.uci.ics.mondego.codegenie.search.Util;
-import edu.uci.ics.mondego.search.model.SearchResultEntry;
+import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 import edu.uci.ics.mondego.codegenie.search.SearchResultEntryWrapper;
 
 public class RepositoryView extends ViewPart implements

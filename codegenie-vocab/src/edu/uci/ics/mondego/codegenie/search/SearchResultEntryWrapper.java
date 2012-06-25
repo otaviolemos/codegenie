@@ -1,11 +1,12 @@
 package edu.uci.ics.mondego.codegenie.search;
 
-import edu.uci.ics.mondego.search.model.SearchResultEntry;
+
+import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 import edu.uci.ics.mondego.codegenie.testing.TestResult;
 
 public class SearchResultEntryWrapper {
 	
-	private SearchResultEntry entry;
+	private SingleResult entry;
 	private TestResult testResult = null;
 	private boolean woven = false;
 	private boolean problemRetrieving = false;
@@ -18,15 +19,15 @@ public class SearchResultEntryWrapper {
 		this.woven = woven;
 	}
 
-	public SearchResultEntryWrapper(SearchResultEntry e) {
+	public SearchResultEntryWrapper(SingleResult e) {
 		entry = e;
 	}
 
-	public SearchResultEntry getEntry() {
+	public SingleResult getEntry() {
 		return entry;
 	}
 
-	public void setEntry(SearchResultEntry entry) {
+	public void setEntry(SingleResult entry) {
 		this.entry = entry;
 	}
 

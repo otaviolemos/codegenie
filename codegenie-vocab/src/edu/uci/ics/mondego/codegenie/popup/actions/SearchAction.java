@@ -22,10 +22,9 @@ import org.eclipse.jdt.core.*;
 import edu.uci.ics.mondego.codegenie.CodeGeniePlugin;
 import edu.uci.ics.mondego.codegenie.search.SearchQueryCreator;
 import edu.uci.ics.mondego.codegenie.search.results.TDSearchResultPage;
-import edu.uci.ics.mondego.search.model.SearchResult;
-import edu.uci.ics.mondego.search.model.SearchResultEntry;
+import edu.uci.ics.sourcerer.services.search.adapter.SearchResult;
+import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 import edu.uci.ics.mondego.codegenie.search.SearchResultEntryWrapper;
-import edu.uci.ics.mondego.wsclient.common.SearchResultUnMarshaller;
 import edu.uci.ics.mondego.codegenie.search.*;
 
 public class SearchAction implements IObjectActionDelegate {
@@ -68,7 +67,7 @@ public class SearchAction implements IObjectActionDelegate {
 			System.out.println(e.getLocalizedMessage());
 		}
 		
-		CodeGeniePlugin.getPlugin().getStore().getRepositoryStore().clearStore();
+		//CodeGeniePlugin.getPlugin().getStore().getRepositoryStore().clearStore();
 		
 		SearchQueryCreator sqc = new SearchQueryCreator();
 		String[] query = sqc.formQuery(selection);
@@ -187,47 +186,5 @@ public class SearchAction implements IObjectActionDelegate {
 	private void getNames(IType type) {
 		String method, clazz, pack;
 		
-	}
-	
-	private void search(String[] query){
-		String keywords = query[0] + "&nbsp;" + query[1];
-		String queryStr = query[0] + "&nbsp;" + query[1] + "&nbsp;ret:(" + query[2] +
-		")" + "&nbsp;args:" + query[3] + ")";
-		String pageID = "1";
-		String entriesPerPage = "10";
-		String sourcererApp = "tagus.ics.uci.edu:8080/sourcerer";
-		
-		InputStream ins = null;
-		try {
-		  System.out.println("http://" + sourcererApp + "/ws-search/search?qry=" +
-					 queryStr +  "&pid=" +
-					 pageID +  "&epp=" +
-					 entriesPerPage);
-		 ins = new URL("http://" + sourcererApp + "/ws-search/search?qry=" +
-									 keywords +  "&pid=" +
-									 pageID +  "&epp=" +
-									 entriesPerPage +  "&sig=signature").openStream();
-		} catch (FileNotFoundException _e) {
-			_e.printStackTrace();
-		} catch (MalformedURLException _e) {
-			_e.printStackTrace();
-		} catch (IOException _e) {
-			_e.printStackTrace();
-		}
-		
-		SearchResult sr = SearchResultUnMarshaller.unMarshallSearchResults(ins);
-		
-		// visual testing
-		for(SearchResultEntry sre: sr.getEntries()){
-			System.out.println(sre.getEntityId() + " | " +
-								sre.getRank() + " | " +
-								sre.getEntityName() );
-		}
-		
-		try {
-			ins.close();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
 	}
 }

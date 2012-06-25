@@ -10,9 +10,6 @@
       <library name="codegenie.jar">
          <export name="*"/>
       </library>
-      <library name="lib/ms.jar">
-         <export name="*"/>
-      </library>
       <library name="lib/jaxb-api.jar">
          <export name="*"/>
       </library>
@@ -39,6 +36,11 @@
          </export>
       </library>
       <library name="lib/jaws-bin.jar">
+         <export
+               name="*">
+         </export>
+      </library>
+      <library name="lib/sourcerer-search.jar">
          <export
                name="*">
          </export>

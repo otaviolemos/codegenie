@@ -16,10 +16,10 @@ import org.eclipse.search.ui.text.Match;
 
 import edu.uci.ics.mondego.codegenie.CodeGeniePlugin;
 import edu.uci.ics.mondego.codegenie.search.results.TDSearchResultPage;
-import edu.uci.ics.mondego.search.model.SearchResult;
-import edu.uci.ics.mondego.search.model.SearchResultEntry;
+import edu.uci.ics.sourcerer.services.search.adapter.SearchAdapter;
+import edu.uci.ics.sourcerer.services.search.adapter.SearchResult;
+import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 import edu.uci.ics.mondego.codegenie.search.SearchResultEntryWrapper;
-import edu.uci.ics.mondego.wsclient.common.SearchResultUnMarshaller;
 
 import org.eclipse.jdt.core.IJavaProject;
 
@@ -53,7 +53,7 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
   private boolean consideringArguments = true;
   private boolean consideringReturnType = true;
   private boolean consideringNames = true;
-  private boolean consideringSynonyms = false;
+  private boolean consideringSynonyms = true;
 
   private boolean[] lastQueryType = 
     {consideringReturnType, consideringNames, consideringArguments, consideringMissingClassName}; 
@@ -126,35 +126,21 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
     srcResult = null;
     String query = getSourcererQuery();
 
-    try
-    {
-      String url = CodeGeniePlugin.getPlugin().getSourcererURL();
+    String url = CodeGeniePlugin.getPlugin().getSourcererURL();
+    SearchAdapter s = SearchAdapter.create(url);
+    srcResult = s.search(query);
 
 
-      InputStream ins = new URL("http://" + url + "/ws-search/search?qry=" +
-          query.replaceAll(" ", "%20")
-          + "&pid=" +
-          currentPage +  "&epp=" +
-          10 + 
-          "&client=codegenie").openStream();
-
-      srcResult = SearchResultUnMarshaller.unMarshallSearchResults(ins);
-
-    } catch (Exception e) {
-      return new Status(IStatus.ERROR, CodeGeniePlugin.PLUGIN_ID, 0, "error", null);
-    }
-
-
-    searchLabel += " - " + srcResult.getTotalHitsFound() + " matches in Sourcerer"
-        + " (" + srcResult.getTimeTakenMiliSecs() + "ms)";
+    searchLabel += " - " + srcResult.getNumFound() + " matches in Sourcerer"
+        + " (" + srcResult.getLastQueryTime() + "ms)";
 
     // no results
-    if(srcResult.getEntries() == null) {
+    if(srcResult.getNumFound() == 0) {
       return new Status(IStatus.OK, CodeGeniePlugin.PLUGIN_ID, 0, "ok", null);
     }
 
     RepositoryStore store = CodeGeniePlugin.getPlugin().getStore().getRepositoryStore();
-    for(SearchResultEntry sre: srcResult.getEntries()){
+    for(SingleResult sre: srcResult.getResults((currentPage-1) * 10, 10)){
       SearchResultEntryWrapper sr = new SearchResultEntryWrapper(sre);
       Match m = new Match (sr, 0, 1);
       textResult.addMatch(m);
@@ -197,7 +183,7 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
     if (consideringReturnType) {
       // TODO: Term or exact?
       searchLabel += " Return type: \'" + querySpec[3] + "\' ";
-      query += " m_ret_type_contents:(" + querySpec[3].replaceAll("\\[\\]", " ") + ")";
+      query += " return_fqn_contents:(" + querySpec[3].replaceAll("\\[\\]", " ") + ")";
     }
 
     if (consideringArguments) {
@@ -205,7 +191,7 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
         searchLabel += "Arguments: " + querySpec[4] + ")";
         // TODO: Term or exact?
         //query += " m_args_sname_contents:"+ querySpec[4].replaceAll("\\[\\]", " ") + ")";
-        query += " m_sig_args_sname:" + querySpec[4].replaceAll("\\[\\]", "\\\\[\\\\]") + ")";
+        query += " params_snames_contents:" + querySpec[4].replaceAll("\\[\\]", "\\\\[\\\\]") + ")";
       }
     }
 

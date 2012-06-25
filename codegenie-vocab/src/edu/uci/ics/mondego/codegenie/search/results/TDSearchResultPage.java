@@ -38,7 +38,7 @@ import edu.uci.ics.mondego.codegenie.search.results.TDSearchResultPage;
 import edu.uci.ics.mondego.codegenie.search.results.ShowNextResultsAction;
 import edu.uci.ics.mondego.codegenie.search.results.SortAction;
 import edu.uci.ics.mondego.codegenie.search.results.TableContentProvider;
-import edu.uci.ics.mondego.codegenie.search.results.TreeContentProvider;
+//import edu.uci.ics.mondego.codegenie.search.results.TreeContentProvider;
 
 public class TDSearchResultPage extends AbstractTextSearchViewPage implements
 		IAdaptable {
@@ -54,7 +54,7 @@ public class TDSearchResultPage extends AbstractTextSearchViewPage implements
 	public static final int GROUP_BY_FILE = 4; 
 	public static final int GROUP_BY_TYPE = 5; 
 	
-	protected TreeContentProvider fTreeContentProvider;
+	//protected TreeContentProvider fTreeContentProvider;
 	protected TableContentProvider fTableContentProvider;
 	
 	private GroupAction fGroupByFileAction;
@@ -111,9 +111,9 @@ public class TDSearchResultPage extends AbstractTextSearchViewPage implements
 
 	public void setGrouping(int grouping) {
 		fCurrentGrouping= grouping;
-		StructuredViewer viewer= getViewer();
-		TreeContentProvider cp= (TreeContentProvider) viewer.getContentProvider();
-		cp.updateGrouping();
+		//StructuredViewer viewer= getViewer();
+//		TreeContentProvider cp= (TreeContentProvider) viewer.getContentProvider();
+//		cp.updateGrouping();
 		updateGroupingActions();
 		getSettings().put(KEY_GROUPING, fCurrentGrouping);
 		getViewPart().updateLabel();
@@ -308,13 +308,13 @@ public class TDSearchResultPage extends AbstractTextSearchViewPage implements
 		hookDoubleClickAction ();
 	}
 
-	protected void configureTreeViewer(TreeViewer viewer) {
-		viewer.setUseHashlookup(true);
-		viewer.setLabelProvider(new TDSearchResultLabelProvider(this));
-		fTreeContentProvider= new TreeContentProvider(this);
-		viewer.setContentProvider(fTreeContentProvider);
-		hookDoubleClickAction ();
-	}
+//	protected void configureTreeViewer(TreeViewer viewer) {
+//		viewer.setUseHashlookup(true);
+//		viewer.setLabelProvider(new TDSearchResultLabelProvider(this));
+//		fTreeContentProvider= new TreeContentProvider(this);
+//		viewer.setContentProvider(fTreeContentProvider);
+//		hookDoubleClickAction ();
+//	}
 
 	public void clear() 
 	{
@@ -418,4 +418,10 @@ public class TDSearchResultPage extends AbstractTextSearchViewPage implements
 			useMissingClassNameAction.setChecked(tdsq.isConsideringMissingClassName());
 		}
 	}
+
+  @Override
+  protected void configureTreeViewer(TreeViewer arg0) {
+    // TODO Auto-generated method stub
+    
+  }
 }

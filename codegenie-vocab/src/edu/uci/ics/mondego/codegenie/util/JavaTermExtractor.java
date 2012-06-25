@@ -16,6 +16,7 @@ import java.lang.StringBuffer;
 import java.lang.String;
 
 import edu.uci.ics.mondego.codegenie.tagclouds.Term;
+import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 
 /**
  * Utility class to extract terms from Java FQNs or FQN fragments
@@ -177,6 +178,10 @@ public class JavaTermExtractor {
 			result.add(string);
 		}
 		return result;
+	}
+	
+	public static String getNameAndParams(SingleResult s) {
+	  return extractShortName(s.getFqn()) + s.getParams();
 	}
 
 }

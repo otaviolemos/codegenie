@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import edu.uci.ics.mondego.search.model.SearchResultEntry;
+import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 
 import edu.uci.ics.mondego.codegenie.search.results.EntryResultTreeNode;
 
@@ -110,7 +110,7 @@ public abstract class TreeParentBase extends TreeObjectBase
 	
 	public boolean removeLeaf (SearchResultEntryWrapper entry)
 	{
-		TreeObjectBase child = this.getChild(String.valueOf(entry.getEntry().getEntityId()));
+		TreeObjectBase child = this.getChild(String.valueOf(entry.getEntry().getEntityID()));
 		
 		if (child != null)
 		{

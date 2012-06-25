@@ -15,6 +15,7 @@ import edu.uci.ics.mondego.codegenie.search.results.GroupTreeNode;
 import edu.uci.ics.mondego.codegenie.search.results.TDSearchResultPage;
 
 import edu.uci.ics.mondego.codegenie.search.SearchResultEntryWrapper;
+import edu.uci.ics.mondego.codegenie.util.JavaTermExtractor;
 import edu.uci.ics.mondego.codegenie.*;
 
 public class TDSearchResultLabelProvider extends LabelProvider {
@@ -56,10 +57,10 @@ public class TDSearchResultLabelProvider extends LabelProvider {
 			SearchResultEntryWrapper entry = (SearchResultEntryWrapper) element;
 			
 			String label = "";
-			if (entry.getEntry().getReturnTypeFQN() != null)
-				label = entry.getEntry().getReturnTypeFQN().replaceAll("java.lang.Void", "void") + " ";
+			if (entry.getEntry().getReturnFqn() != null)
+				label = entry.getEntry().getReturnFqn().replaceAll("java.lang.Void", "void") + " ";
 			
-			label += entry.getEntry().getEntityName();
+			label += JavaTermExtractor.getNameAndParams(entry.getEntry());
 			
 			if(entry.getTestResult() != null)
 				label += " - Test runs: " + entry.getTestResult().getRunCount() +

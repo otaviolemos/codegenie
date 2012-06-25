@@ -97,14 +97,15 @@ public class SearchQueryCreator {
 					}
 				}
 			}
-			myCode.substring(
-					start + wantedClassName.length() + 1,
-					start
-							+ wantedClassName.length()
-							+ 1
-							+ myCode.substring(
-									start + wantedClassName.length() + 1)
-									.indexOf(" ="));
+//			myCode.substring(
+//					start + wantedClassName.length() + 1,
+//					start
+//							+ wantedClassName.length()
+//							+ 1
+//							+ myCode.substring(
+//									start + wantedClassName.length() + 1)
+//									.indexOf(" ="));
+			
 			int invocationStart = myCode.indexOf(instanceName + ".")
 					+ instanceName.length() + 1;
 			wantedMethodName = myCode.substring(
