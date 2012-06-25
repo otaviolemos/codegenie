@@ -87,10 +87,9 @@ public class GetSynonymsServlet extends HttpServlet {
 			for(int j = 0; j < syns.length; j++) {
 				String syn = syns[j];
 				if(!verbSyns.contains(syn) && !syn.equals(word)) {
-					if (syn.contains(" ")) 
+				  if (syn.contains(" ")) 
 						syn = camelCaseJoin(syn);
-					else 
-						verbSyns.add(syn);
+				  verbSyns.add(syn);
 				}
 			}
 		}
@@ -105,8 +104,7 @@ public class GetSynonymsServlet extends HttpServlet {
         if(!nounSyns.contains(syn) && !syn.equals(word)) {
           if (syn.contains(" ")) 
             syn = camelCaseJoin(syn);
-          else 
-            nounSyns.add(syn);
+          nounSyns.add(syn);
         }
       }
     }
