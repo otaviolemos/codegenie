@@ -181,7 +181,7 @@ public class JavaTermExtractor {
 	}
 	
 	public static String getNameAndParams(SingleResult s) {
-	  return extractShortName(s.getFqn()) + s.getParams();
+	  return s.getFqn() + s.getParams();
 	}
 
 }

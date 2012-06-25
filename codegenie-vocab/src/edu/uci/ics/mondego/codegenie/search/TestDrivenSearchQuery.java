@@ -140,13 +140,14 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
     }
 
     RepositoryStore store = CodeGeniePlugin.getPlugin().getStore().getRepositoryStore();
-    for(SingleResult sre: srcResult.getResults((currentPage-1) * 10, 10)){
-      SearchResultEntryWrapper sr = new SearchResultEntryWrapper(sre);
-      Match m = new Match (sr, 0, 1);
-      textResult.addMatch(m);
-      store.addEntity(sr);
+    if((currentPage-1) * 10 < srcResult.getNumFound()) {
+      for(SingleResult sre: srcResult.getResults((currentPage-1) * 10, 10)){
+        SearchResultEntryWrapper sr = new SearchResultEntryWrapper(sre);
+        Match m = new Match (sr, 0, 1);
+        textResult.addMatch(m);
+        store.addEntity(sr);
+      }
     }
-
     return new Status(IStatus.OK, CodeGeniePlugin.PLUGIN_ID, 0, "ok", null);
   }
 
@@ -176,24 +177,26 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
       
       // TODO: Term or exact?
       
-      searchLabel += "Name terms: \'" + fqnTerms + "\' ";
-      query += " fqn_contents:(" + fqnTerms + ")";
+      //searchLabel += "Name terms: \'" + fqnTerms + "\' ";
+      query = "fqn_contents:(" + fqnTerms + ")";
     }
 
     if (consideringReturnType) {
       // TODO: Term or exact?
-      searchLabel += " Return type: \'" + querySpec[3] + "\' ";
+      //searchLabel += " Return type: \'" + querySpec[3] + "\' ";
       query += " return_fqn_contents:(" + querySpec[3].replaceAll("\\[\\]", " ") + ")";
     }
 
     if (consideringArguments) {
       if(!querySpec[4].equals("")) {
-        searchLabel += "Arguments: " + querySpec[4] + ")";
+        //searchLabel += "Arguments: " + querySpec[4] + ")";
         // TODO: Term or exact?
         //query += " m_args_sname_contents:"+ querySpec[4].replaceAll("\\[\\]", " ") + ")";
-        query += " params_snames_contents:" + querySpec[4].replaceAll("\\[\\]", "\\\\[\\\\]") + ")";
+        query += " params_snames_exact:\\" + querySpec[4].replaceAll("\\[\\]", "\\\\[\\\\]") + "\\)";
       }
     }
+    
+    searchLabel = query;
 
     return query;
   }
