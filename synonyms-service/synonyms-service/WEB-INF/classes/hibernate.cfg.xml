@@ -13,8 +13,7 @@
 		<property name="hibernate.connection.password">tyl0n4pi</property>
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
 		<property name="show_sql">true</property>
-	    <mapping class="br.unifesp.sjc.domain.Word"/>
-	    <mapping class="br.unifesp.sjc.domain.Synonym"/>
+		<mapping class="br.unifesp.sjc.domain.Pair"/>
 	</session-factory>
 </hibernate-configuration>
 

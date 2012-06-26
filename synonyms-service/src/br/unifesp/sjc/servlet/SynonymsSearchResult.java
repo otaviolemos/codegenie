@@ -16,8 +16,18 @@ public class SynonymsSearchResult {
 	
 	private List<String> verbs = new ArrayList<String>();
 	private List<String> nouns = new ArrayList<String>();
+	private List<String> codeRelated = new ArrayList<String>();
 
-	@XmlElement(name="nounSynonym")
+	@XmlElement(name="codeSynonym")
+	public List<String> getCodeRelated() {
+    return codeRelated;
+  }
+
+  public void setCodeRelated(List<String> codeRelated) {
+    this.codeRelated = codeRelated;
+  }
+
+  @XmlElement(name="nounSynonym")
 	public List<String> getNouns() {
     return nouns;
   }

@@ -14,6 +14,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import br.unifesp.sjc.dao.SynonymsDAO;
+
 import edu.smu.tspell.wordnet.NounSynset;
 import edu.smu.tspell.wordnet.Synset;
 import edu.smu.tspell.wordnet.SynsetType;
@@ -54,6 +56,9 @@ public class GetSynonymsServlet extends HttpServlet {
 			
       for(String s : result.get(1))
         searchResult.getNouns().add(s);
+      
+      for(String s : result.get(2))
+        searchResult.getCodeRelated().add(s);
 			
 			JAXBContext context  = JAXBContext.newInstance(SynonymsSearchResult.class);
 			Marshaller marshaller = context.createMarshaller();
@@ -112,10 +117,15 @@ public class GetSynonymsServlet extends HttpServlet {
       }
     }
     
+    List<String> codeSyns = new ArrayList<String>();
+    
+    codeSyns = SynonymsDAO.getSynonymsByWord(word);
+    
     List<List<String>> ret = new ArrayList<List<String>>();
     
     ret.add(verbSyns);
-    ret.add(nounSyns);    
+    ret.add(nounSyns); 
+    ret.add(codeSyns);
     
 		return ret;
 	}
