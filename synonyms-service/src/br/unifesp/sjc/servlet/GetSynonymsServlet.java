@@ -47,7 +47,6 @@ public class GetSynonymsServlet extends HttpServlet {
 		response.setContentType("text/xml");
 		try {
 			PrintWriter out = response.getWriter();
-
 			SynonymsSearchResult searchResult = new SynonymsSearchResult();
 			
 			for(String s : result.get(0))
@@ -68,6 +67,10 @@ public class GetSynonymsServlet extends HttpServlet {
 	}
 
 	private List<List<String>> getSynonyms(String word) {
+	  // fist list is the verb synonyms
+	  // second list is the noun synonyms
+	  // third list is the code synonyms
+	  
 		System.setProperty("wordnet.database.dir", "/home/sourcerer/WordNet");
 		VerbSynset verbSynset;
 		NounSynset nounSynset;
