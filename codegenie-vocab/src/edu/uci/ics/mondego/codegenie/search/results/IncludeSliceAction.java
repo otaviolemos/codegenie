@@ -59,7 +59,7 @@ public class IncludeSliceAction extends SelectionDispatchAction {
 			
 			IJavaProject jprj = JavaCore.create(project);
 			
-			SliceOperations so = new SliceOperations(sliceFile.getName(), jprj);
+			SliceOperations so = new SliceOperations(sliceFile.getName(), jprj, searchResultEntry.getEntry());
 			
 			try {
 				so.unzipInProject();

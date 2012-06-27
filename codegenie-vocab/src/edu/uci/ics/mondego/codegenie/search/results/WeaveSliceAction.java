@@ -91,14 +91,14 @@ public class WeaveSliceAction extends SelectionDispatchAction {
 		
 		IJavaProject jprj = JavaCore.create(project);
 		
-		SliceOperations so = new SliceOperations(sliceFile.getName(), jprj);
+		SliceOperations so = new SliceOperations(sliceFile.getName(), jprj, searchResultEntry.getEntry());
 		Composition c = new Composition(jprj);
 		
 		try {
 			so.unzipInProject();
 			so.includeInBuild();
 			so.doRenamings();
-			c.weave(so.getName(), sourceFolderName);
+			//c.weave(so.getName(), sourceFolderName);
 		} catch(Exception e) {
 			e.printStackTrace();
 			return;

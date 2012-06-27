@@ -118,9 +118,8 @@ public class Util {
 			{
 				try
 				{
-					String filepath = 
-						CodeGeniePlugin.getPlugin().getSourcererURL() + "/slicer/slice?eid=" + searchResultEntry.getEntry().getEntityID();
-					URL u = new URL ("http://" + filepath +  "&client=codegenie");
+					String filepath = "http://karnali.ics.uci.edu:8080" + "/slice-server?entityID=" + searchResultEntry.getEntry().getEntityID();
+					URL u = new URL (filepath +  "&client=codegenie");
 					file.create(u.openConnection().getInputStream(), IFile.FORCE, null);
 					return file;
 				}

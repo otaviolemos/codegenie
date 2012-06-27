@@ -75,15 +75,17 @@ public class IncludeSliceAction implements IObjectActionDelegate {
 		
 		//String[] names = new String(selection.getName()).replace(".", ":").split(":");
 		
-		SliceOperations mySlc = new SliceOperations(selection.getName(), JavaCore.create(selection.getProject()));
+		//this was not commented
+		//SliceOperations mySlc = new SliceOperations(selection.getName(), JavaCore.create(selection.getProject()));
 				
 				//substring(0, selection.getName().indexOf(".")),
 				
 				//id3.getValue(), id2.getValue(), id1.getValue(), JavaCore.create(selection.getProject()));
 		try {
-		  mySlc.unzipInProject();
-		  mySlc.includeInBuild();
-		  mySlc.doRenamings();
+		  //this was not commented
+		  //mySlc.unzipInProject();
+		  //mySlc.includeInBuild();
+		  //mySlc.doRenamings();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

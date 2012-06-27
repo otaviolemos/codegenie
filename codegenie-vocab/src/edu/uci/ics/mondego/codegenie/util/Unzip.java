@@ -47,7 +47,7 @@ public class Unzip {
   public void unZip(String rootDir, String fileName) {	  
 	//rootDir = fileName.substring(0, 
 	//		fileName.substring(0, fileName.lastIndexOf("/")).lastIndexOf("/")+1);
-	this.rootDir = rootDir.substring(0, fileName.substring(0, fileName.lastIndexOf("/")).lastIndexOf("/")+1);
+	this.rootDir = rootDir;//.substring(0, fileName.substring(0, fileName.lastIndexOf("/")).lastIndexOf("/")+1);
     dirsMade = new TreeSet();
     try {
       zippy = new ZipFile(fileName);

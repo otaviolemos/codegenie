@@ -34,6 +34,7 @@ public class SynonymUtils {
       
       ArrayList<String> v = new ArrayList<String>(result.getVerbs());
       ArrayList<String> n = new ArrayList<String>(result.getNouns());
+      ArrayList<String> c = new ArrayList<String>(result.getCodeRelated());
       
       if(ret != "") ret += " AND ";
       ret += "(" + tok;
@@ -52,6 +53,13 @@ public class SynonymUtils {
         } else {
           ret += ")";
         }
+      }
+      
+      if(!c.isEmpty()) {
+        ret += " AND (" + tok +  " OR ";
+        for(int i = 0; i < c.size() - 1; i++) 
+          ret += c.get(i) + " OR ";
+        ret += c.get(c.size()-1) + ")";
       }
       
     }
