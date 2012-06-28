@@ -131,10 +131,15 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
     srcResult = s.search(query);
 
 
+    if(srcResult.getNumFound() == -1) {
+      return new Status(IStatus.ERROR, CodeGeniePlugin.PLUGIN_ID, 0, "Unable to perform search.", null);
+    }
+    
     searchLabel += " - " + srcResult.getNumFound() + " matches in Sourcerer"
         + " (" + srcResult.getLastQueryTime() + "ms)";
 
     // no results
+    
     if(srcResult.getNumFound() == 0) {
       return new Status(IStatus.OK, CodeGeniePlugin.PLUGIN_ID, 0, "ok", null);
     }

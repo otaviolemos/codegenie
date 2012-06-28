@@ -135,14 +135,12 @@ public class SliceOperations {
         }
 
       //change the name of the 'slice' package
-      IPackageFragment slicePck = slicePckRoot.getPackageFragment("slice");	
-      slicePck = slicePckRoot.getPackageFragment(wantedPackageName);
+      IPackageFragment slicePck = slicePckRoot.getPackageFragment(this.name);	
+      slicePck = slicePckRoot.getPackageFragment(keyPckName);
 
-      // change the name of the key class and of the key method
-      // and update the package declaration
+      // change the name of the key method
       ICompilationUnit[] myCPUs = slicePck.getCompilationUnits();
       for (int i = 0; i < myCPUs.length; i++) {
-        myCPUs[i].createPackageDeclaration(wantedPackageName, null);
         if(myCPUs[i].getElementName().equals(keyClassName + ".java")) {
           IMethod[] myMethods = myCPUs[i].findPrimaryType().getMethods();
           for (int j = 0; j < myMethods.length; j++) {
@@ -153,8 +151,6 @@ public class SliceOperations {
                 this.renameRefactoring(myMethods[j], wantedMethodName);
           }
           //myCPUs[i].rename(wantedClassName + ".java", true, null);
-          if (!myCPUs[i].findPrimaryType().getElementName().equals(wantedMethodName))
-            this.renameRefactoring(myCPUs[i].findPrimaryType(), wantedClassName);
         }
       }
     } catch (JavaModelException e) {
@@ -165,7 +161,13 @@ public class SliceOperations {
   }
 
   private String getKeyPckName() {
-    return null;
+    int classNameLoc = keyMethodSignature.lastIndexOf(keyClassName);
+    StringBuffer b = new StringBuffer("");
+    int i = classNameLoc - 2;
+    while(keyMethodSignature.charAt(i) != ' ')
+      b.append(keyMethodSignature.charAt(i--));
+    b.reverse();
+    return b.toString();
   }
 
   public void excludeFromBuild() throws Exception  {
