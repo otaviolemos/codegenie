@@ -14,8 +14,8 @@ import br.unifesp.sjc.utils.HibernateUtil;
  */
 public class SynonymsDAO {
 	
-	private static final String GET_SYNONYMS_BY_WORD1 = "select word1 from Pair where word2 = :word";
-	private static final String GET_SYNONYMS_BY_WORD2 = "select word2 from Pair where word1 = :word";
+	private static final String GET_SYNONYMS_BY_WORD1 = "select word1 from Pair where word2 = :word and type = \'s\'";
+	private static final String GET_SYNONYMS_BY_WORD2 = "select word2 from Pair where word1 = :word and type = \'s\'";
 	
 
 	@SuppressWarnings("unchecked")

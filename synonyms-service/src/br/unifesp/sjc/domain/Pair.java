@@ -35,6 +35,16 @@ public class Pair implements Serializable {
     this.word2 = word2;
   }
   
+  private String type;
+  @Column(name="type")
+  public String getType() {
+    return type;
+  }
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  
   @Override
   public String toString() {
     return "Pair [word1=" + word1 + ", word2=" + word2 + "]";
