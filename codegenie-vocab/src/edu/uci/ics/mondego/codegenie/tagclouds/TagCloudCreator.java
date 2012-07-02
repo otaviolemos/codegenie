@@ -64,8 +64,8 @@ public class TagCloudCreator {
 	 * @return
 	 */
 	private SearchResult searchInSourcerer(String word) {
-	  String query = "short_name:(" + word.replaceAll(" ", "%20") + ")";
-	  String url = "snake.ics.uci.edu:8080";
+	  String query = "sname_contents:(" + word + ")";
+	  String url = "http://snake.ics.uci.edu:8080";
 	  SearchAdapter s = SearchAdapter.create(url);
 	  SearchResult srcResult = s.search(query);
 		return srcResult;
@@ -79,7 +79,7 @@ public class TagCloudCreator {
 		for (int i = 0; i < untokenizedTerms.length; i++) {
 			for (Iterator iterator = synonyms.iterator(); iterator.hasNext();) {
 				Term synonym = (Term) iterator.next();
-				if (untokenizedTerms[i].contains(
+				if (untokenizedTerms[i].toUpperCase().contains(
 						synonym.getTerm().toUpperCase())) {
 					synonym.setWeight(synonym.getWeight() + weight);
 					synonym.setHits(synonym.getHits() + 1);

@@ -96,8 +96,8 @@ public class WeaveSliceAction extends SelectionDispatchAction {
 		
 		try {
 			so.unzipInProject();
-			so.includeInBuild();
-			so.doRenamings();
+			//so.includeInBuild();
+			//so.doRenamings();
 			//c.weave(so.getName(), sourceFolderName);
 		} catch(Exception e) {
 			e.printStackTrace();
