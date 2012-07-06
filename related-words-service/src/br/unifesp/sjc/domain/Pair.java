@@ -47,7 +47,7 @@ public class Pair implements Serializable {
   
   @Override
   public String toString() {
-    return "Pair [word1=" + word1 + ", word2=" + word2 + "]";
+    return "Pair [word1=" + word1 + ", word2=" + word2 + " type=" + type + "]";
   }
   
   @Override
