@@ -59,6 +59,10 @@ public class TestDrivenSearchResult extends AbstractTextSearchResult implements
 	public String getLabel() {
 		return queryLabel;
 	}
+	
+	public void setQueryLabel(String label) {
+	  queryLabel = label;
+	}
 
 	public String getTooltip() {
 		return "";

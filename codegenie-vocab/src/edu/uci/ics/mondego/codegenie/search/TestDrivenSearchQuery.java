@@ -2,6 +2,7 @@ package edu.uci.ics.mondego.codegenie.search;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringTokenizer;
 
@@ -24,7 +25,7 @@ import edu.uci.ics.mondego.codegenie.search.SearchResultEntryWrapper;
 import org.eclipse.jdt.core.IJavaProject;
 
 import edu.uci.ics.mondego.codegenie.util.JavaTermExtractor;
-import edu.uci.ics.mondego.codegenie.util.SynonymUtils;
+import edu.uci.ics.mondego.codegenie.util.RelatedWordUtils;
 
 import edu.uci.ics.mondego.codegenie.preferences.PreferenceConstants;
 
@@ -54,9 +55,11 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
   private boolean consideringReturnType = true;
   private boolean consideringNames = true;
   private boolean consideringSynonyms = true;
+  private boolean consideringAntonyms = true;
+
 
   private boolean[] lastQueryType = 
-    {consideringReturnType, consideringNames, consideringArguments, consideringMissingClassName}; 
+    {consideringReturnType, consideringNames, consideringArguments, consideringMissingClassName, consideringSynonyms, consideringAntonyms};
 
   public TestDrivenSearchQuery() {
     fResult = null;
@@ -109,12 +112,14 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
     TestDrivenSearchResult textResult = (TestDrivenSearchResult)getSearchResult();
 
     boolean[] thisQueryType = 
-      {consideringReturnType, consideringNames, consideringArguments, consideringMissingClassName};
+      {consideringReturnType, consideringNames, consideringArguments, consideringMissingClassName, consideringSynonyms, consideringAntonyms};
 
     if(thisQueryType[0] != lastQueryType[0] ||
         thisQueryType[1] != lastQueryType[1] ||
         thisQueryType[2] != lastQueryType[2] ||
-        thisQueryType[3] != lastQueryType[3]) {
+        thisQueryType[3] != lastQueryType[3] ||
+        thisQueryType[4] != lastQueryType[4] ||
+        thisQueryType[5] != lastQueryType[5]) {
       textResult.removeAll();
       setCurrentPage(1);
       queryID = CodeGeniePlugin.getPlugin().getStore().getNewQueryID();
@@ -168,42 +173,47 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
       fqnTerms = JavaTermExtractor.getFQNTermsAsString(querySpec[2]);
       if (consideringMissingClassName) 
         fqnTerms += " " + JavaTermExtractor.getFQNTermsAsString(querySpec[1]); 
-      
-      try {
-        if(consideringSynonyms)
-          fqnTerms = SynonymUtils.getSynonymsAsQueryPart(fqnTerms);
-      } catch (MalformedURLException e) {
-        System.out.println("Could not search for synonyms: Malformed url.");
-      } catch (IOException e) {
-        System.out.println("Could not search for synonyms: IO exception.");
-      } catch (JAXBException e) {
-        System.out.println("Could not search for synonyms: JAXB exception.");
-      }
+      fqnTerms = removeDuplicates(fqnTerms);
+      fqnTerms = RelatedWordUtils.getRelatedAsQueryPart(fqnTerms, consideringSynonyms, consideringAntonyms);
       
       // TODO: Term or exact?
-      
-      //searchLabel += "Name terms: \'" + fqnTerms + "\' ";
+      searchLabel += "Name terms: \'" + fqnTerms + "\' ";
       query = "fqn_contents:(" + fqnTerms + ")";
     }
 
     if (consideringReturnType) {
       // TODO: Term or exact?
-      //searchLabel += " Return type: \'" + querySpec[3] + "\' ";
+      if(!searchLabel.equals("")) searchLabel += "\n";
+      searchLabel += "Return type: \'" + querySpec[3] + "\' ";
       query += " return_fqn_contents:(" + querySpec[3].replaceAll("\\[\\]", " ") + ")";
     }
 
     if (consideringArguments) {
       if(!querySpec[4].equals("")) {
-        //searchLabel += "Arguments: " + querySpec[4] + ")";
+        if(!searchLabel.equals("")) searchLabel += "\n";
+        searchLabel += "Arguments: " + querySpec[4] + ")";
         // TODO: Term or exact?
         //query += " m_args_sname_contents:"+ querySpec[4].replaceAll("\\[\\]", " ") + ")";
         query += " params_snames_exact:\\" + querySpec[4].replaceAll("\\[\\]", "\\\\[\\\\]") + "\\)";
       }
     }
     
-    searchLabel = query;
+    // searchLabel = query;
 
     return query;
+  }
+
+  private String removeDuplicates(String fqnTerms) {
+    ArrayList<String> as = new ArrayList<String>();
+    StringTokenizer stok = new StringTokenizer(fqnTerms);
+    String ret = "";
+    while(stok.hasMoreTokens()) {
+      String s = stok.nextToken();
+      if(!as.contains(s)) 
+        ret += ret.equals("") ? s : " " + s;
+      as.add(s);
+    }
+    return ret;
   }
 
   public void updateQueryLabel() {
@@ -230,7 +240,7 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
     return consideringNames;
   }
 
-  public boolean isConsideingrReturnType() {
+  public boolean isConsideringReturnType() {
     return consideringReturnType;
   }
 
@@ -239,6 +249,8 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
     lastQueryType[1] = consideringNames;
     lastQueryType[2] = consideringArguments;
     lastQueryType[3] = consideringMissingClassName; 
+    lastQueryType[4] = consideringSynonyms;
+    lastQueryType[5] = consideringAntonyms;
   }
 
   public boolean[] getLastQueryType() {
@@ -251,6 +263,22 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
 
   public void setConsiderMissingClassName(boolean consideringMissingClassName) {
     this.consideringMissingClassName = consideringMissingClassName;
+  }
+  
+  public boolean isConsideringSynonyms() {
+    return consideringSynonyms;
+  }
+
+  public void setConsideringSynonyms(boolean consideringSynonyms) {
+    this.consideringSynonyms = consideringSynonyms;
+  }
+  
+  public boolean isConsideringAntonyms() {
+    return consideringAntonyms;
+  }
+
+  public void setConsideringAntonyms(boolean consideringAntonyms) {
+    this.consideringAntonyms = consideringAntonyms;
   }
 
   public ISelection getTestClassSelection() {

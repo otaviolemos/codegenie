@@ -35,7 +35,7 @@ import org.eclipse.zest.cloudio.TagCloud;
 import org.eclipse.zest.cloudio.TagCloudViewer;
 
 import edu.uci.ics.mondego.codegenie.CodeGeniePlugin;
-import edu.uci.ics.mondego.codegenie.synonyms.SynonymsServices;
+import edu.uci.ics.mondego.codegenie.relatedWords.RelatedWordsServices;
 import edu.uci.ics.mondego.codegenie.util.JavaTermExtractor;
 //import edu.uci.ics.sourcerer.services.search.adapter.*;
 
@@ -211,7 +211,7 @@ public class TagCloudCreator {
 	
 
 	public void createTermCloud(String word) throws MalformedURLException, IOException, JAXBException {
-		SynonymsServices sySearch = new SynonymsServices();
+		RelatedWordsServices sySearch = new RelatedWordsServices();
 		List<Term> synonyms = sySearch.searchForSynonyms(word);
 		if (synonyms.size() == 0) {
 			//TODO: Tratar quando não encontrar sinonimo.

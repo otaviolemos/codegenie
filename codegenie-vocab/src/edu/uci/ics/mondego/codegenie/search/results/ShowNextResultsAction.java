@@ -25,23 +25,26 @@ public class ShowNextResultsAction extends Action {
 		AbstractTextSearchResult tmp = page.getInput();
 		if (tmp instanceof TestDrivenSearchResult)
 		{
-			TestDrivenSearchQuery query = (TestDrivenSearchQuery)tmp.getQuery();
+			TestDrivenSearchQuery query = (TestDrivenSearchQuery) tmp.getQuery();
 			TestDrivenSearchResult result = (TestDrivenSearchResult) tmp;
 			
 			boolean[] thisQueryType = 
-		 	{query.isConsideingrReturnType(), query.isConsideringNames(), query.isConsideringArguments(),
-					query.isConsideringMissingClassName()};
+		 	{query.isConsideringReturnType(), query.isConsideringNames(), query.isConsideringArguments(),
+					query.isConsideringMissingClassName(), query.isConsideringSynonyms(), query.isConsideringAntonyms()};
 
 			boolean[] lastQueryType = query.getLastQueryType();
 			
 			if (thisQueryType[0] == lastQueryType[0] &&
 				 thisQueryType[1] == lastQueryType[1] &&
 				 thisQueryType[2] == lastQueryType[2] &&
-				 thisQueryType[3] == lastQueryType[3]) {
+				 thisQueryType[3] == lastQueryType[3] &&
+				 thisQueryType[4] == lastQueryType[4] &&
+				 thisQueryType[5] == lastQueryType[5]) {
 				int page = result.getSearchQuery().getCurrentPage();
 				result.getSearchQuery().setCurrentPage(page+1);
 			}
 			
+			result.setQueryLabel(query.getLabel());
 			NewSearchUI.activateSearchResultView();
 			NewSearchUI.runQueryInBackground(result.getSearchQuery());
 		}	

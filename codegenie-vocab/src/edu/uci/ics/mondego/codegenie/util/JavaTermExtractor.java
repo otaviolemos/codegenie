@@ -112,13 +112,13 @@ public class JavaTermExtractor {
 		if (fragments == null || fragments.length <= 0)
 			return "";
 
-		Collection<String> _strCol = new LinkedList<String>();
+		Set<String> strCol = new HashSet<String>();
 
-		for (String _fragment : fragments) {
-			_strCol.add(getFQNFragmentTermsAsString(_fragment));
+		for (String fragment : fragments) {
+			strCol.add(getFQNFragmentTermsAsString(fragment));
 		}
 
-		return mergeTerms(_strCol);
+		return mergeTerms(strCol);
 
 	}
 
