@@ -1,5 +1,7 @@
 package edu.uci.ics.mondego.codegenie.search.results;
 
+import java.awt.Label;
+
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.action.Action;
@@ -79,7 +81,8 @@ IAdaptable {
   private UseArgumentsAction useArgumentsAction;
   private UseNamesAction useNamesAction;
   private UseMissingClassNameAction useMissingClassNameAction;
-  private UseSynonymsAction useSynonymsAction;
+  private UseEnglishSynonymsAction useEnglishSynonymsAction;
+  private UseCodeSynonymsAction useCodeSynonymsAction;
   private UseAntonymsAction useAntonymsAction;
 
   public TDSearchResultPage ()
@@ -174,11 +177,17 @@ IAdaptable {
     useNamesAction.setImageDescriptor(CodeGenieImages.create(CodeGenieImages.IMG_NAMES));
     useNamesAction.setChecked(true);
     
-    useSynonymsAction = new UseSynonymsAction();
-    useSynonymsAction.setText("Syn");
-    useSynonymsAction.setToolTipText("Use synonym-based query expansion");
+    useEnglishSynonymsAction = new UseEnglishSynonymsAction();
+    useEnglishSynonymsAction.setText("EnSyn");
+    useEnglishSynonymsAction.setToolTipText("Use English synonym-based query expansion");
     //useSynonymsAction.setImageDescriptor(CodeGenieImages.create(CodeGenieImages.IMG_SYN));
-    useSynonymsAction.setChecked(true);
+    useEnglishSynonymsAction.setChecked(true);
+    
+    useCodeSynonymsAction = new UseCodeSynonymsAction();
+    useCodeSynonymsAction.setText("CodeSyn");
+    useCodeSynonymsAction.setToolTipText("Use code synonym-based query expansion");
+    //useSynonymsAction.setImageDescriptor(CodeGenieImages.create(CodeGenieImages.IMG_SYN));
+    useCodeSynonymsAction.setChecked(true);
     
     useAntonymsAction = new UseAntonymsAction();
     useAntonymsAction.setText("Ant");
@@ -270,7 +279,8 @@ IAdaptable {
     tbm.add(useReturnTypeAction);
     tbm.add(useNamesAction);
     tbm.add(useArgumentsAction);
-    tbm.add(useSynonymsAction);
+    tbm.add(useEnglishSynonymsAction);
+    tbm.add(useCodeSynonymsAction);
     tbm.add(useAntonymsAction);
   }
 
@@ -362,7 +372,7 @@ IAdaptable {
     useNamesAction.setChecked(true);
     useArgumentsAction.setChecked(true);
     useReturnTypeAction.setChecked(true);
-    useSynonymsAction.setChecked(true);
+    useEnglishSynonymsAction.setChecked(true);
     useAntonymsAction.setChecked(true);
   }
 
@@ -423,15 +433,27 @@ IAdaptable {
     }
   }
 
-  public class UseSynonymsAction extends Action {
+  public class UseEnglishSynonymsAction extends Action {
 
     public void run () {
       TestDrivenSearchQuery tdsq = ((TestDrivenSearchResult)
           ((TDSearchResultPage)NewSearchUI.getSearchResultView().getActivePage())
           .getInput()).getSearchQuery();
 
-      tdsq.setConsideringSynonyms(!tdsq.isConsideringSynonyms());
-      useSynonymsAction.setChecked(tdsq.isConsideringSynonyms());
+      tdsq.setConsideringEnglishSynonyms(!tdsq.isConsideringEnglishSynonyms());
+      useEnglishSynonymsAction.setChecked(tdsq.isConsideringEnglishSynonyms());
+    }
+  }
+  
+  public class UseCodeSynonymsAction extends Action {
+
+    public void run () {
+      TestDrivenSearchQuery tdsq = ((TestDrivenSearchResult)
+          ((TDSearchResultPage)NewSearchUI.getSearchResultView().getActivePage())
+          .getInput()).getSearchQuery();
+
+      tdsq.setConsideringCodeSynonyms(!tdsq.isConsideringCodeSynonyms());
+      useCodeSynonymsAction.setChecked(tdsq.isConsideringCodeSynonyms());
     }
   }
   

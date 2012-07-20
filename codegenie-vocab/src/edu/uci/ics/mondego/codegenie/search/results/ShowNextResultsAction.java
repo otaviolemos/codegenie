@@ -30,7 +30,7 @@ public class ShowNextResultsAction extends Action {
 			
 			boolean[] thisQueryType = 
 		 	{query.isConsideringReturnType(), query.isConsideringNames(), query.isConsideringArguments(),
-					query.isConsideringMissingClassName(), query.isConsideringSynonyms(), query.isConsideringAntonyms()};
+					query.isConsideringMissingClassName(), query.isConsideringEnglishSynonyms(), query.isConsideringCodeSynonyms(), query.isConsideringAntonyms()};
 
 			boolean[] lastQueryType = query.getLastQueryType();
 			
@@ -39,7 +39,8 @@ public class ShowNextResultsAction extends Action {
 				 thisQueryType[2] == lastQueryType[2] &&
 				 thisQueryType[3] == lastQueryType[3] &&
 				 thisQueryType[4] == lastQueryType[4] &&
-				 thisQueryType[5] == lastQueryType[5]) {
+				 thisQueryType[5] == lastQueryType[5] &&
+				 thisQueryType[6] == lastQueryType[6]) {
 				int page = result.getSearchQuery().getCurrentPage();
 				result.getSearchQuery().setCurrentPage(page+1);
 			}

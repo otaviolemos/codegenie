@@ -17,11 +17,11 @@ public class RelatedWordUtils {
 
   private static String url = "snake.ics.uci.edu:8080";
 
-  public static String getRelatedAsQueryPart(String terms, boolean syn, boolean ant) {
+  public static String getRelatedAsQueryPart(String terms, boolean enSyn, boolean codeSyn, boolean ant) {
     String ret = "";
     StringTokenizer tkn = new StringTokenizer(terms);
     
-    if(!syn && !ant) return terms;
+    if(!enSyn && !codeSyn && !ant) return terms;
     
     try {
 
@@ -41,7 +41,7 @@ public class RelatedWordUtils {
       ArrayList<String> c = new ArrayList<String>(result.getCodeRelatedSyns());
       ArrayList<String> a = new ArrayList<String>(result.getCodeRelatedAntons());
 
-      if(syn) {
+      if(enSyn) {
 
         if(!ret.equals("")) ret += " AND ";
         ret += "(" + tok;
@@ -59,20 +59,25 @@ public class RelatedWordUtils {
             ret += n.get(n.size()-1);
           }
         }
-
+      }
+      
+      if(codeSyn) {
+        if(!enSyn) {
+          if(!ret.equals("")) ret += " AND ";
+          ret += "(" + tok;
+        }
         if(!c.isEmpty()) {
           ret += " OR ";
           for(int i = 0; i < c.size() - 1; i++) 
             ret += c.get(i) + " OR ";
           ret += c.get(c.size()-1);
         }
-        
+      }
+      
+      if(enSyn || codeSyn)
         ret += ")";
 
-      }
-
       if(ant) {
-
         if(!a.isEmpty()) {
           if(!ret.equals("")) 
             ret += " AND ";

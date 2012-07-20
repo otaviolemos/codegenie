@@ -54,12 +54,13 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
   private boolean consideringArguments = true;
   private boolean consideringReturnType = true;
   private boolean consideringNames = true;
-  private boolean consideringSynonyms = true;
+  private boolean consideringEnglishSynonyms = true;
+  private boolean consideringCodeSynonyms = true;
   private boolean consideringAntonyms = true;
 
 
   private boolean[] lastQueryType = 
-    {consideringReturnType, consideringNames, consideringArguments, consideringMissingClassName, consideringSynonyms, consideringAntonyms};
+    {consideringReturnType, consideringNames, consideringArguments, consideringMissingClassName, consideringEnglishSynonyms, consideringCodeSynonyms, consideringAntonyms};
 
   public TestDrivenSearchQuery() {
     fResult = null;
@@ -112,14 +113,15 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
     TestDrivenSearchResult textResult = (TestDrivenSearchResult)getSearchResult();
 
     boolean[] thisQueryType = 
-      {consideringReturnType, consideringNames, consideringArguments, consideringMissingClassName, consideringSynonyms, consideringAntonyms};
+      {consideringReturnType, consideringNames, consideringArguments, consideringMissingClassName, consideringEnglishSynonyms, consideringCodeSynonyms, consideringAntonyms};
 
     if(thisQueryType[0] != lastQueryType[0] ||
         thisQueryType[1] != lastQueryType[1] ||
         thisQueryType[2] != lastQueryType[2] ||
         thisQueryType[3] != lastQueryType[3] ||
         thisQueryType[4] != lastQueryType[4] ||
-        thisQueryType[5] != lastQueryType[5]) {
+        thisQueryType[5] != lastQueryType[5] ||
+        thisQueryType[6] != lastQueryType[6]) {
       textResult.removeAll();
       setCurrentPage(1);
       queryID = CodeGeniePlugin.getPlugin().getStore().getNewQueryID();
@@ -174,7 +176,7 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
       if (consideringMissingClassName) 
         fqnTerms += " " + JavaTermExtractor.getFQNTermsAsString(querySpec[1]); 
       fqnTerms = removeDuplicates(fqnTerms);
-      fqnTerms = RelatedWordUtils.getRelatedAsQueryPart(fqnTerms, consideringSynonyms, consideringAntonyms);
+      fqnTerms = RelatedWordUtils.getRelatedAsQueryPart(fqnTerms, consideringEnglishSynonyms, consideringCodeSynonyms, consideringAntonyms);
       
       // TODO: Term or exact?
       searchLabel += "Name terms: \'" + fqnTerms + "\' ";
@@ -249,8 +251,9 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
     lastQueryType[1] = consideringNames;
     lastQueryType[2] = consideringArguments;
     lastQueryType[3] = consideringMissingClassName; 
-    lastQueryType[4] = consideringSynonyms;
-    lastQueryType[5] = consideringAntonyms;
+    lastQueryType[4] = consideringEnglishSynonyms;
+    lastQueryType[5] = consideringCodeSynonyms;
+    lastQueryType[6] = consideringAntonyms;
   }
 
   public boolean[] getLastQueryType() {
@@ -265,12 +268,20 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
     this.consideringMissingClassName = consideringMissingClassName;
   }
   
-  public boolean isConsideringSynonyms() {
-    return consideringSynonyms;
+  public boolean isConsideringEnglishSynonyms() {
+    return consideringEnglishSynonyms;
   }
 
-  public void setConsideringSynonyms(boolean consideringSynonyms) {
-    this.consideringSynonyms = consideringSynonyms;
+  public void setConsideringEnglishSynonyms(boolean consideringSynonyms) {
+    this.consideringEnglishSynonyms = consideringSynonyms;
+  }
+  
+  public boolean isConsideringCodeSynonyms() {
+    return consideringCodeSynonyms;
+  }
+
+  public void setConsideringCodeSynonyms(boolean consideringSynonyms) {
+    this.consideringCodeSynonyms = consideringSynonyms;
   }
   
   public boolean isConsideringAntonyms() {
