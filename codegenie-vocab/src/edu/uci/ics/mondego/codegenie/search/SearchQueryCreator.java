@@ -17,6 +17,7 @@ public class SearchQueryCreator {
 	String wantedPackageName;
 	String keyInterface;
 	String FQNInterface;
+	boolean existingClass = false;
 	List parameters = new ArrayList();
 	ASTNode returnTypeNode = null;
 
@@ -120,6 +121,7 @@ public class SearchQueryCreator {
 			wantedMethodName = message.substring(11, message.indexOf('('));
 			wantedClassName = message.substring(message
 					.indexOf("is undefined for the type") + 26);
+			existingClass = false;
 		}
 
 		MethodInvocationVisitor mic = new MethodInvocationVisitor();
@@ -222,6 +224,10 @@ public class SearchQueryCreator {
 			}
 			return true;
 		}
+	}
+	
+	public boolean doesClassExist() {
+	  return existingClass;
 	}
 
 }

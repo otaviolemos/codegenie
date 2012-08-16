@@ -82,8 +82,11 @@ IAdaptable {
   private UseNamesAction useNamesAction;
   private UseMissingClassNameAction useMissingClassNameAction;
   private UseEnglishSynonymsAction useEnglishSynonymsAction;
+  private UseEnglishAntonymsAction useEnglishAntonymsAction;
   private UseCodeSynonymsAction useCodeSynonymsAction;
-  private UseAntonymsAction useAntonymsAction;
+  private UseCodeAntonymsAction useCodeAntonymsAction;
+  
+  private boolean existingClass = false;
 
   public TDSearchResultPage ()
   {
@@ -180,20 +183,26 @@ IAdaptable {
     useEnglishSynonymsAction = new UseEnglishSynonymsAction();
     useEnglishSynonymsAction.setText("EnSyn");
     useEnglishSynonymsAction.setToolTipText("Use English synonym-based query expansion");
-    //useSynonymsAction.setImageDescriptor(CodeGenieImages.create(CodeGenieImages.IMG_SYN));
+    useEnglishSynonymsAction.setImageDescriptor(CodeGenieImages.create(CodeGenieImages.IMG_E_SYN));
     useEnglishSynonymsAction.setChecked(true);
+    
+    useEnglishAntonymsAction = new UseEnglishAntonymsAction();
+    useEnglishAntonymsAction.setText("EnSyn");
+    useEnglishAntonymsAction.setToolTipText("Use English antonym-based query expansion");
+    useEnglishAntonymsAction.setImageDescriptor(CodeGenieImages.create(CodeGenieImages.IMG_E_ANT));
+    useEnglishAntonymsAction.setChecked(true);
     
     useCodeSynonymsAction = new UseCodeSynonymsAction();
     useCodeSynonymsAction.setText("CodeSyn");
     useCodeSynonymsAction.setToolTipText("Use code synonym-based query expansion");
-    //useSynonymsAction.setImageDescriptor(CodeGenieImages.create(CodeGenieImages.IMG_SYN));
+    useCodeSynonymsAction.setImageDescriptor(CodeGenieImages.create(CodeGenieImages.IMG_C_SYN));
     useCodeSynonymsAction.setChecked(true);
     
-    useAntonymsAction = new UseAntonymsAction();
-    useAntonymsAction.setText("Ant");
-    useAntonymsAction.setToolTipText("Use antonym-based query expansion");
-    //useSynonymsAction.setImageDescriptor(CodeGenieImages.create(CodeGenieImages.IMG_SYN));
-    useAntonymsAction.setChecked(true);
+    useCodeAntonymsAction = new UseCodeAntonymsAction();
+    useCodeAntonymsAction.setText("Ant");
+    useCodeAntonymsAction.setToolTipText("Use antonym-based query expansion");
+    useCodeAntonymsAction.setImageDescriptor(CodeGenieImages.create(CodeGenieImages.IMG_C_ANT));
+    useCodeAntonymsAction.setChecked(true);
 
 
     useMissingClassNameAction = new UseMissingClassNameAction();
@@ -280,8 +289,9 @@ IAdaptable {
     tbm.add(useNamesAction);
     tbm.add(useArgumentsAction);
     tbm.add(useEnglishSynonymsAction);
+    tbm.add(useEnglishAntonymsAction);
     tbm.add(useCodeSynonymsAction);
-    tbm.add(useAntonymsAction);
+    tbm.add(useCodeAntonymsAction);
   }
 
 
@@ -373,12 +383,20 @@ IAdaptable {
     useArgumentsAction.setChecked(true);
     useReturnTypeAction.setChecked(true);
     useEnglishSynonymsAction.setChecked(true);
-    useAntonymsAction.setChecked(true);
+    useCodeAntonymsAction.setChecked(true);
   }
 
   public StructuredViewer getViewer() {
     return super.getViewer();
   }	
+  
+  public void setExistingClass(boolean ec) {
+    existingClass = ec;
+  }
+  
+  public boolean isExistingClass() {
+    return existingClass;
+  }
 
   public class UseReturnTypeAction extends Action {
 
@@ -445,6 +463,18 @@ IAdaptable {
     }
   }
   
+  public class UseEnglishAntonymsAction extends Action {
+
+    public void run () {
+      TestDrivenSearchQuery tdsq = ((TestDrivenSearchResult)
+          ((TDSearchResultPage)NewSearchUI.getSearchResultView().getActivePage())
+          .getInput()).getSearchQuery();
+
+      tdsq.setConsideringEnglishAntonyms(!tdsq.isConsideringEnglishAntonyms());
+      useEnglishAntonymsAction.setChecked(tdsq.isConsideringEnglishAntonyms());
+    }
+  }
+  
   public class UseCodeSynonymsAction extends Action {
 
     public void run () {
@@ -457,15 +487,15 @@ IAdaptable {
     }
   }
   
-  public class UseAntonymsAction extends Action {
+  public class UseCodeAntonymsAction extends Action {
 
     public void run () {
       TestDrivenSearchQuery tdsq = ((TestDrivenSearchResult)
           ((TDSearchResultPage)NewSearchUI.getSearchResultView().getActivePage())
           .getInput()).getSearchQuery();
 
-      tdsq.setConsideringAntonyms(!tdsq.isConsideringAntonyms());
-      useAntonymsAction.setChecked(tdsq.isConsideringAntonyms());
+      tdsq.setConsideringCodeAntonyms(!tdsq.isConsideringCodeAntonyms());
+      useCodeAntonymsAction.setChecked(tdsq.isConsideringCodeAntonyms());
     }
   }
 

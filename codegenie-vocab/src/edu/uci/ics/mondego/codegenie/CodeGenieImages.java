@@ -21,6 +21,13 @@ public class CodeGenieImages {
 	public static final String IMG_ARGUMENTS="arguments_search.gif";
 	public static final String IMG_NAMES="name_search.gif";
 	public static final String IMG_CODEGENIE="lamp_icon.gif";
+	public static final String IMG_E_SYN="syn-e.gif";
+	public static final String IMG_C_SYN="syn-c.gif";
+	public static final String IMG_C_ANT="ant-c.gif";
+
+  public static final String IMG_E_ANT = "ant-e.gif";
+	
+	
 	
 	public static Image getImage(String key) {
 		ImageDescriptor id = create(key);

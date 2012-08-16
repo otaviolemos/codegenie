@@ -16,6 +16,7 @@ import edu.uci.ics.mondego.codegenie.search.TestDrivenSearchQuery;
 import edu.uci.ics.mondego.codegenie.search.TestDrivenSearchResult;
 
 import edu.uci.ics.mondego.codegenie.composition.Composition;
+import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 
 public class UnweaveSliceAction extends SelectionDispatchAction {
 
@@ -62,20 +63,27 @@ public class UnweaveSliceAction extends SelectionDispatchAction {
 			
 			IJavaProject project = null;
 			String sourceFolderName = null;
+			IType testType = null;
 			if (input instanceof TestDrivenSearchResult) {
 				project = ((TestDrivenSearchResult) input).getSearchQuery().getProject();
 				ISelection selection =  ((TestDrivenSearchResult) input).getSearchQuery().getTestClassSelection();
-				IType testType = (IType) ((TreeSelection)selection).getFirstElement();
+				testType = (IType) ((TreeSelection)selection).getFirstElement();
 				sourceFolderName = testType.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT).getElementName();
 			} else { 
 			  return; 
 			}
+			
+			SingleResult theEntry = searchResultEntry.getEntry();
+			String names = theEntry.getReturnFqn() + " " + theEntry.getFqn() + theEntry.getParams();
+      String fullName = names.substring(names.indexOf(' ')+1, names.indexOf('('));
+      String fullNameLessMethodName = fullName.substring(0, fullName.lastIndexOf('.'));
+      String imported = fullNameLessMethodName;
 
 		
-		Composition c = new Composition(project);
+		Composition c = new Composition(project, testType, imported);
 		try {
 			c.unweave(sourceFolderName, new Long(searchResultEntry.getEntry().getEntityID()).toString(),
-					false);
+					true);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

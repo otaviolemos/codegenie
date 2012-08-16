@@ -33,6 +33,7 @@ import org.eclipse.ltk.core.refactoring.participants.RenameRefactoring;
 import org.eclipse.ui.PlatformUI;
 
 import edu.uci.ics.mondego.codegenie.CodeGeniePlugin;
+import edu.uci.ics.mondego.codegenie.util.JavaTermExtractor;
 import edu.uci.ics.mondego.codegenie.util.Unzip;
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 
@@ -45,6 +46,7 @@ public class SliceOperations {
   private String wantedPackageName;
   private String keyClassName;
   private String keyMethodSignature;
+  private String toImport;
   private IJavaProject javaProject;
   private SingleResult relatedEntry;
 
@@ -83,6 +85,7 @@ public class SliceOperations {
       String names = relatedEntry.getReturnFqn() + " " + relatedEntry.getFqn() + relatedEntry.getParams();
       String fullName = names.substring(names.indexOf(' ')+1, names.indexOf('('));
       String fullNameLessMethodName = fullName.substring(0, fullName.lastIndexOf('.'));
+      toImport = fullNameLessMethodName;
       keyClassName = fullNameLessMethodName.substring(fullNameLessMethodName.lastIndexOf('.')+1);
       keyMethodSignature = names;
       mySlicedFolder.refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -151,6 +154,8 @@ public class SliceOperations {
                 this.renameRefactoring(myMethods[j], wantedMethodName);
           }
           //myCPUs[i].rename(wantedClassName + ".java", true, null);
+          if (!myCPUs[i].findPrimaryType().getElementName().equals(wantedClassName))
+            this.renameRefactoring(myCPUs[i].findPrimaryType(), wantedClassName);
         }
       }
     } catch (JavaModelException e) {
@@ -218,8 +223,10 @@ public class SliceOperations {
     if(!keyMethodParamSignature.equals("")) { 
       String[] paramTypes = keyMethodParamSignature.split(",");
       String[] paramTypeKeys = new String[paramTypes.length];
-      for(int i = 0; i < paramTypes.length; i++) 
+      for(int i = 0; i < paramTypes.length; i++) {
+        paramTypes[i] = JavaTermExtractor.extractShortName(paramTypes[i]);
         paramTypeKeys[i] = Signature.createTypeSignature(paramTypes[i], false);
+      }
       keyMethodSignature = Signature.createMethodSignature(paramTypeKeys, keyMethodReturnType);
     } else {
       String[] paramTypeKeys = {""};
@@ -284,6 +291,10 @@ public class SliceOperations {
 
   public void setWantedPackageName(String wantedPackageName) {
     this.wantedPackageName = wantedPackageName;
+  }
+  
+  public String getToImport() {
+    return toImport;
   }
 
 

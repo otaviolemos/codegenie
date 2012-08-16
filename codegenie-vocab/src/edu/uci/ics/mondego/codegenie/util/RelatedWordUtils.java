@@ -17,11 +17,11 @@ public class RelatedWordUtils {
 
   private static String url = "snake.ics.uci.edu:8080";
 
-  public static String getRelatedAsQueryPart(String terms, boolean enSyn, boolean codeSyn, boolean ant) {
+  public static String getRelatedAsQueryPart(String terms, boolean enSyn, boolean codeSyn, boolean enAnt, boolean codeAnt) {
     String ret = "";
     StringTokenizer tkn = new StringTokenizer(terms);
     
-    if(!enSyn && !codeSyn && !ant) return terms;
+    if(!enSyn && !codeSyn && !codeAnt && !enAnt) return terms;
     
     try {
 
@@ -38,8 +38,12 @@ public class RelatedWordUtils {
 
       ArrayList<String> v = new ArrayList<String>(result.getVerbs());
       ArrayList<String> n = new ArrayList<String>(result.getNouns());
-      ArrayList<String> c = new ArrayList<String>(result.getCodeRelatedSyns());
-      ArrayList<String> a = new ArrayList<String>(result.getCodeRelatedAntons());
+      ArrayList<String> a = new ArrayList<String>(result.getNouns());
+      ArrayList<String> va = new ArrayList<String>(result.getVerbAntonyms());
+      ArrayList<String> na = new ArrayList<String>(result.getNounAntonyms());
+      ArrayList<String> aa = new ArrayList<String>(result.getAdjectiveAntonyms());
+      ArrayList<String> cs = new ArrayList<String>(result.getCodeRelatedSyns());
+      ArrayList<String> ca = new ArrayList<String>(result.getCodeRelatedAntons());
 
       if(enSyn) {
 
@@ -51,12 +55,17 @@ public class RelatedWordUtils {
           for(int i = 0; i < v.size() - 1; i++) 
             ret += v.get(i) + " OR ";
           ret += v.get(v.size()-1);
-        } else {
-          if(!n.isEmpty()) {
+        } else if(!n.isEmpty()) {
             ret += " OR ";
             for(int i = 0; i < n.size() - 1; i++) 
               ret += n.get(i) + " OR ";
             ret += n.get(n.size()-1);
+        } else {
+          if(!a.isEmpty()) {
+            ret += " OR ";
+            for(int i = 0; i < a.size() - 1; i++) 
+              ret += a.get(i) + " OR ";
+            ret += a.get(a.size()-1);
           }
         }
       }
@@ -66,27 +75,62 @@ public class RelatedWordUtils {
           if(!ret.equals("")) ret += " AND ";
           ret += "(" + tok;
         }
-        if(!c.isEmpty()) {
+        if(!cs.isEmpty()) {
           ret += " OR ";
-          for(int i = 0; i < c.size() - 1; i++) 
-            ret += c.get(i) + " OR ";
-          ret += c.get(c.size()-1);
+          for(int i = 0; i < cs.size() - 1; i++) 
+            ret += cs.get(i) + " OR ";
+          ret += cs.get(cs.size()-1);
         }
       }
       
       if(enSyn || codeSyn)
         ret += ")";
+      
+      if(enAnt) {
+        if(!v.isEmpty()) {
+          if(!va.isEmpty()) {
+            if(!ret.equals("")) 
+              ret += " AND ";
+            else
+              ret = tok + " AND ";
+            ret += "!(";
+            for(int i = 0; i < va.size() - 1; i++) 
+              ret += va.get(i) + " OR ";
+            ret += va.get(va.size()-1) + ")";
+          }
+        } else if(!na.isEmpty()) {
+            if(!ret.equals("")) 
+              ret += " AND ";
+            else
+              ret = tok + " AND ";
+            ret += "!(";
+            for(int i = 0; i < na.size() - 1; i++) 
+              ret += na.get(i) + " OR ";
+            ret += na.get(na.size()-1) + ")";
+        } else {
+          if(!aa.isEmpty()) {
+            if(!ret.equals("")) 
+              ret += " AND ";
+            else
+              ret = tok + " AND ";
+            ret += "!(";
+            for(int i = 0; i < aa.size() - 1; i++) 
+              ret += aa.get(i) + " OR ";
+            ret += aa.get(aa.size()-1) + ")";
+          }
+        }
+      }
 
-      if(ant) {
-        if(!a.isEmpty()) {
+      if(codeAnt) {
+        if(!ca.isEmpty()) {
           if(!ret.equals("")) 
             ret += " AND ";
           else
             ret = tok + " AND ";
           ret += "!(";
-          for(int i = 0; i < a.size() - 1; i++) 
-            ret += a.get(i) + " OR ";
-          ret += a.get(a.size()-1) + ")";
+          for(int i = 0; i < ca.size() - 1; i++) 
+            ret += ca.get(i) + " OR ";
+          ret += ca.get(ca.size()-1) + ")";
         }
       }
     }

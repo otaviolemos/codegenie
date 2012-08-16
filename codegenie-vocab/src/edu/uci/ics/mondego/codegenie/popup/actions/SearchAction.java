@@ -79,6 +79,9 @@ public class SearchAction implements IObjectActionDelegate {
 			((TDSearchResultPage)NewSearchUI.activateSearchResultView().getActivePage()).refreshButtons();
 		}
 		NewSearchUI.runQueryInBackground(searchJob);	
+		if (NewSearchUI.activateSearchResultView().getActivePage() instanceof TDSearchResultPage) {
+      ((TDSearchResultPage)NewSearchUI.activateSearchResultView().getActivePage()).setExistingClass(sqc.doesClassExist());
+    }
 	}
 
 	/**

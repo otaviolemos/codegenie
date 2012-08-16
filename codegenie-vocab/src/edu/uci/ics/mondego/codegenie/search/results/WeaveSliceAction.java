@@ -64,8 +64,13 @@ public class WeaveSliceAction extends SelectionDispatchAction {
 	}
 	
 	public void weave(SearchResultEntryWrapper searchResultEntry) {
-		AbstractTextSearchResult input = ((TDSearchResultPage) 
-				NewSearchUI.getSearchResultView().getActivePage()).getInput();
+	  
+	  TDSearchResultPage searchPage = ((TDSearchResultPage) 
+        NewSearchUI.getSearchResultView().getActivePage());
+	  
+		AbstractTextSearchResult input = searchPage.getInput();
+		
+		IType testType = null;
 			
 			String[] query = null;
 			IProject project = null;
@@ -74,7 +79,7 @@ public class WeaveSliceAction extends SelectionDispatchAction {
 				query = ((TestDrivenSearchResult) input).getSearchQuery().getQuerySpec();
 				project = ((TestDrivenSearchResult) input).getSearchQuery().getProject().getProject();
 				ISelection selection =  ((TestDrivenSearchResult) input).getSearchQuery().getTestClassSelection();
-				IType testType = (IType) ((TreeSelection)selection).getFirstElement();
+				testType = (IType) ((TreeSelection)selection).getFirstElement();
 				sourceFolderName = testType.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT).getElementName();
 			} else { 
 			  return; 
@@ -84,7 +89,7 @@ public class WeaveSliceAction extends SelectionDispatchAction {
 			Util.getSliceFromSearchResult(searchResultEntry, query, project);
 		
 		if (sliceFile == null) {
-			((TDSearchResultPage)NewSearchUI.getSearchResultView().getActivePage()).update(searchResultEntry);
+			searchPage.update(searchResultEntry);
 			return;
 		}
 
@@ -92,13 +97,15 @@ public class WeaveSliceAction extends SelectionDispatchAction {
 		IJavaProject jprj = JavaCore.create(project);
 		
 		SliceOperations so = new SliceOperations(sliceFile.getName(), jprj, searchResultEntry.getEntry());
-		Composition c = new Composition(jprj);
+		
 		
 		try {
 			so.unzipInProject();
-			//so.includeInBuild();
-			//so.doRenamings();
-			//c.weave(so.getName(), sourceFolderName);
+			so.includeInBuild();
+			so.doRenamings();
+			Composition c = new Composition(jprj, testType, so.getToImport());
+	    c.setExistingClass(searchPage.isExistingClass());
+			c.weave(so.getName(), sourceFolderName);
 		} catch(Exception e) {
 			e.printStackTrace();
 			return;
