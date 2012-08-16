@@ -44,7 +44,8 @@ public class RelatedDAO {
           ant = (String)lo[0];
         else 
           ant = (String)lo[1];
-        antonymList.add(ant);
+        if(!word.contains(ant))
+          antonymList.add(ant);
         addSynonyms(ant, antonymList, session);
 		  }
 		}
@@ -79,10 +80,13 @@ public class RelatedDAO {
     List<Object[]> resultList = query.list();
     
     for(Object[] lo : resultList) {
+        String ant = "";
         if(((String)lo[1]).equals(word))
-          list.add((String)lo[0]);
+          ant = ((String)lo[0]);
         else
-          list.add((String)lo[1]);
+          ant = ((String)lo[1]);
+        if(!word.contains(ant))
+          list.add(ant);
     }
   }
 
