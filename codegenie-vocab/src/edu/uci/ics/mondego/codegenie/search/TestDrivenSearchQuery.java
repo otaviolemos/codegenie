@@ -202,7 +202,7 @@ public class TestDrivenSearchQuery implements ISearchQuery, Serializable {
       }
     }
     
-    // searchLabel = query;
+    searchLabel = query;
 
     return query;
   }
