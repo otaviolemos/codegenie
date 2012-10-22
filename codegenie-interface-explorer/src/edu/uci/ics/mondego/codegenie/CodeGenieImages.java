@@ -9,6 +9,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
 
+
 public class CodeGenieImages {
 	
 	public static final IPath ICONS_PATH= new Path("$nl$/icons");
