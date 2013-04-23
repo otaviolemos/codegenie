@@ -62,19 +62,18 @@ public class TagCloudCreator {
 
   private Shell shell;
 
-  /**
-   * Busca palavra no sourcerer
-   * 
-   * @param word
-   * @return
-   */
-  private SearchResult searchInSourcerer(String word) {
-    String query = "sname_contents:(" + word + ")";
-    String url = "http://snake.ics.uci.edu:8080";
-    SearchAdapter s = SearchAdapter.create(url);
-    SearchResult srcResult = s.search(query);
-    return srcResult;
-  }
+	/**
+	 * Busca palavra no sourcerer
+	 * 
+	 * @param word
+	 * @return
+	 */
+	private SearchResult searchInSourcerer(String word) {
+		String query = "sname_contents:(" + word + ")";
+		SearchAdapter s = SearchAdapter.create(url);
+		SearchResult srcResult = s.search(query);
+		return srcResult;
+	}
 
   private void addTerms(String fqn, List<Term> synonyms) {
     String justFqn = JavaTermExtractor.removeMethodArguments(fqn);
@@ -278,4 +277,6 @@ public class TagCloudCreator {
     return switched;
   }
 
+  
+  
 }
