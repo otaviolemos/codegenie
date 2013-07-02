@@ -1,0 +1,8 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>edu.uci.ics.sourcerer</groupId>
+  <artifactId>sourcerer-search</artifactId>
+  <version>1.0</version>
+  <packaging>jar</packaging>
+  <name>Sourcerer Search</name>
+</project>

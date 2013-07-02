@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.1.3" icons="true">  
+  <object id="1" language="java" name="br.unifesp.ppgcc.eaq.interfaces.daemon.Main" project="AQExperiment" 
+    file="/AQExperiment/src/main/java/br/unifesp/ppgcc/eaq/interfaces/daemon/Main.java" binary="false" label="main" 
+    type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="2">      
+      <position height="1164" width="176" x="5" y="139"/>    
+    </execution>  
+  </object>  
+  <object id="5" language="java" name="br.unifesp.ppgcc.eaq.application.Service" project="AQExperiment" 
+    file="/AQExperiment/src/main/java/br/unifesp/ppgcc/eaq/application/Service.java" binary="false" label="service" 
+    type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="4">      
+      <position height="1122" width="142" x="185" y="160"/>    
+    </execution>    
+    <execution id="15">      
+      <position height="409" width="0" x="0" y="613"/>    
+    </execution>    
+    <execution id="17">      
+      <position height="21" width="0" x="0" y="1188"/>    
+    </execution>    
+    <execution id="19">      
+      <position height="21" width="0" x="0" y="1240"/>    
+    </execution>  
+  </object>  
+  <object id="32" language="java" name="edu.uci.ics.sourcerer.services.search.adapter.SearchAdapter" 
+    project="AQExperiment" 
+    file="C:/Users/ac/.m2/repository/edu/uci/ics/sourcerer/sourcerer-search/1.0/sourcerer-search-1.0.jar" binary="true" 
+    label="&lt;static&gt;" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="21">      
+      <position height="21" width="0" x="0" y="648"/>    
+    </execution>  
+  </object>  
+  <object id="33" language="java" name="br.unifesp.ppgcc.eaq.domain.AnaliseFunction" project="AQExperiment" 
+    file="/AQExperiment/src/main/java/br/unifesp/ppgcc/eaq/domain/AnaliseFunction.java" binary="false" label="function" 
+    type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="23">      
+      <position height="21" width="0" x="0" y="728"/>    
+    </execution>    
+    <execution id="31">      
+      <position height="21" width="0" x="0" y="980"/>    
+    </execution>  
+  </object>  
+  <object id="34" language="java" name="edu.uci.ics.sourcerer.services.search.adapter.SearchAdapter" 
+    project="AQExperiment" 
+    file="C:/Users/ac/.m2/repository/edu/uci/ics/sourcerer/sourcerer-search/1.0/sourcerer-search-1.0.jar" binary="true" 
+    label="searchAdapter" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="25">      
+      <position height="21" width="0" x="0" y="770"/>    
+    </execution>  
+  </object>  
+  <object id="35" language="java" name="edu.uci.ics.sourcerer.services.search.adapter.SearchResult" 
+    project="AQExperiment" 
+    file="C:/Users/ac/.m2/repository/edu/uci/ics/sourcerer/sourcerer-search/1.0/sourcerer-search-1.0.jar" binary="true" 
+    label="searchResult" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="27">      
+      <position height="21" width="0" x="0" y="812"/>    
+    </execution>    
+    <execution id="29">      
+      <position height="21" width="0" x="0" y="896"/>    
+    </execution>  
+  </object>  
+  <object id="36" language="java" name="br.unifesp.ppgcc.eaq.infrastructure.AnaliseFunctionRepository" 
+    project="AQExperiment" 
+    file="/AQExperiment/src/main/java/br/unifesp/ppgcc/eaq/infrastructure/AnaliseFunctionRepository.java" binary="false" 
+    type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="7">      
+      <position height="21" width="0" x="0" y="181"/>    
+    </execution>    
+    <execution id="9">      
+      <position height="21" width="0" x="0" y="223"/>    
+    </execution>  
+  </object>  
+  <object id="37" language="java" name="br.unifesp.ppgcc.eaq.infrastructure.SurveyResponseRepository" 
+    project="AQExperiment" 
+    file="/AQExperiment/src/main/java/br/unifesp/ppgcc/eaq/infrastructure/SurveyResponseRepository.java" binary="false" 
+    type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="11">      
+      <position height="21" width="0" x="0" y="265"/>    
+    </execution>    
+    <execution id="13">      
+      <position height="21" width="0" x="0" y="307"/>    
+    </execution>  
+  </object>  
+  <message id="3" operation="execute():void">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="6" operation="AnaliseFunctionRepository()">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="7"/>  
+  </message>  
+  <message id="8" operation="findAll():java.util.List&lt;AnaliseFunction&gt;">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="9"/>  
+  </message>  
+  <message id="10" operation="SurveyResponseRepository()">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="11"/>  
+  </message>  
+  <message id="12" operation="findAll():java.util.List&lt;SurveyResponse&gt;">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="13"/>  
+  </message>  
+  <message id="14" operation="buildRelevants(br.unifesp.ppgcc.eaq.domain.AnaliseFunction):void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="15"/>  
+  </message>  
+  <message id="16" operation="buildResponses(br.unifesp.ppgcc.eaq.domain.AnaliseFunction):void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="17"/>  
+  </message>  
+  <message id="18" operation="searchResponse(br.unifesp.ppgcc.eaq.domain.AnaliseFunction):void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="19"/>  
+  </message>  
+  <message id="20" operation="create(java.lang.String):edu.uci.ics.sourcerer.services.search.adapter.SearchAdapter">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="21"/>  
+  </message>  
+  <message id="22" operation="getRelevantsSolrIds():java.lang.Long[]">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="23"/>  
+  </message>  
+  <message id="24" operation="search(java.lang.String):edu.uci.ics.sourcerer.services.search.adapter.SearchResult">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="25"/>  
+  </message>  
+  <message id="26" operation="getNumFound():int">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="27"/>  
+  </message>  
+  <message id="28" 
+    operation="getResults(int,int):java.util.List&lt;edu.uci.ics.sourcerer.services.search.adapter.SingleResult&gt;">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="29"/>  
+  </message>  
+  <message id="30" operation="getRelevants():java.util.List&lt;SingleResult&gt;">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="31"/>  
+  </message>
+</sequence-diagram>
