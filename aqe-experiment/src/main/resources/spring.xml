@@ -11,9 +11,9 @@
 
 	<tx:annotation-driven />
 
-	<context:component-scan base-package="br.unifesp.ppgcc.aqe.aqe-experiment.application" />
-	<context:component-scan base-package="br.unifesp.ppgcc.aqe.aqe-experiment.infrastructure" />
-	<context:component-scan base-package="br.unifesp.ppgcc.aqe.aqe-experiment.domain" />
+	<context:component-scan base-package="br.unifesp.ppgcc.aqexperiment.application" />
+	<context:component-scan base-package="br.unifesp.ppgcc.aqexperiment.infrastructure" />
+	<context:component-scan base-package="br.unifesp.ppgcc.aqexperiment.domain" />
 
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
