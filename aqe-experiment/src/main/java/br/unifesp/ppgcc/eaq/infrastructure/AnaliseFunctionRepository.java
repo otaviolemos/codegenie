@@ -1,9 +1,9 @@
-package br.unifesp.ppgcc.eaq.infrastructure;
+package br.unifesp.ppgcc.aqexperiment.infrastructure;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import br.unifesp.ppgcc.eaq.domain.AnaliseFunction;
+import br.unifesp.ppgcc.aqexperiment.domain.AnaliseFunction;
 
 public class AnaliseFunctionRepository {
 

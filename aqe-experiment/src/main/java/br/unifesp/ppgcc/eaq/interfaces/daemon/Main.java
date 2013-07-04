@@ -1,4 +1,4 @@
-package br.unifesp.ppgcc.eaq.interfaces.daemon;
+package br.unifesp.ppgcc.aqexperiment.interfaces.daemon;
 
 import java.util.List;
 
@@ -10,10 +10,10 @@ import javax.persistence.Persistence;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import br.unifesp.ppgcc.eaq.application.AQEService;
-import br.unifesp.ppgcc.eaq.domain.Department;
-import br.unifesp.ppgcc.eaq.domain.Employee;
-import br.unifesp.ppgcc.eaq.infrastructure.LogUtils;
+import br.unifesp.ppgcc.aqexperiment.application.AQEService;
+import br.unifesp.ppgcc.aqexperiment.domain.Department;
+import br.unifesp.ppgcc.aqexperiment.domain.Employee;
+import br.unifesp.ppgcc.aqexperiment.infrastructure.LogUtils;
 
 public class Main {
 

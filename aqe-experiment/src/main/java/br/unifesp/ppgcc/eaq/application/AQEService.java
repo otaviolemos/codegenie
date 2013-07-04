@@ -1,4 +1,4 @@
-package br.unifesp.ppgcc.eaq.application;
+package br.unifesp.ppgcc.aqexperiment.application;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,16 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.unifesp.ppgcc.eaq.domain.AnaliseFunction;
-import br.unifesp.ppgcc.eaq.domain.AnaliseFunctionResponse;
-import br.unifesp.ppgcc.eaq.domain.Employee;
-import br.unifesp.ppgcc.eaq.domain.SurveyResponse;
-import br.unifesp.ppgcc.eaq.infrastructure.AnaliseFunctionRepository;
-import br.unifesp.ppgcc.eaq.infrastructure.ConfigProperties;
-import br.unifesp.ppgcc.eaq.infrastructure.EmployeeRepository;
-import br.unifesp.ppgcc.eaq.infrastructure.JavaTermExtractor;
-import br.unifesp.ppgcc.eaq.infrastructure.LogUtils;
-import br.unifesp.ppgcc.eaq.infrastructure.SurveyResponseRepository;
+import br.unifesp.ppgcc.aqexperiment.domain.AnaliseFunction;
+import br.unifesp.ppgcc.aqexperiment.domain.AnaliseFunctionResponse;
+import br.unifesp.ppgcc.aqexperiment.domain.Employee;
+import br.unifesp.ppgcc.aqexperiment.domain.SurveyResponse;
+import br.unifesp.ppgcc.aqexperiment.infrastructure.AnaliseFunctionRepository;
+import br.unifesp.ppgcc.aqexperiment.infrastructure.ConfigProperties;
+import br.unifesp.ppgcc.aqexperiment.infrastructure.EmployeeRepository;
+import br.unifesp.ppgcc.aqexperiment.infrastructure.JavaTermExtractor;
+import br.unifesp.ppgcc.aqexperiment.infrastructure.LogUtils;
+import br.unifesp.ppgcc.aqexperiment.infrastructure.SurveyResponseRepository;
 import edu.uci.ics.sourcerer.services.search.adapter.SearchAdapter;
 import edu.uci.ics.sourcerer.services.search.adapter.SearchResult;
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;

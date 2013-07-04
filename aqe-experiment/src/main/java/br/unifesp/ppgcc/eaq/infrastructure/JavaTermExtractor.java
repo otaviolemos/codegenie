@@ -2,7 +2,7 @@
  * @author <a href="sbajrach@ics.uci.edu">skb</a>
  *  created: May 13, 2007 
  */
-package br.unifesp.ppgcc.eaq.infrastructure;
+package br.unifesp.ppgcc.aqexperiment.infrastructure;
 
 import java.util.Collection;
 import java.util.HashSet;

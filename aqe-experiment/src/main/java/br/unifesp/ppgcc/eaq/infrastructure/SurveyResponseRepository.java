@@ -1,4 +1,4 @@
-package br.unifesp.ppgcc.eaq.infrastructure;
+package br.unifesp.ppgcc.aqexperiment.infrastructure;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.List;
 
 import jxl.Sheet;
 import jxl.Workbook;
-import br.unifesp.ppgcc.eaq.domain.SurveyResponse;
+import br.unifesp.ppgcc.aqexperiment.domain.SurveyResponse;
 
 public class SurveyResponseRepository {
 

@@ -1,4 +1,4 @@
-package br.unifesp.ppgcc.eaq.domain;
+package br.unifesp.ppgcc.aqexperiment.domain;
 
 import jxl.Sheet;
 

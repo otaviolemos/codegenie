@@ -11,18 +11,14 @@
 
 	<tx:annotation-driven />
 
-	<context:component-scan base-package="br.unifesp.ppgcc.eaq.application" />
-	<context:component-scan base-package="br.unifesp.ppgcc.eaq.infrastructure" />
-	<context:component-scan base-package="br.unifesp.ppgcc.eaq.domain" />
+	<context:component-scan base-package="br.unifesp.ppgcc.aqe.aqe-experiment.application" />
+	<context:component-scan base-package="br.unifesp.ppgcc.aqe.aqe-experiment.infrastructure" />
+	<context:component-scan base-package="br.unifesp.ppgcc.aqe.aqe-experiment.domain" />
 
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="persistenceUnitName" value="persistenceUnit" />
 	</bean>
-
-	<context:component-scan base-package="br.org.oabsjc.oabsys">
-		<context:include-filter type="annotation" expression="javax.jws.WebService" />
-	</context:component-scan>
 
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
