@@ -8,6 +8,8 @@ import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 
 public class AnaliseFunctionResponse {
 	
+	private Long id;
+
 	private String methodName;
 	private Float recall;
 	private Float precision;
@@ -21,6 +23,14 @@ public class AnaliseFunctionResponse {
 		this.surveyResponse = surveyResponse;
 	}
 	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public String getMethodName() {
 		return methodName;
 	}

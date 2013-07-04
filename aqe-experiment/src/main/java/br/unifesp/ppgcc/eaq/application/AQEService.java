@@ -3,11 +3,17 @@ package br.unifesp.ppgcc.eaq.application;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import br.unifesp.ppgcc.eaq.domain.AnaliseFunction;
 import br.unifesp.ppgcc.eaq.domain.AnaliseFunctionResponse;
+import br.unifesp.ppgcc.eaq.domain.Employee;
 import br.unifesp.ppgcc.eaq.domain.SurveyResponse;
 import br.unifesp.ppgcc.eaq.infrastructure.AnaliseFunctionRepository;
 import br.unifesp.ppgcc.eaq.infrastructure.ConfigProperties;
+import br.unifesp.ppgcc.eaq.infrastructure.EmployeeRepository;
 import br.unifesp.ppgcc.eaq.infrastructure.JavaTermExtractor;
 import br.unifesp.ppgcc.eaq.infrastructure.LogUtils;
 import br.unifesp.ppgcc.eaq.infrastructure.SurveyResponseRepository;
@@ -16,12 +22,20 @@ import edu.uci.ics.sourcerer.services.search.adapter.SearchResult;
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 
 
-public class Service {
+@Service
+@Transactional
+public class AQEService {
 
+	@Autowired
+	private EmployeeRepository employeeRepository;
+	
 	private List<AnaliseFunction> analiseFunctions = new ArrayList<AnaliseFunction>();
 	private List<SurveyResponse> surveyResponses = new ArrayList<SurveyResponse>();
 
 	public void execute() throws Exception {
+
+		List<Employee> employees = employeeRepository.findAll();
+		System.out.println(employees.size());
 		
 		analiseFunctions = new AnaliseFunctionRepository().findAll();
 		surveyResponses = new SurveyResponseRepository().findAll();
