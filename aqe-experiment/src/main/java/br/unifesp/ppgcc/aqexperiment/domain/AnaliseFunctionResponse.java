@@ -1,6 +1,5 @@
 package br.unifesp.ppgcc.aqexperiment.domain;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,10 +31,10 @@ public class AnaliseFunctionResponse {
 
 	private String methodName;
 
-	private BigDecimal recall;
+	private Double recall;
 	
 	@Column(name="precis")
-	private BigDecimal precision;
+	private Double precision;
 
 	@ManyToOne
 	@JoinColumn(name = "surveyResponse")
@@ -84,19 +83,19 @@ public class AnaliseFunctionResponse {
 		this.methodName = methodName;
 	}
 
-	public BigDecimal getRecall() {
+	public Double getRecall() {
 		return recall;
 	}
 
-	public void setRecall(BigDecimal recall) {
+	public void setRecall(Double recall) {
 		this.recall = recall;
 	}
 
-	public BigDecimal getPrecision() {
+	public Double getPrecision() {
 		return precision;
 	}
 
-	public void setPrecision(BigDecimal precision) {
+	public void setPrecision(Double precision) {
 		this.precision = precision;
 	}
 

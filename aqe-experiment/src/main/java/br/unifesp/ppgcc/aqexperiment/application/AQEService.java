@@ -135,11 +135,11 @@ public class AQEService {
 				totalIntersections++;
 		}
 		
-		long recall = totalRelevants == 0 ? 0 : totalIntersections / totalRelevants;
-		long precision = totalResults == 0 ? 0 : totalIntersections / totalResults;
+		double recall = totalRelevants == 0 ? 0 : new Double(totalIntersections) / totalRelevants;
+		double precision = totalResults == 0 ? 0 : new Double(totalIntersections) / totalResults;
 		
-		response.setRecall(new BigDecimal(recall));
-		response.setPrecision(new BigDecimal(precision));
+		response.setRecall(recall);
+		response.setPrecision(precision);
 		response.setTotalRelevants(totalRelevants);
 		response.setTotalResults(totalResults);
 		response.setTotalIntersections(totalIntersections);
