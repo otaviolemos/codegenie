@@ -1,6 +1,8 @@
 package br.unifesp.ppgcc.aqexperiment.application;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,14 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.unifesp.ppgcc.aqexperiment.domain.AnaliseFunction;
 import br.unifesp.ppgcc.aqexperiment.domain.AnaliseFunctionResponse;
-import br.unifesp.ppgcc.aqexperiment.domain.Employee;
+import br.unifesp.ppgcc.aqexperiment.domain.SolrResult;
 import br.unifesp.ppgcc.aqexperiment.domain.SurveyResponse;
 import br.unifesp.ppgcc.aqexperiment.infrastructure.AnaliseFunctionRepository;
-import br.unifesp.ppgcc.aqexperiment.infrastructure.ConfigProperties;
-import br.unifesp.ppgcc.aqexperiment.infrastructure.EmployeeRepository;
-import br.unifesp.ppgcc.aqexperiment.infrastructure.JavaTermExtractor;
-import br.unifesp.ppgcc.aqexperiment.infrastructure.LogUtils;
+import br.unifesp.ppgcc.aqexperiment.infrastructure.AnaliseFunctionResponseRepository;
 import br.unifesp.ppgcc.aqexperiment.infrastructure.SurveyResponseRepository;
+import br.unifesp.ppgcc.aqexperiment.infrastructure.util.ConfigProperties;
+import br.unifesp.ppgcc.aqexperiment.infrastructure.util.JavaTermExtractor;
+import br.unifesp.ppgcc.aqexperiment.infrastructure.util.LogUtils;
 import edu.uci.ics.sourcerer.services.search.adapter.SearchAdapter;
 import edu.uci.ics.sourcerer.services.search.adapter.SearchResult;
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
@@ -27,26 +29,33 @@ import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 public class AQEService {
 
 	@Autowired
-	private EmployeeRepository employeeRepository;
+	private AnaliseFunctionRepository analiseFunctionRepository;
 	
-	private List<AnaliseFunction> analiseFunctions = new ArrayList<AnaliseFunction>();
-	private List<SurveyResponse> surveyResponses = new ArrayList<SurveyResponse>();
+	@Autowired
+	private AnaliseFunctionResponseRepository analiseFunctionResponseRepository;
+
+	@Autowired
+	private SurveyResponseRepository surveyResponseRepository;
 
 	public void execute() throws Exception {
-
-		List<Employee> employees = employeeRepository.findAll();
-		System.out.println(employees.size());
+		Date executionTimestamp = new Date(System.currentTimeMillis());
 		
-		analiseFunctions = new AnaliseFunctionRepository().findAll();
-		surveyResponses = new SurveyResponseRepository().findAll();
-
-		for(AnaliseFunction function : this.analiseFunctions){
-			this.buildRelevants(function);
-			this.buildResponses(function);
-			this.processResponses(function);
+		//SurveyResponses
+		for(SurveyResponse surveyResponse : surveyResponseRepository.findAllFromSheet()){
+			surveyResponse.setExecutionTimestamp(executionTimestamp);
+			surveyResponseRepository.save(surveyResponse);
 		}
+		List<SurveyResponse> surveyResponses = surveyResponseRepository.findAll(executionTimestamp);
 		
-		LogUtils.getLogger().error("Fim execute");
+		List<AnaliseFunction> analiseFunctions = analiseFunctionRepository.findAllHardCode();
+
+		for(AnaliseFunction function : analiseFunctions){
+			this.buildRelevants(function);
+			this.buildResponses(surveyResponses, function, executionTimestamp);
+			this.processResponses(function);
+
+			analiseFunctionRepository.save(function);
+		}
 	}
 	
 	private void buildRelevants(AnaliseFunction function) throws Exception {
@@ -60,13 +69,13 @@ public class AQEService {
 		    	continue;
 		    }
 		    SingleResult singleResult = searchResult.getResults(0, 1).get(0);
-		    function.getRelevants().add(singleResult);
+		    function.getRelevants().add(new SolrResult(singleResult));
 	    }
 	}
 	
-	private void buildResponses(AnaliseFunction function){
-		for(SurveyResponse surveyResponse : this.surveyResponses)
-			function.addResponse(surveyResponse);
+	private void buildResponses(List<SurveyResponse> surveyResponses, AnaliseFunction function, Date executionTimestamp){
+		for(SurveyResponse surveyResponse : surveyResponses)
+			function.addResponse(surveyResponse, executionTimestamp);
 	}
 	
 	private void processResponses(AnaliseFunction function) throws Exception {
@@ -74,15 +83,18 @@ public class AQEService {
 	    SearchResult searchResult = null;
 		for(AnaliseFunctionResponse response : function.getResponses()){
 			List<SingleResult> results = new ArrayList<SingleResult>();
-			for(SingleResult relevant :function.getRelevants()){
+			for(SolrResult relevant :function.getRelevants()){
 				String query = this.getSourcererQuery(response.getMethodName(), relevant.getReturnFqn(), relevant.getParams());
 				searchResult = searchAdapter.search(query);
 				results.addAll(searchResult.getResults(0, 1000));
 			}
-			response.setResults(results);
+			response.setResultsFromSingleResult(results);
 			
 			if(results.size() > 0)
 				this.calculateRelevance(response, function);
+			
+			if(response.getPrecision() == null)
+				System.out.println("opa");
 		}
 	}
 	
@@ -95,12 +107,12 @@ public class AQEService {
 	
 	private void calculateRelevance(AnaliseFunctionResponse response, AnaliseFunction function){
 		int intersection = 0;
-		for(SingleResult recovered : response.getResults()){
+		for(SolrResult recovered : response.getResults()){
 			if(function.getRelevants().contains(recovered))
 				intersection++;
 		}
 		
-		response.setPrecision(new Float(intersection / response.getResults().size()));
-		response.setRecall(new Float(intersection / function.getRelevants().size()));
+		response.setPrecision(new BigDecimal(intersection / response.getResults().size()));
+		response.setRecall(new BigDecimal(intersection / function.getRelevants().size()));
 	}
 }

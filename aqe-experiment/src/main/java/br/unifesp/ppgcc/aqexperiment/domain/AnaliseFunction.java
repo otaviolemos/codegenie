@@ -1,12 +1,27 @@
 package br.unifesp.ppgcc.aqexperiment.domain;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 
 
+@Entity
+@Table(name = "analise_function")
 public class AnaliseFunction {
+
+	@Id
+	@GeneratedValue
+	private Long id;
 
 	private String description;
 	private int number;
@@ -14,8 +29,16 @@ public class AnaliseFunction {
 	private int occurences;
 	private Long[] relevantsSolrIds;
 	
-	private List<SingleResult> relevants = new ArrayList<SingleResult>();
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "analiseFunction")
+	private List<SolrResult> relevants = new ArrayList<SolrResult>();
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "analiseFunction")
 	private List<AnaliseFunctionResponse> responses = new ArrayList<AnaliseFunctionResponse>();
+
+	public AnaliseFunction(){
+	}
 
 	public AnaliseFunction(String description, int number, int surveyNumber, int occurences, Long[] relevantsSolrIds) {
 		this.description = description;
@@ -25,7 +48,7 @@ public class AnaliseFunction {
 		this.relevantsSolrIds = relevantsSolrIds;
 	}
 	
-	public void addResponse(SurveyResponse surveyResponse) {
+	public void addResponse(SurveyResponse surveyResponse, Date executionTimestamp) {
 		
 //		if(!"15 + 6".equals(surveyResponse.getQuestoes()) && !"21".equals(surveyResponse.getQuestoes()))
 		if(!"15 + 6".equals(surveyResponse.getQuestoes()) && !"21".equals(surveyResponse.getQuestoes()))
@@ -75,10 +98,22 @@ public class AnaliseFunction {
 		else if(this.getNumber() == 34)
 			methodName = surveyResponse.getMethodName21();
 		
-		this.responses.add(new AnaliseFunctionResponse(methodName, surveyResponse));
+		this.responses.add(new AnaliseFunctionResponse(methodName, surveyResponse, executionTimestamp));
+	}
+
+	public void setRelevantsFromSingleResult(List<SingleResult> relevants) {
+		this.relevants = new ArrayList<SolrResult>();
+		for(SingleResult singleResult : relevants)
+			this.relevants.add(new SolrResult(singleResult));
 	}
 
 	//accessors
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	public String getDescription() {
 		return description;
 	}
@@ -109,10 +144,10 @@ public class AnaliseFunction {
 	public void setRelevantsSolrIds(Long[] relevantsSolrIds) {
 		this.relevantsSolrIds = relevantsSolrIds;
 	}
-	public List<SingleResult> getRelevants() {
+	public List<SolrResult> getRelevants() {
 		return relevants;
 	}
-	public void setRelevants(List<SingleResult> relevants) {
+	public void setRelevants(List<SolrResult> relevants) {
 		this.relevants = relevants;
 	}
 	public List<AnaliseFunctionResponse> getResponses() {

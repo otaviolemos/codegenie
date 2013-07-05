@@ -1,28 +1,66 @@
 package br.unifesp.ppgcc.aqexperiment.domain;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 
 
+@Entity
+@Table(name = "analise_function_response")
 public class AnaliseFunctionResponse {
 	
+	@Id
+	@GeneratedValue
 	private Long id;
 
-	private String methodName;
-	private Float recall;
-	private Float precision;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date executionTimestamp;
 
+	private String methodName;
+
+	private BigDecimal recall;
+	
+	@Column(name="precis")
+	private BigDecimal precision;
+
+	@ManyToOne
+	@JoinColumn(name = "surveyResponse")
 	private SurveyResponse surveyResponse;
 	
-	private List<SingleResult> results = new ArrayList<SingleResult>();
+//	@OneToMany
+//	@JoinColumn(name = "analiseFunctionResponse")
+	@Transient
+	private List<SolrResult> results = new ArrayList<SolrResult>();
 	
-	public AnaliseFunctionResponse(String methodName, SurveyResponse surveyResponse) {
+	public AnaliseFunctionResponse(){
+	}
+	
+	public AnaliseFunctionResponse(String methodName, SurveyResponse surveyResponse, Date executionTimestamp) {
+		this.executionTimestamp = executionTimestamp;
 		this.methodName = methodName;
 		this.surveyResponse = surveyResponse;
 	}
 	
+	public void setResultsFromSingleResult(List<SingleResult> relevants) {
+		this.results = new ArrayList<SolrResult>();
+		for(SingleResult singleResult : relevants)
+			this.results.add(new SolrResult(singleResult));
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -39,19 +77,19 @@ public class AnaliseFunctionResponse {
 		this.methodName = methodName;
 	}
 
-	public Float getRecall() {
+	public BigDecimal getRecall() {
 		return recall;
 	}
 
-	public void setRecall(Float recall) {
+	public void setRecall(BigDecimal recall) {
 		this.recall = recall;
 	}
 
-	public Float getPrecision() {
+	public BigDecimal getPrecision() {
 		return precision;
 	}
 
-	public void setPrecision(Float precision) {
+	public void setPrecision(BigDecimal precision) {
 		this.precision = precision;
 	}
 
@@ -63,11 +101,11 @@ public class AnaliseFunctionResponse {
 		this.surveyResponse = surveyResponse;
 	}
 
-	public List<SingleResult> getResults() {
+	public List<SolrResult> getResults() {
 		return results;
 	}
 
-	public void setResults(List<SingleResult> results) {
+	public void setResults(List<SolrResult> results) {
 		this.results = results;
 	}
 }

@@ -4,7 +4,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import br.unifesp.ppgcc.aqexperiment.application.AQEService;
-import br.unifesp.ppgcc.aqexperiment.infrastructure.LogUtils;
+import br.unifesp.ppgcc.aqexperiment.infrastructure.util.LogUtils;
 
 public class Main {
 
@@ -22,9 +22,6 @@ public class Main {
 			ApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
 
 			LogUtils.getLogger().info("Service");
-			
-			ctx.getBeanDefinitionNames();
-			
 			AQEService service = (AQEService) ctx.getBean("AQEService");
 			service.execute();
 

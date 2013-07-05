@@ -1,9 +1,27 @@
 package br.unifesp.ppgcc.aqexperiment.domain;
 
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import jxl.Sheet;
 
 
+@Entity
+@Table(name = "survey_response")
 public class SurveyResponse {
+
+	@Id
+	@GeneratedValue
+	private Long id;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date executionTimestamp;
 
 	private String copiaNome;
 	private String origem;
@@ -86,6 +104,9 @@ public class SurveyResponse {
 	private String methodName21;
 	private String params21;
 
+	public SurveyResponse(){
+	}
+	
 	public SurveyResponse(Sheet sheet, int line) {
 		this.copiaNome = sheet.getCell(0, line).getContents();
 		this.origem = sheet.getCell(1, line).getContents();
@@ -169,6 +190,18 @@ public class SurveyResponse {
 		this.params21 = sheet.getCell(79, line).getContents();
 	}
 	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public Date getExecutionTimestamp() {
+		return executionTimestamp;
+	}
+	public void setExecutionTimestamp(Date executionTimestamp) {
+		this.executionTimestamp = executionTimestamp;
+	}
 	public String getCopiaNome() {
 		return copiaNome;
 	}

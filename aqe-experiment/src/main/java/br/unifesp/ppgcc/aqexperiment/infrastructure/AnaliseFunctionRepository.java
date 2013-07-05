@@ -3,11 +3,14 @@ package br.unifesp.ppgcc.aqexperiment.infrastructure;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import br.unifesp.ppgcc.aqexperiment.domain.AnaliseFunction;
 
-public class AnaliseFunctionRepository {
+@Repository("analiseFunctionRepository")
+public class AnaliseFunctionRepository extends BaseRepository<AnaliseFunction>{
 
-	public List<AnaliseFunction> findAll() throws Exception {
+	public List<AnaliseFunction> findAllHardCode() throws Exception {
 		List<AnaliseFunction> functions = new ArrayList<AnaliseFunction>();
 		
 		functions.add(new AnaliseFunction("Blurring an image", 24, 11, 1, new Long[]{6020560l}));
