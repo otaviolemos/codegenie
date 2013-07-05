@@ -1,4 +1,4 @@
-package br.unifesp.ppgcc.eaq.domain;
+package br.unifesp.ppgcc.aqesearchtext.domain;
 
 
 public class SearchTerm {

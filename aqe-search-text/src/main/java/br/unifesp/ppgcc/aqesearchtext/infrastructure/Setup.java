@@ -1,9 +1,9 @@
-package br.unifesp.ppgcc.eaq.infrastructure;
+package br.unifesp.ppgcc.aqesearchtext.infrastructure;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import br.unifesp.ppgcc.eaq.domain.SearchTerm;
+import br.unifesp.ppgcc.aqesearchtext.domain.SearchTerm;
 
 public class Setup {
 

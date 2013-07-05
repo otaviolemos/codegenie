@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.unifesp.ppgcc.eaq.infrastructure;
+package br.unifesp.ppgcc.aqesearchtext.infrastructure;
 
 import org.apache.log4j.Logger;
 

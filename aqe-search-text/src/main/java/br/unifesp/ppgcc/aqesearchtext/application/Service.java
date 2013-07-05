@@ -1,4 +1,4 @@
-package br.unifesp.ppgcc.eaq.application;
+package br.unifesp.ppgcc.aqesearchtext.application;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -6,10 +6,10 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import br.unifesp.ppgcc.eaq.domain.SearchResult;
-import br.unifesp.ppgcc.eaq.infrastructure.ConfigProperties;
-import br.unifesp.ppgcc.eaq.infrastructure.FileExtensionsFilter;
-import br.unifesp.ppgcc.eaq.infrastructure.LogUtils;
+import br.unifesp.ppgcc.aqesearchtext.domain.SearchResult;
+import br.unifesp.ppgcc.aqesearchtext.infrastructure.ConfigProperties;
+import br.unifesp.ppgcc.aqesearchtext.infrastructure.FileExtensionsFilter;
+import br.unifesp.ppgcc.aqesearchtext.infrastructure.LogUtils;
 
 
 public class Service {

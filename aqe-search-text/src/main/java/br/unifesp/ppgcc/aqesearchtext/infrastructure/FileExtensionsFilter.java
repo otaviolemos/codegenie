@@ -1,4 +1,4 @@
-package br.unifesp.ppgcc.eaq.infrastructure;
+package br.unifesp.ppgcc.aqesearchtext.infrastructure;
 
 import java.io.File;
 import java.io.FileFilter;

@@ -1,8 +1,8 @@
-package br.unifesp.ppgcc.eaq.interfaces.daemon;
+package br.unifesp.ppgcc.aqesearchtext.interfaces.daemon;
 
-import br.unifesp.ppgcc.eaq.application.SearchResultHandler;
-import br.unifesp.ppgcc.eaq.application.Service;
-import br.unifesp.ppgcc.eaq.infrastructure.LogUtils;
+import br.unifesp.ppgcc.aqesearchtext.application.SearchResultHandler;
+import br.unifesp.ppgcc.aqesearchtext.application.Service;
+import br.unifesp.ppgcc.aqesearchtext.infrastructure.LogUtils;
 
 public class Main {
 

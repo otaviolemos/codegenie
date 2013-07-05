@@ -1,6 +1,5 @@
-package br.unifesp.ppgcc.eaq.application;
+package br.unifesp.ppgcc.aqesearchtext.application;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,8 +9,8 @@ import jxl.Workbook;
 import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
-import br.unifesp.ppgcc.eaq.domain.SearchResult;
-import br.unifesp.ppgcc.eaq.infrastructure.ConfigProperties;
+import br.unifesp.ppgcc.aqesearchtext.domain.SearchResult;
+import br.unifesp.ppgcc.aqesearchtext.infrastructure.ConfigProperties;
 
 public class SearchResultHandler {
 

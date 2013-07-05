@@ -1,4 +1,4 @@
-package br.unifesp.ppgcc.eaq.infrastructure;
+package br.unifesp.ppgcc.aqesearchtext.infrastructure;
 
 import java.net.URL;
 import java.util.Properties;

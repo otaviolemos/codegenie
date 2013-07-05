@@ -1,4 +1,4 @@
-package br.unifesp.ppgcc.eaq.application;
+package br.unifesp.ppgcc.aqesearchtext.application;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,10 +11,10 @@ import java.util.Scanner;
 
 import org.apache.commons.lang.StringUtils;
 
-import br.unifesp.ppgcc.eaq.domain.SearchResult;
-import br.unifesp.ppgcc.eaq.domain.SearchTerm;
-import br.unifesp.ppgcc.eaq.infrastructure.LogUtils;
-import br.unifesp.ppgcc.eaq.infrastructure.Setup;
+import br.unifesp.ppgcc.aqesearchtext.domain.SearchResult;
+import br.unifesp.ppgcc.aqesearchtext.domain.SearchTerm;
+import br.unifesp.ppgcc.aqesearchtext.infrastructure.LogUtils;
+import br.unifesp.ppgcc.aqesearchtext.infrastructure.Setup;
 
 public class SearchFileService {
 
