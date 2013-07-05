@@ -1,13 +1,11 @@
 package br.unifesp.ppgcc.aqexperiment.application;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -119,9 +117,9 @@ public class AQEService {
 		params = StringUtils.replace(params, "]", "\\]");
 		
 		String query = "fqn_contents:("+ JavaTermExtractor.getFQNTermsAsString(methodName) + ")";
-//		query += "\nreturn_fqn_contents:(" + returnType + ")";
-//        if(!"()".equals(params) && !sourcererLibBug)
-//        	query += "\nparams_snames_exact:" + params;
+		query += "\nreturn_fqn_contents:(" + returnType + ")";
+        if(!"()".equals(params) && !sourcererLibBug)
+        	query += "\nparams_snames_exact:" + params;
 		return query;
 	}
 	
