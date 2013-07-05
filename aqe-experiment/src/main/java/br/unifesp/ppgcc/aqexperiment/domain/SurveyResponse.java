@@ -190,6 +190,12 @@ public class SurveyResponse {
 		this.params21 = sheet.getCell(79, line).getContents();
 	}
 	
+	public boolean isValid(){
+		return "21".equals(this.questoes);
+		//return "21".equals(this.questoes) || "15 + 6".equals(this.questoes);
+	}
+	
+	//Accessors
 	public Long getId() {
 		return id;
 	}

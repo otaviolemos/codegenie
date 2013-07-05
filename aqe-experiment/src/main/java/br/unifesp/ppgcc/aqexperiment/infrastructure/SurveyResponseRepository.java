@@ -1,6 +1,5 @@
 package br.unifesp.ppgcc.aqexperiment.infrastructure;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,16 +12,14 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import br.unifesp.ppgcc.aqexperiment.domain.SurveyResponse;
-import br.unifesp.ppgcc.aqexperiment.infrastructure.util.ConfigProperties;
 
 @Repository("surveyResponseRepository")
 public class SurveyResponseRepository extends BaseRepository<SurveyResponse> {
 
 	public List<SurveyResponse> findAllFromSheet() throws Exception {
-		File inputWorkbook = new File(ConfigProperties.getProperty("aqExperiment.survey.path"));
 		Workbook w;
 
-		w = Workbook.getWorkbook(inputWorkbook);
+		w = Workbook.getWorkbook(ClassLoader.getSystemResourceAsStream("Survey.xls"));
 		Sheet sheet = w.getSheet(0);
 
 		List<SurveyResponse> responses = new ArrayList<SurveyResponse>();

@@ -50,10 +50,6 @@ public class AnaliseFunction {
 	
 	public void addResponse(SurveyResponse surveyResponse, Date executionTimestamp) {
 		
-//		if(!"15 + 6".equals(surveyResponse.getQuestoes()) && !"21".equals(surveyResponse.getQuestoes()))
-		if(!"15 + 6".equals(surveyResponse.getQuestoes()) && !"21".equals(surveyResponse.getQuestoes()))
-			return;
-		
 		String methodName = null;
 		if(this.getNumber() == 18)
 			methodName = surveyResponse.getMethodName1();

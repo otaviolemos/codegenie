@@ -41,6 +41,12 @@ public class AnaliseFunctionResponse {
 	@JoinColumn(name = "surveyResponse")
 	private SurveyResponse surveyResponse;
 	
+	private Integer totalRelevants;
+	
+	private Integer totalResults;
+	
+	private Integer totalIntersections;
+
 //	@OneToMany
 //	@JoinColumn(name = "analiseFunctionResponse")
 	@Transient
@@ -61,6 +67,7 @@ public class AnaliseFunctionResponse {
 			this.results.add(new SolrResult(singleResult));
 	}
 
+	//Accessors
 	public Long getId() {
 		return id;
 	}
@@ -108,4 +115,37 @@ public class AnaliseFunctionResponse {
 	public void setResults(List<SolrResult> results) {
 		this.results = results;
 	}
+
+	public Date getExecutionTimestamp() {
+		return executionTimestamp;
+	}
+
+	public void setExecutionTimestamp(Date executionTimestamp) {
+		this.executionTimestamp = executionTimestamp;
+	}
+
+	public Integer getTotalResults() {
+		return totalResults;
+	}
+
+	public void setTotalResults(Integer totalResults) {
+		this.totalResults = totalResults;
+	}
+
+	public Integer getTotalRelevants() {
+		return totalRelevants;
+	}
+
+	public void setTotalRelevants(Integer totalRelevants) {
+		this.totalRelevants = totalRelevants;
+	}
+
+	public Integer getTotalIntersections() {
+		return totalIntersections;
+	}
+
+	public void setTotalIntersections(Integer totalIntersections) {
+		this.totalIntersections = totalIntersections;
+	}
+	
 }
