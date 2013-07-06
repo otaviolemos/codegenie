@@ -4,10 +4,12 @@
  */
 package br.unifesp.ppgcc.aqexperiment.infrastructure.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 
@@ -23,16 +25,15 @@ public class JavaTermExtractor {
 
 	public static String FQN_SPLIT_CHARS = "[^A-Za-z]";
 
-	
 	/**
-	 * extracts the short name from FQN
-	 * works both for fqn w/o method arguments or for
-	 * fqn with method arguments
+	 * extracts the short name from FQN works both for fqn w/o method arguments
+	 * or for fqn with method arguments
+	 * 
 	 * @param fqn
 	 * @return
 	 */
-	public static String extractShortName(String fqn){
-		
+	public static String extractShortName(String fqn) {
+
 		String[] _fragments = fqn.split("[.]");
 		int _lastIndex = _fragments.length;
 		String[] _lastFragment = _fragments[_lastIndex - 1].split("[(]");
@@ -42,22 +43,24 @@ public class JavaTermExtractor {
 		else
 			return "";
 	}
-	
+
 	/**
-	 * splits the fqn to fragments using "." as separator
-	 * and returns a single string where all the fqn fragments
-	 * are appended with TERM_SEPARATOR in between 
+	 * splits the fqn to fragments using "." as separator and returns a single
+	 * string where all the fqn fragments are appended with TERM_SEPARATOR in
+	 * between
+	 * 
 	 * @param fqn
 	 * @return
 	 */
-	public static String extractFQNFragments(String fqn){
+	public static String extractFQNFragments(String fqn) {
 		return mergeTerms(fqn.split("[.]"));
 	}
-	
+
 	/**
 	 * Extracts the true FQN for a method, i.e; removes the method arguments
 	 * 
-	 * @param fqn input of form: org.foo.Cl.m(arg)
+	 * @param fqn
+	 *            input of form: org.foo.Cl.m(arg)
 	 * @return method's fqn of form: orf.foo.Cl.m
 	 */
 	public static String removeMethodArguments(String fqn) {
@@ -71,18 +74,17 @@ public class JavaTermExtractor {
 	public static String extractMethodArguments(String fqn) {
 
 		String[] _fragments = fqn.split("[(]");
-		
+
 		if (_fragments == null || _fragments.length <= 1)
 			return "";
-		
+
 		return _fragments[1].replaceAll("\\s", "").replace(")", "");
 
 	}
 
 	private static String getFQNFragmentTermsAsString(String fqnFragment) {
 
-		SplitCamelCaseIdentifier splitter = new SplitCamelCaseIdentifier(
-				fqnFragment);
+		SplitCamelCaseIdentifier splitter = new SplitCamelCaseIdentifier(fqnFragment);
 
 		Collection<String> _strCol = splitter.split();
 
@@ -155,11 +157,23 @@ public class JavaTermExtractor {
 
 		return retVal;
 	}
-	
+
 	public static String getNameAndParams(SingleResult s) {
-	  return s.getFqn() + s.getParams();
+		return s.getFqn() + s.getParams();
 	}
 
+	public static String removeDuplicates(String fqnTerms) {
+		ArrayList<String> as = new ArrayList<String>();
+		StringTokenizer stok = new StringTokenizer(fqnTerms);
+		String ret = "";
+		while (stok.hasMoreTokens()) {
+			String s = stok.nextToken();
+			if (!as.contains(s))
+				ret += ret.equals("") ? s : " " + s;
+			as.add(s);
+		}
+		return ret;
+	}
 }
 
 /**

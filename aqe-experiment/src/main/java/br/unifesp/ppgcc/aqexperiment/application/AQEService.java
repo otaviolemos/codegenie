@@ -19,6 +19,7 @@ import br.unifesp.ppgcc.aqexperiment.infrastructure.SurveyResponseRepository;
 import br.unifesp.ppgcc.aqexperiment.infrastructure.util.ConfigProperties;
 import br.unifesp.ppgcc.aqexperiment.infrastructure.util.JavaTermExtractor;
 import br.unifesp.ppgcc.aqexperiment.infrastructure.util.LogUtils;
+import br.unifesp.ppgcc.aqexperiment.infrastructure.util.RelatedWordUtils;
 import edu.uci.ics.sourcerer.services.search.adapter.SearchAdapter;
 import edu.uci.ics.sourcerer.services.search.adapter.SearchResult;
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
@@ -116,7 +117,16 @@ public class AQEService {
 		params = StringUtils.replace(params, "[", "\\[");
 		params = StringUtils.replace(params, "]", "\\]");
 		
-		String query = "fqn_contents:("+ JavaTermExtractor.getFQNTermsAsString(methodName) + ")";
+		boolean aqe = false;
+
+		String fqnTerms = JavaTermExtractor.getFQNTermsAsString(methodName);
+		if(aqe){
+			fqnTerms = JavaTermExtractor.removeDuplicates(fqnTerms);
+			fqnTerms = RelatedWordUtils.getRelatedAsQueryPart(fqnTerms, true, true, true, true);
+		}
+		
+		String query = "fqn_contents:("+ fqnTerms + ")";
+		
 		query += "\nreturn_fqn_contents:(" + returnType + ")";
         if(!"()".equals(params) && !sourcererLibBug)
         	query += "\nparams_snames_exact:" + params;
