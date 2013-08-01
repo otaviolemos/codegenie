@@ -191,8 +191,7 @@ public class SurveyResponse {
 	}
 	
 	public boolean isValid(){
-		return "21".equals(this.questoes);
-		//return "21".equals(this.questoes) || "15 + 6".equals(this.questoes);
+		return "21".equals(this.questoes) || "15 + 6".equals(this.questoes);
 	}
 	
 	//Accessors
