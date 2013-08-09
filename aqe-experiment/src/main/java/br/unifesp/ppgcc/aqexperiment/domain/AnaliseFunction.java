@@ -80,15 +80,20 @@ public class AnaliseFunction {
 		else if(this.getNumber() == 5)
 			methodName = surveyResponse.getMethodName14();
 		else if(this.getNumber() == 33)
-			methodName = surveyResponse.getMethodName15();
-		else if(this.getNumber() == 20)
+			//methodName = surveyResponse.getMethodName15();
 			methodName = surveyResponse.getMethodName16();
-		else if(this.getNumber() == 16)
+		else if(this.getNumber() == 20)
+			//methodName = surveyResponse.getMethodName16();
 			methodName = surveyResponse.getMethodName17();
-		else if(this.getNumber() == 11)
+		else if(this.getNumber() == 16)
+			//methodName = surveyResponse.getMethodName17();
 			methodName = surveyResponse.getMethodName18();
-		else if(this.getNumber() == 1)
+		else if(this.getNumber() == 11)
+			//methodName = surveyResponse.getMethodName18();
 			methodName = surveyResponse.getMethodName19();
+		else if(this.getNumber() == 1)
+			//methodName = surveyResponse.getMethodName19();
+			methodName = surveyResponse.getMethodName20();
 		else if(this.getNumber() == 13)
 			methodName = surveyResponse.getMethodName20();
 		else if(this.getNumber() == 34)

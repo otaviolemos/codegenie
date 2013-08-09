@@ -42,6 +42,10 @@ public class RelatedWordUtils {
       ArrayList<String> aa = new ArrayList<String>(result.getAdjectiveAntonyms());
       ArrayList<String> cs = new ArrayList<String>(result.getCodeRelatedSyns());
       ArrayList<String> ca = new ArrayList<String>(result.getCodeRelatedAntons());
+      
+//    // taking wordnet related words out... TODO: rollback. 
+//      enSyn = false;
+//      enAnt = false;
 
       if(enSyn) {
 
@@ -67,6 +71,10 @@ public class RelatedWordUtils {
           }
         }
       }
+      
+//      // taking code related words out... TODO: rollback. 
+//      codeSyn = false;
+//      codeAnt = false;
       
       if(codeSyn) {
         if(!enSyn) {

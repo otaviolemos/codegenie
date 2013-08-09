@@ -101,6 +101,8 @@ public class AQEService {
 					LogUtils.getLogger().error("Unable to perform search: " + query);
 			    	continue;
 			    }
+			    
+			    
 				results.addAll(searchResult.getResults(0, 1000));
 			}
 			response.setResultsFromSingleResult(results);
@@ -117,7 +119,7 @@ public class AQEService {
 		params = StringUtils.replace(params, "[", "\\[");
 		params = StringUtils.replace(params, "]", "\\]");
 		
-		boolean aqe = false;
+		boolean aqe = true;
 
 		String fqnTerms = JavaTermExtractor.getFQNTermsAsString(methodName);
 		if(aqe){
@@ -125,7 +127,8 @@ public class AQEService {
 			fqnTerms = RelatedWordUtils.getRelatedAsQueryPart(fqnTerms, true, true, true, true);
 		}
 		
-		String query = "fqn_contents:("+ fqnTerms + ")";
+		//String query = "fqn_contents:("+ fqnTerms + ")";
+		String query = "sname_contents:("+ fqnTerms + ")";
 		
 		query += "\nreturn_fqn_contents:(" + returnType + ")";
         if(!"()".equals(params) && !sourcererLibBug)
@@ -138,13 +141,13 @@ public class AQEService {
 		int totalResults = response.getResults().size();
 		int totalIntersections = 0;
 		
-		for(SolrResult recovered : response.getResults()){
-			if(function.getRelevants().contains(recovered))
-				totalIntersections++;
+		for(SolrResult relevant : function.getRelevants()) {
+			if(response.getResults().contains(relevant))
+			  totalIntersections++;
 		}
 		
-		double recall = totalRelevants == 0 ? 0 : new Double(totalIntersections) / totalRelevants;
-		double precision = totalResults == 0 ? 0 : new Double(totalIntersections) / totalResults;
+		double recall = totalRelevants == 0 ? 0 : new Double(totalIntersections) / new Double(totalRelevants);
+		double precision = totalResults == 0 ? 0 : new Double(totalIntersections) / new Double(totalResults);
 		
 		response.setRecall(recall);
 		response.setPrecision(precision);
