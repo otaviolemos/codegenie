@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	
+   <extension
+         point="org.eclipse.ui.startup">
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="codegenie-2.contribution1"
+            objectClass="org.eclipse.jdt.core.IType">
+         <menu
+               id="codegenie-2.menu1"
+               label="CodeGenie2"
+               path="additions">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               class="br.unifesp.ict.seg.codegenie.popup.actions.SearchAction"
+               enablesFor="1"
+               id="codegenie-2.newAction"
+               label="Search"
+               menubarPath="codegenie-2.menu1/group1">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="codegenie-2"
+            name="codegenie">
+      </category>
+      <view
+            category="codegenie-2"
+            class="br.unifesp.ict.seg.codegenie.views.SolrResultsView"
+            icon="icons/sample.gif"
+            id="br.unifesp.ict.seg.codegenie.views.SolrResultsView"
+            name="CodeGenie view">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               id="br.unifesp.ict.seg.codegenie.views.SolrResultsView"
+               ratio="0.5"
+               relationship="right"
+               relative="org.eclipse.ui.views.ProblemView">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="br.unifesp.ict.seg.codegenie.preferences.CodeGeniePreferences"
+            id="br.unifesp.ict.seg.codegenie.preferences.CodeGeniePreferences"
+            name="CodeGenie 2 Preferences">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="br.unifesp.ict.seg.codegenie.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   
+</plugin>

@@ -1,18 +1,23 @@
-package codegenie_2;
+package br.unifesp.ict.seg.codegenie;
 
+import org.eclipse.ui.IStartup;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+
+import br.unifesp.ict.seg.codegenie.tmp.Debug;
 
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin {
+public class Activator extends AbstractUIPlugin implements IStartup{
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "codegenie-2"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "br.unifesp.ict.seg.codegenie-2"; //$NON-NLS-1$
 
 	// The shared instance
 	private static Activator plugin;
+
+	private static long idStore = 0;
 	
 	/**
 	 * The constructor
@@ -45,6 +50,18 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public static Activator getDefault() {
 		return plugin;
+	}
+
+	@Override
+	public void earlyStartup() {
+		Debug.debug(getClass(),"starting codegenie-2.0 plugin");
+	}
+
+	public static long newID() {
+		return ++idStore;
+	}
+	public static long lastID(){
+		return idStore;
 	}
 
 }
