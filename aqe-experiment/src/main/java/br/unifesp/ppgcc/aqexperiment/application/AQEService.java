@@ -3,6 +3,7 @@ package br.unifesp.ppgcc.aqexperiment.application;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,135 +25,173 @@ import edu.uci.ics.sourcerer.services.search.adapter.SearchAdapter;
 import edu.uci.ics.sourcerer.services.search.adapter.SearchResult;
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 
-
 @Service
 @Transactional
 public class AQEService {
 
-	@Autowired
-	private AnaliseFunctionRepository analiseFunctionRepository;
-	
-	@Autowired
-	private AnaliseFunctionResponseRepository analiseFunctionResponseRepository;
+  @Autowired
+  private AnaliseFunctionRepository analiseFunctionRepository;
 
-	@Autowired
-	private SurveyResponseRepository surveyResponseRepository;
+  @Autowired
+  private AnaliseFunctionResponseRepository analiseFunctionResponseRepository;
 
-	public void execute() throws Exception {
-		Date executionTimestamp = new Date(System.currentTimeMillis());
-		
-		//AQEApproach
-		
-		//SurveyResponses
-		this.persistSurveyResponses(executionTimestamp);
-		List<SurveyResponse> surveyResponses = surveyResponseRepository.findAll(executionTimestamp);
-		
-		List<AnaliseFunction> analiseFunctions = analiseFunctionRepository.findAllHardCode();
+  @Autowired
+  private SurveyResponseRepository surveyResponseRepository;
 
-		for(AnaliseFunction function : analiseFunctions){
-			this.buildRelevants(function);
-			this.buildResponses(surveyResponses, function, executionTimestamp);
-			this.processResponses(function);
+  public void execute() throws Exception {
+    Date executionTimestamp = new Date(System.currentTimeMillis());
 
-			analiseFunctionRepository.save(function);
-		}
-	}
-	
-	private void persistSurveyResponses(Date executionTimestamp) throws Exception {
-		for(SurveyResponse surveyResponse : surveyResponseRepository.findAllFromSheet()){
-			if(!surveyResponse.isValid())
-				continue;
+    // AQEApproach
 
-			surveyResponse.setExecutionTimestamp(executionTimestamp);
-			surveyResponseRepository.save(surveyResponse);
-		}
-		
-	}
-	
-	private void buildRelevants(AnaliseFunction function) throws Exception {
-		SearchAdapter searchAdapter = SearchAdapter.create(ConfigProperties.getProperty("aqExperiment.sourcererServer"));
-	    SearchResult searchResult = null;
-	    for(long entityId : function.getRelevantsSolrIds()){
-	    	String query = "entity_id:"+entityId;
-	    	searchResult = searchAdapter.search(query);
-		    if(searchResult.getNumFound() == -1){
-				LogUtils.getLogger().error("Unable to perform search: " + query);
-		    	continue;
-		    }
-		    SingleResult singleResult = searchResult.getResults(0, 1).get(0);
-		    function.getRelevants().add(new SolrResult(singleResult));
-	    }
-	}
-	
-	private void buildResponses(List<SurveyResponse> surveyResponses, AnaliseFunction function, Date executionTimestamp){
-		for(SurveyResponse surveyResponse : surveyResponses)
-			function.addResponse(surveyResponse, executionTimestamp);
-	}
-	
-	private void processResponses(AnaliseFunction function) throws Exception {
-		SearchAdapter searchAdapter = SearchAdapter.create(ConfigProperties.getProperty("aqExperiment.sourcererServer"));
-	    SearchResult searchResult = null;
-		for(AnaliseFunctionResponse response : function.getResponses()){
-			List<SingleResult> results = new ArrayList<SingleResult>();
-			for(SolrResult relevant :function.getRelevants()){
-				String query = this.getSourcererQuery(response.getMethodName(), relevant.getReturnFqn(), relevant.getParams());
-				searchResult = searchAdapter.search(query);
-			    if(searchResult.getNumFound() == -1){
-					LogUtils.getLogger().error("Unable to perform search: " + query);
-			    	continue;
-			    }
-			    
-			    
-				results.addAll(searchResult.getResults(0, 1000));
-			}
-			response.setResultsFromSingleResult(results);
-			
-			this.calculateRecallAndPrecision(response, function);
-		}
-	}
-	
-	private String getSourcererQuery(String methodName, String returnType, String params){
-		boolean sourcererLibBug = ")".equals(params); // entityId in ( 5842071 , 5877324 )
-		
-		returnType = StringUtils.replace(returnType, "[", "\\[");
-		returnType = StringUtils.replace(returnType, "]", "\\]");
-		params = StringUtils.replace(params, "[", "\\[");
-		params = StringUtils.replace(params, "]", "\\]");
-		
-		boolean aqe = true;
+    // SurveyResponses
+    this.persistSurveyResponses(executionTimestamp);
+    List<SurveyResponse> surveyResponses = surveyResponseRepository
+        .findAll(executionTimestamp);
 
-		String fqnTerms = JavaTermExtractor.getFQNTermsAsString(methodName);
-		if(aqe){
-			fqnTerms = JavaTermExtractor.removeDuplicates(fqnTerms);
-			fqnTerms = RelatedWordUtils.getRelatedAsQueryPart(fqnTerms, true, true, true, true);
-		}
-		
-		//String query = "fqn_contents:("+ fqnTerms + ")";
-		String query = "sname_contents:("+ fqnTerms + ")";
-		
-		query += "\nreturn_fqn_contents:(" + returnType + ")";
-        if(!"()".equals(params) && !sourcererLibBug)
-        	query += "\nparams_snames_exact:" + params;
-		return query;
-	}
-	
-	private void calculateRecallAndPrecision(AnaliseFunctionResponse response, AnaliseFunction function){
-		int totalRelevants = function.getRelevants().size();
-		int totalResults = response.getResults().size();
-		int totalIntersections = 0;
-		
-		for(SolrResult relevant : function.getRelevants()) {
-			if(response.getResults().contains(relevant))
-			  totalIntersections++;
-		}
-		
-		double recall = totalRelevants == 0 ? 0 : new Double(totalIntersections) / new Double(totalRelevants);
-		double precision = totalResults == 0 ? 0 : new Double(totalIntersections) / new Double(totalResults);
-		
-		response.setRecall(recall);
-		response.setPrecision(precision);
-		response.setTotalRelevants(totalRelevants);
-		response.setTotalResults(totalResults);
-		response.setTotalIntersections(totalIntersections);
-	}
+    List<AnaliseFunction> analiseFunctions = analiseFunctionRepository
+        .findAllHardCode();
+
+    for (AnaliseFunction function : analiseFunctions) {
+      this.buildRelevants(function);
+      this.buildResponses(surveyResponses, function, executionTimestamp);
+      this.processResponses(function);
+
+      analiseFunctionRepository.save(function);
+    }
+  }
+
+  private void persistSurveyResponses(Date executionTimestamp) throws Exception {
+    for (SurveyResponse surveyResponse : surveyResponseRepository
+        .findAllFromSheet()) {
+      if (!surveyResponse.isValid())
+        continue;
+
+      surveyResponse.setExecutionTimestamp(executionTimestamp);
+      surveyResponseRepository.save(surveyResponse);
+    }
+
+  }
+
+  private void buildRelevants(AnaliseFunction function) throws Exception {
+    SearchAdapter searchAdapter = SearchAdapter.create(ConfigProperties
+        .getProperty("aqExperiment.sourcererServer"));
+    SearchResult searchResult = null;
+    for (long entityId : function.getRelevantsSolrIds()) {
+      String query = "entity_id:" + entityId;
+      searchResult = searchAdapter.search(query);
+      if (searchResult.getNumFound() == -1) {
+        LogUtils.getLogger().error("Unable to perform search: " + query);
+        continue;
+      }
+      SingleResult singleResult = searchResult.getResults(0, 1).get(0);
+      function.getRelevants().add(new SolrResult(singleResult));
+    }
+  }
+
+  private void buildResponses(List<SurveyResponse> surveyResponses,
+      AnaliseFunction function, Date executionTimestamp) {
+    for (SurveyResponse surveyResponse : surveyResponses)
+      function.addResponse(surveyResponse, executionTimestamp);
+  }
+
+  private void processResponses(AnaliseFunction function) throws Exception {
+    SearchAdapter searchAdapter = SearchAdapter.create(ConfigProperties
+        .getProperty("aqExperiment.sourcererServer"));
+    SearchResult searchResult = null;
+    for (AnaliseFunctionResponse response : function.getResponses()) {
+      List<SingleResult> results = new ArrayList<SingleResult>();
+
+      //for (SolrResult relevant : function.getRelevants()) {
+        String query = this.getSourcererQuery(response.getMethodName(),
+            response.getReturnType(), response.getParams());
+        LogUtils.getLogger().error("Query formed: " + query);
+        searchResult = searchAdapter.search(query);
+        if (searchResult.getNumFound() == -1) {
+          LogUtils.getLogger().error("Unable to perform search: " + query);
+          //continue;
+        } else {
+          LogUtils.getLogger().error("Num. results found: " + searchResult.getNumFound());
+          results.addAll(searchResult.getResults(0, searchResult.getNumFound()));
+        }
+      //}
+      response.setResultsFromSingleResult(results);
+
+      this.calculateRecallAndPrecision(response, function);
+    }
+  }
+
+  private String getSourcererQuery(String methodName, String returnType,
+      String params) {
+    boolean sourcererLibBug = ")".equals(params); // entityId in ( 5842071 ,
+                                                  // 5877324 )
+
+    returnType = StringUtils.replace(returnType, "[", "\\[");
+    returnType = StringUtils.replace(returnType, "]", "\\]");
+    params = StringUtils.replace(params, "[", "\\[");
+    params = StringUtils.replace(params, "]", "\\]");
+
+    boolean aqe = true;
+    boolean interfaceDriven = true;
+    boolean useOrInSname = false;
+    boolean useOrInParamTypes = false;
+
+    String fqnTerms = JavaTermExtractor.getFQNTermsAsString(methodName);
+
+    String query = "";
+    if (aqe) {
+      fqnTerms = JavaTermExtractor.removeDuplicates(fqnTerms);
+      fqnTerms = RelatedWordUtils.getRelatedAsQueryPart(fqnTerms, true, true,
+          true, true);
+      query += "sname_contents:(" + fqnTerms + ")";
+    } else {
+      query += "sname_contents:(" + (useOrInSname ? fqnTerms.replace(" ", " OR ") : fqnTerms) + ")";
+    }
+
+    // String query = "fqn_contents:("+ fqnTerms + ")";
+    
+
+    if (interfaceDriven) {
+      query += "\nreturn_sname_contents:(" + returnType + ")";
+
+      if (!"".equals(params) && !sourcererLibBug) {
+        // query += "\nparams_snames_exact:" + params;
+        // TODO: check if this is correct; adding parameters defined by the
+        // subject
+        // Parameters will have to be provided as this: String, String, String
+        params = params.replace(',', ' ');
+        StringTokenizer stokParams = new StringTokenizer(params);
+        //query += "\nparam_count:" + stokParams.countTokens();
+        query += "\nparams_snames_contents:(";
+        while (stokParams.hasMoreTokens()) {
+          query += stokParams.nextToken();
+          if(stokParams.hasMoreTokens()) query += (useOrInParamTypes ? " OR " : " AND ");
+        }
+        query += ")";
+      }
+    }
+    return query;
+  }
+
+  private void calculateRecallAndPrecision(AnaliseFunctionResponse response,
+      AnaliseFunction function) {
+    int totalRelevants = function.getRelevants().size();
+    int totalResults = response.getResults().size();
+    int totalIntersections = 0;
+
+    for (SolrResult relevant : function.getRelevants()) {
+      if (response.getResults().contains(relevant))
+        totalIntersections++;
+    }
+
+    double recall = totalRelevants == 0 ? 0 : new Double(totalIntersections)
+        / new Double(totalRelevants);
+    double precision = totalResults == 0 ? 0 : new Double(totalIntersections)
+        / new Double(totalResults);
+
+    response.setRecall(recall);
+    response.setPrecision(precision);
+    response.setTotalRelevants(totalRelevants);
+    response.setTotalResults(totalResults);
+    response.setTotalIntersections(totalIntersections);
+  }
 }

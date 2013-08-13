@@ -23,7 +23,7 @@ public class JavaTermExtractor {
 	 */
 	public static String TERM_SEPARATOR = " ";
 
-	public static String FQN_SPLIT_CHARS = "[^A-Za-z]";
+	public static String FQN_SPLIT_CHARS = "[^A-Za-z0-9]";
 
 	/**
 	 * extracts the short name from FQN works both for fqn w/o method arguments
@@ -88,7 +88,7 @@ public class JavaTermExtractor {
 
 		Collection<String> _strCol = splitter.split();
 
-		return mergeTerms(_strCol);
+		return mergeTerms(_strCol).trim();
 
 	}
 
@@ -103,7 +103,7 @@ public class JavaTermExtractor {
 	public static String getFQNTermsAsString(String fqn) {
 
 		String[] fragments = fqn.split(FQN_SPLIT_CHARS);
-
+		
 		if (fragments == null || fragments.length <= 0)
 			return "";
 
@@ -131,10 +131,13 @@ public class JavaTermExtractor {
 			return retVal;
 		else {
 			StringBuffer _buf = new StringBuffer();
-			for (String s : strCol) {
-				_buf.append(s);
-				_buf.append(TERM_SEPARATOR);
-			}
+			Object as[] = strCol.toArray();
+      int i = 0;
+      while(i < as.length-1) {
+        _buf.append((String)as[i++]);
+        _buf.append(TERM_SEPARATOR);
+      }
+      _buf.append(as[i]);
 			retVal = _buf.toString().trim();
 		}
 
@@ -148,10 +151,12 @@ public class JavaTermExtractor {
 			return retVal;
 		else {
 			StringBuffer _buf = new StringBuffer();
-			for (String s : strCol) {
-				_buf.append(s);
+			int i = 0;
+			while(i < strCol.length-1) {
+				_buf.append(strCol[i++]);
 				_buf.append(TERM_SEPARATOR);
 			}
+			_buf.append(strCol[i]);
 			retVal = _buf.toString().trim();
 		}
 

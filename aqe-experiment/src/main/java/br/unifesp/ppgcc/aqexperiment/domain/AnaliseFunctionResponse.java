@@ -32,6 +32,11 @@ public class AnaliseFunctionResponse {
 	private Date executionTimestamp;
 
 	private String methodName;
+	
+	//adding additional required fields:
+	private String returnType;
+	private String params;
+	
 
 	private Double recall;
 	
@@ -56,10 +61,13 @@ public class AnaliseFunctionResponse {
 	public AnaliseFunctionResponse(){
 	}
 	
-	public AnaliseFunctionResponse(String methodName, SurveyResponse surveyResponse, Date executionTimestamp) {
+	public AnaliseFunctionResponse(String methodName, String returnType, String params, SurveyResponse surveyResponse, Date executionTimestamp) {
 		this.executionTimestamp = executionTimestamp;
 		this.methodName = methodName;
 		this.surveyResponse = surveyResponse;
+		// adding return type and params from subject
+		this.returnType = returnType;
+		this.params = params;
 	}
 	
 	public void setResultsFromSingleResult(List<SingleResult> relevants) {
@@ -147,6 +155,22 @@ public class AnaliseFunctionResponse {
 
 	public void setTotalIntersections(Integer totalIntersections) {
 		this.totalIntersections = totalIntersections;
+	}
+
+	public String getReturnType() {
+		return returnType;
+	}
+
+	public void setReturnType(String returnType) {
+		this.returnType = returnType;
+	}
+
+	public String getParams() {
+		return params;
+	}
+
+	public void setParams(String params) {
+		this.params = params;
 	}
 	
 }

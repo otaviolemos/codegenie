@@ -19,6 +19,8 @@ public class RelatedWordUtils {
     String ret = "";
     StringTokenizer tkn = new StringTokenizer(terms);
     
+    boolean useAndBetweenSyns = true;
+    
     if(!enSyn && !codeSyn && !codeAnt && !enAnt) return terms;
     
     try {
@@ -49,7 +51,7 @@ public class RelatedWordUtils {
 
       if(enSyn) {
 
-        if(!ret.equals("")) ret += " AND ";
+        if(!ret.equals("")) ret += useAndBetweenSyns ? " AND " : " OR ";
         ret += "(" + tok;
 
         if(!v.isEmpty()) {
@@ -78,7 +80,7 @@ public class RelatedWordUtils {
       
       if(codeSyn) {
         if(!enSyn) {
-          if(!ret.equals("")) ret += " AND ";
+          if(!ret.equals("")) ret += useAndBetweenSyns ? " AND " : " OR ";
           ret += "(" + tok;
         }
         if(!cs.isEmpty()) {
