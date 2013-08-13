@@ -11,6 +11,9 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: org.eclipse.jdt.core,
  org.eclipse.jdt.core.dom,
+ org.eclipse.jdt.junit,
+ org.eclipse.jdt.junit.launcher,
+ org.eclipse.jdt.junit.model,
  org.eclipse.search.ui,
  org.eclipse.search.ui.text
 Bundle-ClassPath: lib/sourcerer-search.jar,

@@ -24,10 +24,10 @@ import br.unifesp.ict.seg.codegenie.pool.SearchResultMap;
 import br.unifesp.ict.seg.codegenie.pool.SlicePool;
 import br.unifesp.ict.seg.codegenie.pool.SolrPool;
 import br.unifesp.ict.seg.codegenie.search.CGMethodInterface;
+import br.unifesp.ict.seg.codegenie.search.solr.MySingleResult;
 import br.unifesp.ict.seg.codegenie.search.solr.SearchQueryCreator;
 import br.unifesp.ict.seg.codegenie.search.solr.SolrSearch;
 import br.unifesp.ict.seg.codegenie.tmp.Debug;
-import br.unifesp.ict.seg.codegenie.tmp.MySingleResult;
 import br.unifesp.ict.seg.codegenie.views.SolrResultsView;
 
 
@@ -97,6 +97,7 @@ public class SearchAction implements IObjectActionDelegate {
 		for(SingleResult sr : results){
 			long neweid = MySQLQuery.query(MySQLQuery.fixSolr(sr.getFqn(), sr.getParams()));
 			MySingleResult msr = new MySingleResult(sr,neweid);
+			msr.setTestClass(selection);
 			updatedResults.add(msr);
 		}
 		//register solr results and this query into the pools

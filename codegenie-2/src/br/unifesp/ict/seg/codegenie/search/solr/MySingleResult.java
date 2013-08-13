@@ -1,4 +1,8 @@
-package br.unifesp.ict.seg.codegenie.tmp;
+package br.unifesp.ict.seg.codegenie.search.solr;
+
+import org.eclipse.jdt.core.IType;
+
+import br.unifesp.ict.seg.codegenie.tmp.Debug;
 
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 
@@ -6,6 +10,10 @@ public class MySingleResult {
 
 	protected Long id;
 	protected SingleResult sr;
+	private IType testClass;
+	private int failures=-1;
+	private int errors=-1;
+	private int success=-1;
 
 	/**
 	 * @return
@@ -96,7 +104,12 @@ public class MySingleResult {
 		String name = sr.getFqn();
 		String params = sr.getParams();
 		String idstr = "["+id+"]";
-		return retType+" "+name+" "+params+" "+idstr;
+		String ret =  idstr + " " +retType+" "+name+" "+params;
+		if(failures!=-1){
+			ret+=" Failures="+failures+", Errors="+errors+", Success="+success;
+		}
+		Debug.debug(getClass(),"returning SingleResult.toString");
+		return ret;
 	}
 
 	public MySingleResult(SingleResult sr, Long newID) {
@@ -124,6 +137,18 @@ public class MySingleResult {
 		}
 		return true;
 	}
+
+	public void setTestClass(IType selection) {
+		testClass = selection;
+	}
 	
+	public IType getTestClass(){return testClass;}
+
+	public void setResults(int failuresCount, int errorCount, int successCount) {
+		this.failures = failuresCount;
+		this.errors = errorCount;
+		this.success = successCount;
+		
+	}
 
 }

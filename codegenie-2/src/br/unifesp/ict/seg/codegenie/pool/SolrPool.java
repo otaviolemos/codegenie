@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import br.unifesp.ict.seg.codegenie.search.solr.MySingleResult;
 import br.unifesp.ict.seg.codegenie.tmp.Debug;
-import br.unifesp.ict.seg.codegenie.tmp.MySingleResult;
 
 public class SolrPool {
 

@@ -22,6 +22,7 @@
                class="br.unifesp.ict.seg.codegenie.popup.actions.SearchAction"
                enablesFor="1"
                id="codegenie-2.newAction"
+               icon="icons/lamp_icon.gif"
                label="Search"
                menubarPath="codegenie-2.menu1/group1">
          </action>
@@ -36,7 +37,7 @@
       <view
             category="codegenie-2"
             class="br.unifesp.ict.seg.codegenie.views.SolrResultsView"
-            icon="icons/sample.gif"
+            icon="icons/lamp_icon.gif"
             id="br.unifesp.ict.seg.codegenie.views.SolrResultsView"
             name="CodeGenie view">
       </view>

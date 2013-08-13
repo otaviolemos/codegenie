@@ -14,12 +14,9 @@ import java.util.StringTokenizer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.Flags;
-import org.eclipse.jdt.core.IBuffer;
-import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
@@ -31,15 +28,12 @@ import br.unifesp.ict.seg.codegenie.pool.SlicePool;
 import br.unifesp.ict.seg.codegenie.pool.SolrPool;
 import br.unifesp.ict.seg.codegenie.preferences.PreferenceConstants;
 import br.unifesp.ict.seg.codegenie.search.CGMethodInterface;
+import br.unifesp.ict.seg.codegenie.search.solr.MySingleResult;
 import br.unifesp.ict.seg.codegenie.test.CodeGenieTestRunner;
 import br.unifesp.ict.seg.codegenie.tmp.Debug;
-import br.unifesp.ict.seg.codegenie.tmp.MySingleResult;
 import br.unifesp.ict.seg.codegenie.util.Folders;
 import br.unifesp.ict.seg.codegenie.util.Unzip;
 import br.unifesp.ict.seg.codegenie.views.GRProgressMonitor;
-
-
-
 
 
 public class SliceFile extends AbstractProjectEditor{
@@ -49,12 +43,12 @@ public class SliceFile extends AbstractProjectEditor{
 	protected CGMethodInterface mi;
 	protected String zipFileName;
 	protected String projectFolder;
-	//protected FailCase fc;
 	protected String sliceSrcFolder;
 	protected String sliceBkpFolder;
 	protected Weaver weave;
 	protected Unweaver unweave;
 	protected Long queryID;
+	protected IType testClass;
 
 
 	/**Create a slice file ready to be saved, uncompressed, 
@@ -199,8 +193,9 @@ public class SliceFile extends AbstractProjectEditor{
 			clazz = javap.findType(mi.getParentFqn());
 		} 
 		Debug.debug(getClass(), "clazz is =>"+clazz);
+		mi.setParent(clazz);
 		String wantedMethodName = mi.getMethodname();
-		String wantedparams[] = mi.getParamsTypes();
+		//String wantedparams[] = mi.getParamsTypes();
 		
 		//create method calling the inserted method
 		MySingleResult sr = SolrPool.get(eid);
@@ -248,14 +243,14 @@ public class SliceFile extends AbstractProjectEditor{
 		methodContents+=");"+System.lineSeparator();
 		methodContents+="}";
 		GRProgressMonitor monitor = new GRProgressMonitor();
-		clazz.createMethod(methodContents, null, true, monitor);
+		mi.setMethod(clazz.createMethod(methodContents, null, true, monitor));
 		GRProgressMonitor.waitMonitor(monitor);
 		this.saveAndRebuild();
-		Debug.debug(getClass(), "created method: "+methodContents);
-		/*
-		IType mergedType = javap.findType(parentsFqn);
+		Debug.debug(getClass(), "created method: "+mi.getMethod());
+		//if the called method is private, make it public
+		IType calledType = javap.findType(parentsFqn);
 		IMethod calledMethod = null;
-		for(IMethod m : mergedType.getMethods()){
+		for(IMethod m : calledType.getMethods()){
 			if(m.getElementName().equals(methodName)){
 				calledMethod = m;
 				String sourceCode = m.getSource();
@@ -274,9 +269,19 @@ public class SliceFile extends AbstractProjectEditor{
 		if(calledMethod==null){
 			return;
 		}
-		*/
-		
-
+		String src = calledMethod.getSource();
+		int openParentesis = src.indexOf("(");
+		if(src.indexOf("private ")<openParentesis){
+			src = src.replaceFirst("private ", "public ");
+		} else if(src.indexOf("protected ")<openParentesis){
+			src = src.replaceFirst("protected ", "public ");
+		}
+		monitor = new GRProgressMonitor();
+		calledMethod.delete(true, monitor);
+		GRProgressMonitor.waitMonitor(monitor);
+		monitor = new GRProgressMonitor();
+		calledType.createMethod(src, null, true, monitor);
+		GRProgressMonitor.waitMonitor(monitor);
 	}
 
 
@@ -398,28 +403,27 @@ public class SliceFile extends AbstractProjectEditor{
 		Debug.debug(getClass(),"Method Created!");
 	}
 
-	public void runTests() {
+	public void runTests(MySingleResult sr) {
 		Debug.debug(getClass(),"Running tests...");
-		CodeGenieTestRunner testRunner = new CodeGenieTestRunner(queryID);
-		//try {
-		testRunner.runTest();
-		//} catch (JavaModelException e) {
-		//	Debug.errDebug(getClass(),e.getMessage());
-		//}
+		CodeGenieTestRunner testRunner = new CodeGenieTestRunner(testClass);
+		testRunner.runTest(sr);
 	}
 
-	public static boolean removeSlice(long eid){
-		SliceFile slice = SlicePool.get(eid);
+	public static boolean removeSlice(Long eid,MySingleResult obj){
+		SliceFile slice = SlicePool.getByEID(eid);
+		MySingleResult sr=SolrPool.get(eid);
 		try {
-			slice.remove();
+			slice.remove(sr);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
 		}
+		slice.saveAndRebuild();
+		slice.runTests(obj);
 		return true;
 	}
 
-	private boolean remove() throws IOException {
+	private boolean remove(MySingleResult sr) throws IOException {
 		try {
 			Debug.debug(getClass(),"unweaving...");
 			unweave.unweave(mi);
@@ -431,7 +435,7 @@ public class SliceFile extends AbstractProjectEditor{
 			return false;
 		}
 		saveAndRebuild();
-		runTests();
+		runTests(sr);
 		return true;
 	}
 
@@ -467,5 +471,9 @@ public class SliceFile extends AbstractProjectEditor{
 		}
 		OpenOption options= StandardOpenOption.WRITE;
 		Files.write(javaFile.toPath(), sourceCode.getBytes(), options);
+	}
+	
+	public void setTestClass(IType test){
+		this.testClass=test;
 	}
 }

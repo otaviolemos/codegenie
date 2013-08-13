@@ -1,8 +1,12 @@
 package br.unifesp.ict.seg.codegenie.search;
 
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
 
+import br.unifesp.ict.seg.codegenie.pool.SlicePool;
+import br.unifesp.ict.seg.codegenie.search.slicer.SliceAddedAnn;
 import br.unifesp.ict.seg.codegenie.search.solr.Solr;
 
 public class CGMethodInterface {
@@ -64,8 +68,16 @@ public class CGMethodInterface {
 		//return false;
 	}
 
-	public void restore() {
-		// TODO Auto-generated method stub
+	public void restore() throws JavaModelException {
+		Long eid = SlicePool.getEID(queryid);
+		SliceAddedAnn ann = new SliceAddedAnn(eid);
+		String source = parent.getCompilationUnit().getPrimary().getSource();
+		ISourceRange sr = parent.getCompilationUnit().getPrimary().getSourceRange();
+		if(source.startsWith(ann.toString())){
+			parent.delete(true, null);
+		} else {
+			method.delete(true, null);
+		}
 		
 	}
 
@@ -80,6 +92,10 @@ public class CGMethodInterface {
 
 	public boolean getisStatic() {
 		return isStatic;
+	}
+
+	public IMethod getMethod() {
+		return method;
 	}
 
 }

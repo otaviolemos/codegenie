@@ -1,9 +1,12 @@
 package br.unifesp.ict.seg.codegenie;
 
+import org.eclipse.jdt.junit.JUnitCore;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import br.unifesp.ict.seg.codegenie.test.CodeGenieTestListener;
+import br.unifesp.ict.seg.codegenie.test.CodeGenieTestRunner;
 import br.unifesp.ict.seg.codegenie.tmp.Debug;
 
 /**
@@ -18,7 +21,7 @@ public class Activator extends AbstractUIPlugin implements IStartup{
 	private static Activator plugin;
 
 	private static long idStore = 0;
-	
+
 	/**
 	 * The constructor
 	 */
@@ -54,6 +57,11 @@ public class Activator extends AbstractUIPlugin implements IStartup{
 
 	@Override
 	public void earlyStartup() {
+
+		CodeGenieTestListener listener = new CodeGenieTestListener();
+		CodeGenieTestRunner.setListener(listener);
+		JUnitCore.addTestRunListener(listener);
+
 		Debug.debug(getClass(),"starting codegenie-2.0 plugin");
 	}
 

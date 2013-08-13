@@ -3,8 +3,8 @@ package br.unifesp.ict.seg.codegenie.util;
 
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 import br.unifesp.ict.seg.codegenie.search.fileserver.FileServerConnector;
+import br.unifesp.ict.seg.codegenie.search.solr.MySingleResult;
 import br.unifesp.ict.seg.codegenie.tmp.Debug;
-import br.unifesp.ict.seg.codegenie.tmp.MySingleResult;
 
 public class EntitiesUtil {
 
