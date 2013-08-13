@@ -14,14 +14,16 @@ public class CGMethodInterface {
 	private String[] paramsTypes;
 	private IType parent;
 	private IMethod method;
+	private Boolean isStatic;
 
 	public CGMethodInterface(Long queryid, String returnFqn, String parentFqn, String methodName,
-			String paramsTypes,String[] paramsNames) {
+			String paramsTypes,String[] paramsNames,Boolean isStatic) {
 		this.queryid = queryid;
 		this.returnFQN = returnFqn;
 		this.parentFqn = parentFqn;
 		this.methodname = methodName;
 		this.paramsTypes = paramsTypes.split(Solr.AND);
+		this.isStatic=isStatic;
 	}
 
 	/**
@@ -74,6 +76,10 @@ public class CGMethodInterface {
 
 	public void setMethod(IMethod method) {
 		this.method = method;
+	}
+
+	public boolean getisStatic() {
+		return isStatic;
 	}
 
 }

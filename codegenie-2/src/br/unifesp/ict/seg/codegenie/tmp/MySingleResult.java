@@ -111,6 +111,19 @@ public class MySingleResult {
 	public SingleResult getSingleResult() {
 		return sr;
 	}
+
+	public boolean compareParams(String[] vetParams) {
+		String[] thisParams = sr.getParams().substring(1, sr.getParams().length()).split(",");
+		if(vetParams.length!=thisParams.length){
+			return false;
+		}
+		for(int i=0;i<thisParams.length;i+=1){
+			if(!thisParams[i].contains(vetParams[i]));{
+				return false;
+			}
+		}
+		return true;
+	}
 	
 
 }

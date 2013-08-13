@@ -43,6 +43,7 @@ public class SearchQueryCreator {
 	String[] query;
 	private long id;
 	private CGMethodInterface mi;
+	private Boolean isStatic;
 
 	public SearchQueryCreator(IType selection) {
 		this.selection = selection;
@@ -102,12 +103,14 @@ public class SearchQueryCreator {
 
 		// class does not exist, static method being called
 		if (message.endsWith("cannot be resolved")) {
+			isStatic = true;
 			wantedClassName = message.substring(0,
 					message.indexOf("cannot be resolved") - 1);
 			wantedMethodName = myCode.substring(end + 1, end
 					+ myCode.substring(end).indexOf('('));
 		} else if (message.endsWith("cannot be resolved to a type")) {
 			// class does not exist, instance method being called
+			isStatic = false;
 			wantedClassName = message.substring(0,
 					message.indexOf("cannot be resolved") - 1);
 			String instanceName = "";
@@ -226,7 +229,7 @@ public class SearchQueryCreator {
 		if(mi==null){
 			String params = parameters.toString();
 			params = params.substring(1,params.length()-1);
-			mi = new CGMethodInterface(id,query[3],query[0]+"."+query[1],query[2],query[4],params.split(", "));
+			mi = new CGMethodInterface(id,query[3],query[0]+"."+query[1],query[2],query[4],params.split(", "),isStatic);
 		}
 		return mi;	
 	}

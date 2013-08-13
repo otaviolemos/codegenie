@@ -163,7 +163,6 @@ public class SliceFile extends AbstractProjectEditor{
 
 
 		IType clazz = javap.findType(mi.getParentFqn());
-
 		if(clazz == null){//class does not exist
 
 			//create packages if needed
@@ -182,7 +181,7 @@ public class SliceFile extends AbstractProjectEditor{
 				frag = pack.createPackageFragment(packageName, true, null);
 				Debug.debug(getClass(), "package created => "+frag);
 			}
-			
+
 			//create class for sure
 			String className = mi.getParentFqn();
 			if(className.contains(".")){
@@ -198,18 +197,86 @@ public class SliceFile extends AbstractProjectEditor{
 			GRProgressMonitor.waitMonitor(monitor);
 			this.saveAndRebuild();
 			clazz = javap.findType(mi.getParentFqn());
-		}
+		} 
 		Debug.debug(getClass(), "clazz is =>"+clazz);
-		//TODO create method calling the inserted method
+		String wantedMethodName = mi.getMethodname();
+		String wantedparams[] = mi.getParamsTypes();
+		
+		//create method calling the inserted method
 		MySingleResult sr = SolrPool.get(eid);
 		String fqn = sr.getFqn();
 		String parentsFqn = fqn.substring(0,fqn.lastIndexOf("."));
-		IType mergedType = javap.findType(parentsFqn);
-		for(IMethod m : mergedType.getMethods()){
-			String sourceCode = m.getSource();
-			
+		String methodName = fqn.substring(fqn.lastIndexOf("."));
+		String returnType = sr.getReturnFqn();
+		String[] paramsTypes;
+		paramsTypes = sr.getParams().substring(1,sr.getParams().length()-1).split(",");
+		String[] paramsNames = new String[paramsTypes.length];
+		for(int i=0;i<paramsTypes.length;++i){
+			paramsNames[i] = "arg"+i;
 		}
+		SliceAddedAnn ann = new SliceAddedAnn(eid);
+		boolean isStatic = mi.getisStatic();
+		String methodContents = ann+"public "+(isStatic==true?"static ":"")+
+				returnType +" "+wantedMethodName+"(";
+		for(int i=0;i<paramsTypes.length;++i){
+			methodContents+=paramsTypes[i]+" "+paramsNames[i];
+			if(i+1<paramsTypes.length){
+				methodContents+=", ";
+			}
+		}
+		methodContents+=") {"+System.lineSeparator()+"\t";
+		String caller = "";
+		if(isStatic){
+			methodContents+=parentsFqn+" instance = new "+parentsFqn+"();"+System.lineSeparator();
+			caller = "instance";
+		} else {
+			caller = parentsFqn;
+		}
+		if(!returnType.equals("void")){
+			methodContents+="return ";
+		}
+		if(methodName.startsWith(".")){
+			methodName=methodName.substring(1);
+		}
+		methodContents+=caller+"."+methodName+"(";
+		for(int i=0;i<paramsNames.length;++i){
+			methodContents+=paramsNames[i];
+			if(i+1<paramsNames.length){
+				methodContents+=", ";
+			}
+		}
+		methodContents+=");"+System.lineSeparator();
+		methodContents+="}";
+		GRProgressMonitor monitor = new GRProgressMonitor();
+		clazz.createMethod(methodContents, null, true, monitor);
+		GRProgressMonitor.waitMonitor(monitor);
+		this.saveAndRebuild();
+		Debug.debug(getClass(), "created method: "+methodContents);
+		/*
+		IType mergedType = javap.findType(parentsFqn);
+		IMethod calledMethod = null;
+		for(IMethod m : mergedType.getMethods()){
+			if(m.getElementName().equals(methodName)){
+				calledMethod = m;
+				String sourceCode = m.getSource();
+				int openParentesis = sourceCode.indexOf("(");
+				int closeParentesis = sourceCode.indexOf(")");
+				String params = sourceCode.substring(openParentesis+1, closeParentesis);
+				String[] vetParams = params.split(",");
+				for(int i=0;i<vetParams.length;++i){
+					vetParams[i]=vetParams[i].split(" ")[0];
+				}
+				if(sr.compareParams(vetParams)){
+					break;
+				}
+			}
+		}
+		if(calledMethod==null){
+			return;
+		}
+		*/
 		
+
 	}
 
 
