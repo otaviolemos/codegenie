@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project name="related-words-service" default="build">
+
+	<!-- Propriedades -->
+	<property name="web" location="../WebContent" />
+	<property name="dist" location="../dist" />
+
+	<!-- Build do aplicativo -->
+	<target name="build">
+		<war destfile="${dist}/related-words-service.war" webxml="${web}/WEB-INF/web.xml" basedir="${web}" />
+	</target>
+
+</project>
