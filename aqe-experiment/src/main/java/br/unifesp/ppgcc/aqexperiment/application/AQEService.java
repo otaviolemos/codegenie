@@ -1,8 +1,12 @@
 package br.unifesp.ppgcc.aqexperiment.application;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
@@ -130,7 +134,7 @@ public class AQEService {
     params = StringUtils.replace(params, "[", "\\[");
     params = StringUtils.replace(params, "]", "\\]");
 
-    boolean aqe = true;
+    boolean aqe = false;
     boolean interfaceDriven = true;
     boolean useOrInSname = false;
     boolean useOrInParamTypes = false;
@@ -151,7 +155,7 @@ public class AQEService {
     
 
     if (interfaceDriven) {
-      query += "\nreturn_sname_contents:(" + returnType + ")";
+      query += "\nreturn_sname_contents:( void OR " + returnType + ")";
 
       if (!"".equals(params) && !sourcererLibBug) {
         // query += "\nparams_snames_exact:" + params;
@@ -160,7 +164,7 @@ public class AQEService {
         // Parameters will have to be provided as this: String, String, String
         params = params.replace(',', ' ');
         StringTokenizer stokParams = new StringTokenizer(params);
-        //query += "\nparam_count:" + stokParams.countTokens();
+        query += "\nparam_count:" + stokParams.countTokens();
         query += "\nparams_snames_contents:(";
         while (stokParams.hasMoreTokens()) {
           query += stokParams.nextToken();
@@ -174,7 +178,48 @@ public class AQEService {
 
   private void calculateRecallAndPrecision(AnaliseFunctionResponse response,
       AnaliseFunction function) {
-    int totalRelevants = function.getRelevants().size();
+    
+    boolean strictRelevance = true;
+    
+    int relevantsWithSameInterface = 0;
+    
+    for (SolrResult relevant : function.getRelevants()) {
+      String returnTypeResp = response.getReturnType();
+      String returnTypeRel = relevant.getReturnFqn();
+      if(!returnTypeResp.equalsIgnoreCase(returnTypeRel))
+        continue;
+      
+        
+      String paramsResp = response.getParams();
+      String paramsRel = relevant.getParams();
+      
+      if(paramsRel.length() <= 2 && paramsResp.length() != 0)
+        continue;
+      
+      if(paramsResp.length() == 0 && paramsRel.length() <= 2) {
+        relevantsWithSameInterface++;
+        continue;
+      }
+      
+      List<String> paramsRelList= new ArrayList<String>(Arrays.asList(paramsRel.substring(1, paramsRel.length()-1).toLowerCase().split(",")));
+      for(int i = 0; i < paramsRelList.size(); i++) {
+        String p = paramsRelList.get(i);
+        int ultimoPonto = p.lastIndexOf('.')+1;
+        paramsRelList.set(i, p.substring(ultimoPonto));
+      }
+        
+      List<String> paramsRespList = new ArrayList<String>(Arrays.asList(paramsResp.toLowerCase().split(",")));
+      LogUtils.getLogger().info("Resp params: " + paramsRespList.toString());
+      LogUtils.getLogger().info("Rel params: " + paramsRelList.toString());
+      
+      if(!equalLists(paramsRelList, paramsRespList))
+        continue;
+      else 
+        relevantsWithSameInterface++;
+    }
+    
+    int totalRelevants = strictRelevance ? 
+        relevantsWithSameInterface : function.getRelevants().size();
     int totalResults = response.getResults().size();
     int totalIntersections = 0;
 
@@ -193,5 +238,26 @@ public class AQEService {
     response.setTotalRelevants(totalRelevants);
     response.setTotalResults(totalResults);
     response.setTotalIntersections(totalIntersections);
+  }
+  
+  public  boolean equalLists(List<String> one, List<String> two){     
+    if (one == null && two == null){
+        return true;
+    }
+
+    if((one == null && two != null) 
+      || one != null && two == null
+      || one.size() != two.size()){
+        return false;
+    }
+
+    //to avoid messing the order of the lists we will use a copy
+    //as noted in comments by A. R. S.
+    one = new ArrayList<String>(one); 
+    two = new ArrayList<String>(two);   
+
+    Collections.sort(one);
+    Collections.sort(two);      
+    return one.equals(two);
   }
 }
