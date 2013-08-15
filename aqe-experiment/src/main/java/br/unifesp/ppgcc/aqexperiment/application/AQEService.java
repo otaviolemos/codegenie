@@ -1,12 +1,9 @@
 package br.unifesp.ppgcc.aqexperiment.application;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
@@ -74,7 +71,7 @@ public class AQEService {
 	}
 
 	private void buildRelevants(AnaliseFunction function) throws Exception {
-		SearchAdapter searchAdapter = SearchAdapter.create(ConfigProperties.getProperty("aqExperiment.sourcerer.url"));
+		SearchAdapter searchAdapter = SearchAdapter.create(ConfigProperties.getProperty("aqExperiment.sourcererServer"));
 		SearchResult searchResult = null;
 		for (long entityId : function.getRelevantsSolrIds()) {
 			String query = "entity_id:" + entityId;
@@ -94,7 +91,7 @@ public class AQEService {
 	}
 
 	private void processResponses(AnaliseFunction function) throws Exception {
-		SearchAdapter searchAdapter = SearchAdapter.create(ConfigProperties.getProperty("aqExperiment.sourcerer.url"));
+		SearchAdapter searchAdapter = SearchAdapter.create(ConfigProperties.getProperty("aqExperiment.sourcererServer"));
 		SearchResult searchResult = null;
 		for (AnaliseFunctionResponse response : function.getResponses()) {
 			List<SingleResult> results = new ArrayList<SingleResult>();
@@ -118,17 +115,17 @@ public class AQEService {
 	}
 
 	private String getSourcererQuery(String methodName, String returnType, String params) throws Exception {
-		boolean sourcererLibBug = ")".equals(params); // entityId in ( 5842071 ,
-														// 5877324 )
+		boolean sourcererLibBug = ")".equals(params); // entityId in ( 5842071 , 5877324 )
 
 		returnType = StringUtils.replace(returnType, "[", "\\[");
 		returnType = StringUtils.replace(returnType, "]", "\\]");
 		params = StringUtils.replace(params, "[", "\\[");
 		params = StringUtils.replace(params, "]", "\\]");
 
-		boolean aqe = true;
-		boolean interfaceDriven = true;
+		boolean aqe = false;
+		boolean interfaceDriven = false;
 		boolean useOrInSname = false;
+		boolean useParamCount = true;
 		boolean useOrInParamTypes = false;
 
 		String fqnTerms = JavaTermExtractor.getFQNTermsAsString(methodName);
@@ -144,16 +141,8 @@ public class AQEService {
 
 		// String query = "fqn_contents:("+ fqnTerms + ")";
 
-<<<<<<< .mine
 		if (interfaceDriven) {
-			query += "\nreturn_sname_contents:( void OR " + returnType + ")";
-=======
-    boolean aqe = false;
-    boolean interfaceDriven = false;
-    boolean useOrInSname = false;
-    boolean useParamCount = true;
-    boolean useOrInParamTypes = false;
->>>>>>> .r89
+			query += "\nreturn_sname_contents:(" + returnType + ")";
 
 			if (!"".equals(params) && !sourcererLibBug) {
 				// query += "\nparams_snames_exact:" + params;
@@ -164,7 +153,8 @@ public class AQEService {
 				// String
 				params = params.replace(',', ' ');
 				StringTokenizer stokParams = new StringTokenizer(params);
-				query += "\nparam_count:" + stokParams.countTokens();
+				if (useParamCount)
+					query += "\nparam_count:" + stokParams.countTokens();
 				query += "\nparams_snames_contents:(";
 				while (stokParams.hasMoreTokens()) {
 					query += stokParams.nextToken();
@@ -172,6 +162,9 @@ public class AQEService {
 						query += (useOrInParamTypes ? " OR " : " AND ");
 				}
 				query += ")";
+			} else if ("".equals(params)) {
+				if (useParamCount)
+					query += "\nparam_count:1";
 			}
 		}
 		return query;
@@ -179,83 +172,7 @@ public class AQEService {
 
 	private void calculateRecallAndPrecision(AnaliseFunctionResponse response, AnaliseFunction function) {
 
-		boolean strictRelevance = true;
-
-<<<<<<< .mine
-		int relevantsWithSameInterface = 0;
-=======
-    if (interfaceDriven) {
-      query += "\nreturn_sname_contents:(" + returnType + ")";
->>>>>>> .r89
-
-<<<<<<< .mine
-		for (SolrResult relevant : function.getRelevants()) {
-			String returnTypeResp = response.getReturnType();
-			String returnTypeRel = relevant.getReturnFqn();
-			if (!returnTypeResp.equalsIgnoreCase(returnTypeRel))
-				continue;
-=======
-      if (!"".equals(params) && !sourcererLibBug) {
-        // query += "\nparams_snames_exact:" + params;
-        // TODO: check if this is correct; adding parameters defined by the
-        // subject
-        // Parameters will have to be provided as this: String, String, String
-        params = params.replace(',', ' ');
-        StringTokenizer stokParams = new StringTokenizer(params);
-        if(useParamCount) 
-          query += "\nparam_count:" + stokParams.countTokens();
-        query += "\nparams_snames_contents:(";
-        while (stokParams.hasMoreTokens()) {
-          query += stokParams.nextToken();
-          if(stokParams.hasMoreTokens()) query += (useOrInParamTypes ? " OR " : " AND ");
-        }
-        query += ")";
-      } else if ("".equals(params)) {
-        if (useParamCount) query += "\nparam_count:1";
-      } 
-    }
-    return query;
-  }
->>>>>>> .r89
-
-<<<<<<< .mine
-			String paramsResp = response.getParams();
-			String paramsRel = relevant.getParams();
-=======
-  private void calculateRecallAndPrecision(AnaliseFunctionResponse response,
-      AnaliseFunction function) {
-    
-    int totalRelevants = function.getRelevants().size();
-    int totalResults = response.getResults().size();
-    int totalIntersections = 0;
->>>>>>> .r89
-
-			if (paramsRel.length() <= 2 && paramsResp.length() != 0)
-				continue;
-
-			if (paramsResp.length() == 0 && paramsRel.length() <= 2) {
-				relevantsWithSameInterface++;
-				continue;
-			}
-
-			List<String> paramsRelList = new ArrayList<String>(Arrays.asList(paramsRel.substring(1, paramsRel.length() - 1).toLowerCase().split(",")));
-			for (int i = 0; i < paramsRelList.size(); i++) {
-				String p = paramsRelList.get(i);
-				int ultimoPonto = p.lastIndexOf('.') + 1;
-				paramsRelList.set(i, p.substring(ultimoPonto));
-			}
-
-			List<String> paramsRespList = new ArrayList<String>(Arrays.asList(paramsResp.toLowerCase().split(",")));
-			LogUtils.getLogger().info("Resp params: " + paramsRespList.toString());
-			LogUtils.getLogger().info("Rel params: " + paramsRelList.toString());
-
-			if (!equalLists(paramsRelList, paramsRespList))
-				continue;
-			else
-				relevantsWithSameInterface++;
-		}
-
-		int totalRelevants = strictRelevance ? relevantsWithSameInterface : function.getRelevants().size();
+		int totalRelevants = function.getRelevants().size();
 		int totalResults = response.getResults().size();
 		int totalIntersections = 0;
 
