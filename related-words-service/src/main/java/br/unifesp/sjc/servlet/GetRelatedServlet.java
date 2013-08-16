@@ -107,7 +107,7 @@ public class GetRelatedServlet extends HttpServlet {
 	  // eighth list is the code antonyms
 	  
 		
-		String wordNetDatabasePath = getServletContext().getRealPath("/WEB-INF/classes/wordnet-database/dict");
+		String wordNetDatabasePath = getServletContext().getRealPath("/WEB-INF/classes/wordnet-database");
 		System.setProperty("wordnet.database.dir", wordNetDatabasePath);
 		VerbSynset verbSynset;
 		NounSynset nounSynset;
