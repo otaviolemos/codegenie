@@ -7,6 +7,7 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.IObjectActionDelegate;
@@ -15,6 +16,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import br.unifesp.ict.seg.codegenie.Activator;
 import br.unifesp.ict.seg.codegenie.tmp.MySQLQuery;
 
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
@@ -23,6 +25,7 @@ import br.unifesp.ict.seg.codegenie.pool.MethodInterfacePool;
 import br.unifesp.ict.seg.codegenie.pool.SearchResultMap;
 import br.unifesp.ict.seg.codegenie.pool.SlicePool;
 import br.unifesp.ict.seg.codegenie.pool.SolrPool;
+import br.unifesp.ict.seg.codegenie.preferences.PreferenceConstants;
 import br.unifesp.ict.seg.codegenie.search.solr.MySingleResult;
 import br.unifesp.ict.seg.codegenie.search.solr.SearchQueryCreator;
 import br.unifesp.ict.seg.codegenie.search.solr.SolrSearch;
@@ -69,7 +72,12 @@ public class SearchAction implements IObjectActionDelegate {
 		SearchQueryCreator sqc = new SearchQueryCreator(selection);
 		sqc.formQuery();
 		sqc.getMethodInterface();
-		sqc.expandQuery(true, true,true,true);
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		boolean ensyn = store.getBoolean(PreferenceConstants.ENSYN);
+		boolean enant = store.getBoolean(PreferenceConstants.ENANT);
+		boolean codesyn = store.getBoolean(PreferenceConstants.CODESYN);
+		boolean codeant = store.getBoolean(PreferenceConstants.CODEANT);
+		sqc.expandQuery(ensyn, codesyn, enant, codeant);
 		lastQID = sqc.getID();
 		String[] query = sqc.getQuery();
 		if(query == null){

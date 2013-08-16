@@ -25,7 +25,7 @@ public class CodeGeniePreferences extends FieldEditorPreferencePage implements I
 	public CodeGeniePreferences() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("Genie Repair preference page");
+		setDescription("CodeGenie preference page");
 	}
 	
 	/**
@@ -64,12 +64,28 @@ public class CodeGeniePreferences extends FieldEditorPreferencePage implements I
 		//BooleanFieldEditor listenJUnit = 
 		//		new BooleanFieldEditor(PreferenceConstants.LISTEN_JUNIT,
 		//				"Listen to JUnit",getFieldEditorParent());
+		BooleanFieldEditor ensyn = 
+				new BooleanFieldEditor(PreferenceConstants.ENSYN,
+						"Use english synonyms",getFieldEditorParent());
+		BooleanFieldEditor enant = 
+				new BooleanFieldEditor(PreferenceConstants.ENANT,
+						"Use english antonyms",getFieldEditorParent());
+		BooleanFieldEditor codesyn = 
+				new BooleanFieldEditor(PreferenceConstants.CODESYN,
+						"Use code synonyms",getFieldEditorParent());
+		BooleanFieldEditor codeant = 
+				new BooleanFieldEditor(PreferenceConstants.CODEANT,
+						"Use code antonyms",getFieldEditorParent());
 		addField(fileServer);
 		addField(relatedWordServer);
 		addField(sliceServer);
 		addField(solrServer);
 		addField(annPack);
 		addField(annClass);
+		addField(ensyn);
+		addField(enant);
+		addField(codesyn);
+		addField(codeant);
 		//addField(listenJUnit);
 	}
 

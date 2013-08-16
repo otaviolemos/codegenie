@@ -12,5 +12,10 @@ public class PreferenceConstants {
 	//public static final String LISTEN_JUNIT = "listenJUnit";
 	public static final String ANNOTATIONPACKAGE = "annpackage";
 	public static final String ANNOTATIONCLASS = "annclass";
+	public static final String ENSYN = "ensyn";
+	public static final String CODESYN = "codesyn";
+	public static final String ENANT = "enant";
+	public static final String CODEANT = "codeant";
+	
 	
 }

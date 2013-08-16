@@ -26,6 +26,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(SOLR_SERVER, "http://127.0.0.1:8080");
 		store.setDefault(ANNOTATIONPACKAGE, "slice.annotation");
 		store.setDefault(ANNOTATIONCLASS, "FromSlice");
+		store.setDefault(ENSYN, true);
+		store.setDefault(CODESYN, true);
+		store.setDefault(ENANT, true);
+		store.setDefault(CODEANT, true);
 	}
 
 }
