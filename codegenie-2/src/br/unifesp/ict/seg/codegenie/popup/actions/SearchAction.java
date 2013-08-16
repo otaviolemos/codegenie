@@ -23,12 +23,11 @@ import br.unifesp.ict.seg.codegenie.pool.MethodInterfacePool;
 import br.unifesp.ict.seg.codegenie.pool.SearchResultMap;
 import br.unifesp.ict.seg.codegenie.pool.SlicePool;
 import br.unifesp.ict.seg.codegenie.pool.SolrPool;
-import br.unifesp.ict.seg.codegenie.search.CGMethodInterface;
 import br.unifesp.ict.seg.codegenie.search.solr.MySingleResult;
 import br.unifesp.ict.seg.codegenie.search.solr.SearchQueryCreator;
 import br.unifesp.ict.seg.codegenie.search.solr.SolrSearch;
 import br.unifesp.ict.seg.codegenie.tmp.Debug;
-import br.unifesp.ict.seg.codegenie.views.SolrResultsView;
+import br.unifesp.ict.seg.codegenie.views.ResultsView;
 
 
 public class SearchAction implements IObjectActionDelegate {
@@ -105,19 +104,19 @@ public class SearchAction implements IObjectActionDelegate {
 		SearchResultMap.add(sqc.getID(),updatedResults,selection,javap);
 		
 		
-		//force showing the cpde genie view
+		//force showing the code genie view
 		IWorkbench work = PlatformUI.getWorkbench();
 		//bring view to the front
 		try {
 			work.getActiveWorkbenchWindow()
 			.getActivePage()
-			.showView(SolrResultsView.ID);
+			.showView(ResultsView.ID);
 		} catch (PartInitException e) {
 			e.printStackTrace();
 		}
-		//get SolrResultsView
-		SolrResultsView view = (SolrResultsView) work.getActiveWorkbenchWindow()
-				.getActivePage().findView(SolrResultsView.ID);
+		//get ResultsView
+		ResultsView view = (ResultsView) work.getActiveWorkbenchWindow()
+				.getActivePage().findView(ResultsView.ID);
 		view.refresh();
 		
 

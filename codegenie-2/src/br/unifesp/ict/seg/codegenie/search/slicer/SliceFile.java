@@ -193,7 +193,7 @@ public class SliceFile extends AbstractProjectEditor{
 			clazz = javap.findType(mi.getParentFqn());
 		} 
 		Debug.debug(getClass(), "clazz is =>"+clazz);
-		mi.setParent(clazz);
+		//mi.setParent(clazz);
 		String wantedMethodName = mi.getMethodname();
 		//String wantedparams[] = mi.getParamsTypes();
 		
@@ -316,7 +316,7 @@ public class SliceFile extends AbstractProjectEditor{
 		//mi found
 		String originalSource = method.getSource();			//save original source
 		//rename method and refresh project
-		mi.setParent(t);
+		//mi.setParent(t);
 		method.rename("replaced"+method.getElementName(), false, null);	
 		mi.setMethod(method);
 		javap.getProject().refreshLocal(IProject.DEPTH_INFINITE, null);
@@ -412,6 +412,7 @@ public class SliceFile extends AbstractProjectEditor{
 	public static boolean removeSlice(Long eid,MySingleResult obj){
 		SliceFile slice = SlicePool.getByEID(eid);
 		MySingleResult sr=SolrPool.get(eid);
+		sr.setUnWeaven();
 		try {
 			slice.remove(sr);
 		} catch (IOException e) {
@@ -419,7 +420,7 @@ public class SliceFile extends AbstractProjectEditor{
 			return false;
 		}
 		slice.saveAndRebuild();
-		slice.runTests(obj);
+		//slice.runTests(obj);
 		return true;
 	}
 
@@ -428,14 +429,14 @@ public class SliceFile extends AbstractProjectEditor{
 			Debug.debug(getClass(),"unweaving...");
 			unweave.unweave(mi);
 			saveAndRebuild();
-			Debug.debug(getClass(),"restoring previous code...");
-			mi.restore();
+			//Debug.debug(getClass(),"restoring previous code...");
+			//mi.restore();
 		} catch (CoreException e) {
 			e.printStackTrace();
 			return false;
 		}
 		saveAndRebuild();
-		runTests(sr);
+		//runTests(sr);
 		return true;
 	}
 

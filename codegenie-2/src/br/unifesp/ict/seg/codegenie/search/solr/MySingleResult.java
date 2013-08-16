@@ -2,8 +2,6 @@ package br.unifesp.ict.seg.codegenie.search.solr;
 
 import org.eclipse.jdt.core.IType;
 
-import br.unifesp.ict.seg.codegenie.tmp.Debug;
-
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 
 public class MySingleResult {
@@ -14,6 +12,7 @@ public class MySingleResult {
 	private int failures=-1;
 	private int errors=-1;
 	private int success=-1;
+	private boolean weaven;
 
 	/**
 	 * @return
@@ -108,7 +107,11 @@ public class MySingleResult {
 		if(failures!=-1){
 			ret+=" Failures="+failures+", Errors="+errors+", Success="+success;
 		}
-		Debug.debug(getClass(),"returning SingleResult.toString");
+		if(weaven){
+			ret+=" - currrently weaven";
+		} else {
+			ret+=" - currrently unweaven";
+		}
 		return ret;
 	}
 
@@ -125,19 +128,21 @@ public class MySingleResult {
 		return sr;
 	}
 
+	
 	public boolean compareParams(String[] vetParams) {
 		String[] thisParams = sr.getParams().substring(1, sr.getParams().length()).split(",");
 		if(vetParams.length!=thisParams.length){
 			return false;
 		}
-		for(int i=0;i<thisParams.length;i+=1){
-			if(!thisParams[i].contains(vetParams[i]));{
+		for(int i=0;i<thisParams.length;i++){
+			if(!thisParams[i].contains(vetParams[i])){
 				return false;
 			}
 		}
 		return true;
 	}
-
+	
+	
 	public void setTestClass(IType selection) {
 		testClass = selection;
 	}
@@ -150,5 +155,21 @@ public class MySingleResult {
 		this.success = successCount;
 		
 	}
+
+	public int getSuccess() {
+		return this.success;
+	}
+	
+	public int getTotal(){
+		return success+errors+failures;
+	}
+
+	public void setUnWeaven() {
+		this.weaven=false;		
+	}
+	public void setWeaven() {
+		this.weaven=true;		
+	}
+	
 
 }

@@ -14,6 +14,7 @@ import org.eclipse.ui.*;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.SWT;
 
+import br.unifesp.ict.seg.codegenie.CodeGenieImages;
 import br.unifesp.ict.seg.codegenie.pool.MethodInterfacePool;
 import br.unifesp.ict.seg.codegenie.pool.SlicePool;
 import br.unifesp.ict.seg.codegenie.pool.SolrPool;
@@ -42,35 +43,26 @@ import br.unifesp.ict.seg.codegenie.tmp.Debug;
  * <p>
  */
 
-public class SolrResultsView extends ViewPart {
+public class ResultsView extends ViewPart {
 
 	/**
 	 * The ID of the view as specified by the extension.
 	 */
-	public static final String ID = "br.unifesp.ict.seg.codegenie.views.SolrResultsView";
+	public static final String ID = "br.unifesp.ict.seg.codegenie.views.ResultsView";
 
-	private TableViewer viewer;
-	private Action refresh;
-	private Action add;
-	private Action remove;
-	private Action doubleClickAction;
+	protected TableViewer viewer;
+	protected Action refresh;
+	protected Action add;
+	protected Action remove;
+	protected Action doubleClickAction;
+	protected Action viewSourceCode;
+	protected boolean canRefresh;
 
-	private boolean canRefresh;
+	private static ResultsView current = null;
+	public static ResultsView getCurrent(){return current;}
+	public Action getTestAction(){return add;}
 
 
-	private static SolrResultsView current = null;
-	public static SolrResultsView getCurrent(){return current;}
-
-
-	/*
-	 * The content provider class is responsible for
-	 * providing objects to the view. It can wrap
-	 * existing objects in adapters or simply return
-	 * objects as-is. These objects may be sensitive
-	 * to the current input of the view, or ignore
-	 * it and always show the same content 
-	 * (like Task List, for example).
-	 */
 
 	class ViewContentProvider implements IStructuredContentProvider {
 
@@ -82,6 +74,7 @@ public class SolrResultsView extends ViewPart {
 			return SolrPool.all();
 		}
 	}
+
 	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
 		public String getColumnText(Object obj, int index) {
 			return getText(obj);
@@ -90,17 +83,31 @@ public class SolrResultsView extends ViewPart {
 			return getImage(obj);
 		}
 		public Image getImage(Object obj) {
+			if(obj instanceof MySingleResult){
+				MySingleResult sr = (MySingleResult) obj;
+				if(sr.getSuccess()==-1){
+					return CodeGenieImages.getImageDescriptor(
+							CodeGenieImages.YELLOW_IMG).createImage();
+				} else if(sr.getSuccess()==sr.getTotal()){
+					return CodeGenieImages.getImageDescriptor(
+							CodeGenieImages.GREEN_IMG).createImage();
+				} else {
+					return CodeGenieImages.getImageDescriptor(
+							CodeGenieImages.RED_IMG).createImage();
+				}
+			}
 			return PlatformUI.getWorkbench().
 					getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
 		}
 	}
+
 	class NameSorter extends ViewerSorter {
 	}
 
 	/**
 	 * The constructor.
 	 */
-	public SolrResultsView() {
+	public ResultsView() {
 		current=this;
 	}
 
@@ -125,7 +132,7 @@ public class SolrResultsView extends ViewPart {
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
-				SolrResultsView.this.fillContextMenu(manager);
+				ResultsView.this.fillContextMenu(manager);
 			}
 		});
 		Menu menu = menuMgr.createContextMenu(viewer.getControl());
@@ -146,12 +153,15 @@ public class SolrResultsView extends ViewPart {
 		manager.add(add);
 		manager.add(new Separator());
 		manager.add(remove);
+		manager.add(new Separator());
+		manager.add(viewSourceCode);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
 		manager.add(refresh);
 		manager.add(add);
 		manager.add(remove);
+		manager.add(viewSourceCode);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
@@ -160,6 +170,7 @@ public class SolrResultsView extends ViewPart {
 		manager.add(refresh);
 		manager.add(add);
 		manager.add(remove);
+		manager.add(viewSourceCode);
 	}
 
 
@@ -167,13 +178,12 @@ public class SolrResultsView extends ViewPart {
 		refresh = new Action() {
 			public void run() {
 				viewer.refresh();
-				//showMessage("Action 1 executed");
 			}
 		};
-		refresh.setText("Action 1");
-		refresh.setToolTipText("Action 1 tooltip");
-		refresh.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+		refresh.setText("Refresh");
+		refresh.setToolTipText("Refresh view");
+		refresh.setImageDescriptor(
+				CodeGenieImages.getImageDescriptor(CodeGenieImages.REFRESH));
 
 		add = new Action() {
 			public void run() {
@@ -192,8 +202,10 @@ public class SolrResultsView extends ViewPart {
 					slice.saveAndRebuild();
 					slice.createMethod();
 					slice.saveAndRebuild();
+					obj.setWeaven();
 					slice.runTests(obj);
-					//SolrResultsView.this.waitAndRefresh();
+					showMessage("Slice "+eid+" added");
+					//ResultsView.this.waitAndRefresh();
 				} catch (IOException | CoreException e) {
 					e.printStackTrace();
 				} catch (Exception e) {
@@ -204,39 +216,66 @@ public class SolrResultsView extends ViewPart {
 			}
 
 		};
-		add.setText("include and test slice");
-		add.setToolTipText("Action 2 tooltip");
-		add.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
-		
+		add.setText("Test");
+		add.setToolTipText("Include and test slice");
+		add.setImageDescriptor(CodeGenieImages.getImageDescriptor(
+				CodeGenieImages.ADD_N_TEST));
+		//add.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
+		//		getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+
 		remove = new Action() {
 			public void run() {
 				ISelection selection = viewer.getSelection();
 				MySingleResult obj = (MySingleResult) ((IStructuredSelection)selection).getFirstElement();
 				Long eid = obj.getEntityID();
-				
+
 				if(SliceFile.removeSlice(eid,obj)){
 					showMessage("Slice "+eid+" removed");
 				} else {
 					showMessage("Could not remove slice "+eid);
 				}
 				SlicePool.remove(eid);
-				
 				viewer.refresh();
 			}
 		};
-		remove.setText("Action 3");
-		remove.setToolTipText("Action 3 tooltip");
-		remove.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+		remove.setText("Remove");
+		remove.setToolTipText("Remove selected slice");
+		remove.setImageDescriptor(CodeGenieImages.getImageDescriptor(
+				CodeGenieImages.REMOVE));
 
-		
+		viewSourceCode = new Action() {
+			public void run() {
+				ISelection selection = viewer.getSelection();
+				MySingleResult obj = (MySingleResult) ((IStructuredSelection)selection).getFirstElement();
+				//force showing the cpde genie view
+				IWorkbench work = PlatformUI.getWorkbench();
+				//bring view to the front
+				try {
+					work.getActiveWorkbenchWindow()
+					.getActivePage()
+					.showView(CodeView.ID);
+				} catch (PartInitException e) {
+					e.printStackTrace();
+				}
+				//get ResultsView
+				CodeView view = (CodeView) work.getActiveWorkbenchWindow()
+						.getActivePage().findView(CodeView.ID);
+				Long qid = SearchAction.getCurrentQueryID();
+				view.setText(obj,qid);
+			}
+		};
+		viewSourceCode.setText("Source Code");
+		viewSourceCode.setToolTipText("View source code from selected slice");
+		viewSourceCode.setImageDescriptor(
+				CodeGenieImages.getImageDescriptor(CodeGenieImages.VIEW_CODE));
+
+
 		doubleClickAction = new Action() {
 			public void run() {
 				ISelection selection = viewer.getSelection();
 				Object obj = ((IStructuredSelection)selection).getFirstElement();
-				String packageName = showInput("Message",obj.toString());
-				Debug.debug(SolrResultsView.this.getClass(), packageName);
+				String packageName = showInput("Double click action\nMessage: ",obj.toString());
+				Debug.debug(ResultsView.this.getClass(), packageName);
 			}
 		};
 	}
@@ -260,19 +299,7 @@ public class SolrResultsView extends ViewPart {
 				"CodeGenie View",
 				message,
 				defaultValue,
-				/*new IInputValidator(){
-					@Override
-					public String isValid(String arg0) {
-						String[] tokens = arg0.split(".");
-						for(String str : tokens){
-							Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
-							Matcher m = p.matcher(str);
-							boolean b = m.find();
-							if(b) return "contains special char: "+str;
-						}
-						return null;
-					}
-				}*/null);
+				null);
 		input.create();
 		input.open();
 		if(input.getReturnCode()==InputDialog.OK){

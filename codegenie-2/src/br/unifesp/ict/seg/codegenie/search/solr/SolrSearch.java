@@ -87,4 +87,20 @@ public class SolrSearch {
 	    return new ArrayList<SingleResult>();
 	}
 
+	/**
+	 * @return the javap
+	 */
+	public IJavaProject getJavap() {
+		return javap;
+	}
+
+	/**
+	 * @return the testClass
+	 */
+	public ISelection getTestClass() {
+		return testClass;
+	}
+	
+	
+
 }

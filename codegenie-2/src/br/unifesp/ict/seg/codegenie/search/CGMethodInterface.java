@@ -1,12 +1,7 @@
 package br.unifesp.ict.seg.codegenie.search;
 
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.ISourceRange;
-import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaModelException;
 
-import br.unifesp.ict.seg.codegenie.pool.SlicePool;
-import br.unifesp.ict.seg.codegenie.search.slicer.SliceAddedAnn;
 import br.unifesp.ict.seg.codegenie.search.solr.Solr;
 
 public class CGMethodInterface {
@@ -16,7 +11,7 @@ public class CGMethodInterface {
 	private String parentFqn;
 	private String methodname;
 	private String[] paramsTypes;
-	private IType parent;
+	//private IType parent;
 	private IMethod method;
 	private Boolean isStatic;
 
@@ -63,11 +58,9 @@ public class CGMethodInterface {
 	}
 
 	public boolean equalsParams(String[] parameterTypes) {
-		// TODO Auto-generated method stub
 		throw new RuntimeException("not implemented yet");
-		//return false;
 	}
-
+/*
 	public void restore() throws JavaModelException {
 		Long eid = SlicePool.getEID(queryid);
 		SliceAddedAnn ann = new SliceAddedAnn(eid);
@@ -83,9 +76,8 @@ public class CGMethodInterface {
 
 	public void setParent(IType t) {
 		this.parent = t;
-		
 	}
-
+*/
 	public void setMethod(IMethod method) {
 		this.method = method;
 	}

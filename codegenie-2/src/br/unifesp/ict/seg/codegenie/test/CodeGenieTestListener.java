@@ -7,7 +7,7 @@ import org.eclipse.jdt.junit.model.ITestElement.Result;
 
 import br.unifesp.ict.seg.codegenie.search.solr.MySingleResult;
 import br.unifesp.ict.seg.codegenie.tmp.Debug;
-import br.unifesp.ict.seg.codegenie.views.SolrResultsView;
+import br.unifesp.ict.seg.codegenie.views.ResultsView;
 
 public class CodeGenieTestListener extends TestRunListener{
 
@@ -37,7 +37,7 @@ public class CodeGenieTestListener extends TestRunListener{
 		if(sr!=null){
 			sr.setResults(getFailuresCount(),getErrorCount(),getSuccessCount());
 		}
-		SolrResultsView.getCurrent().canRefresh();
+		ResultsView.getCurrent().canRefresh();
 		super.sessionFinished(session);
 	}
 
@@ -55,7 +55,7 @@ public class CodeGenieTestListener extends TestRunListener{
 		error=0;
 		failure=0;
 		success=0;
-		SolrResultsView.getCurrent().cantRefresh();
+		ResultsView.getCurrent().cantRefresh();
 	}
 
 	/* (non-Javadoc)

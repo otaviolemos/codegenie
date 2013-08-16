@@ -47,4 +47,8 @@ public class FileServerConnector {
 			return e.getMessage().getBytes();
 		}
 	}
+	
+	public String getSourceCode(){
+		return new String(getBytes());
+	}
 }

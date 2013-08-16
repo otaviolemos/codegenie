@@ -36,10 +36,17 @@
       </category>
       <view
             category="codegenie-2"
-            class="br.unifesp.ict.seg.codegenie.views.SolrResultsView"
+            class="br.unifesp.ict.seg.codegenie.views.ResultsView"
             icon="icons/lamp_icon.gif"
-            id="br.unifesp.ict.seg.codegenie.views.SolrResultsView"
-            name="CodeGenie view">
+            id="br.unifesp.ict.seg.codegenie.views.ResultsView"
+            name="CodeGenie">
+      </view>
+      <view
+            category="codegenie-2"
+            class="br.unifesp.ict.seg.codegenie.views.CodeView"
+            icon="icons/viewcode.png"
+            id="br.unifesp.ict.seg.codegenie.views.CodeView"
+            name="Remote Source Code ">
       </view>
    </extension>
    <extension
@@ -48,6 +55,15 @@
             targetID="org.eclipse.jdt.ui.JavaPerspective">
          <view
                id="br.unifesp.ict.seg.codegenie.views.SolrResultsView"
+               ratio="0.5"
+               relationship="right"
+               relative="org.eclipse.ui.views.ProblemView">
+         </view>
+      </perspectiveExtension>
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               id="br.unifesp.ict.seg.codegenie.views.CodeView"
                ratio="0.5"
                relationship="right"
                relative="org.eclipse.ui.views.ProblemView">
