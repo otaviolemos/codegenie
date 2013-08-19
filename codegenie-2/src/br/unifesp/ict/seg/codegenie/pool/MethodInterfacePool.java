@@ -18,7 +18,7 @@ public class MethodInterfacePool {
 	}
 
 	public static void clear() {
-		Debug.debug(MethodInterfacePool.class,"crearing pool");
+		Debug.debug(MethodInterfacePool.class,"clearing pool");
 		contents.clear();		
 	}
 

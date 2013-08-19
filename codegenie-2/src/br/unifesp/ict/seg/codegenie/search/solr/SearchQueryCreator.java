@@ -282,4 +282,8 @@ public class SearchQueryCreator {
 	public Long getID() {
 		return id;
 	}
+
+	public IType getTestingClass() {
+		return this.selection;
+	}
 }

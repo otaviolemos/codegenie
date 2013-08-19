@@ -2,6 +2,8 @@ package br.unifesp.ict.seg.codegenie.search.solr;
 
 import org.eclipse.jdt.core.IType;
 
+import br.unifesp.ict.seg.codegenie.views.ResultsViewUpdater;
+
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 
 public class MySingleResult {
@@ -13,6 +15,7 @@ public class MySingleResult {
 	private int errors=-1;
 	private int success=-1;
 	private boolean weaven;
+	private ResultsViewUpdater resultsViewUpdater;
 
 	/**
 	 * @return
@@ -170,6 +173,12 @@ public class MySingleResult {
 	public void setWeaven() {
 		this.weaven=true;		
 	}
+
+	public void setResultsViewUpdater(ResultsViewUpdater resultsViewUpdater) {
+		this.resultsViewUpdater = resultsViewUpdater;
+	}
+	
+	public ResultsViewUpdater getResultsViewUpdater(){return this.resultsViewUpdater;}
 	
 
 }

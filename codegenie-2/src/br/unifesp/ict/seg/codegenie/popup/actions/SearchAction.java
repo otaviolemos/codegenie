@@ -1,8 +1,5 @@
 package br.unifesp.ict.seg.codegenie.popup.actions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
@@ -11,26 +8,15 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.IObjectActionDelegate;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 
 import br.unifesp.ict.seg.codegenie.Activator;
-import br.unifesp.ict.seg.codegenie.tmp.MySQLQuery;
 
-import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
-
-import br.unifesp.ict.seg.codegenie.pool.MethodInterfacePool;
-import br.unifesp.ict.seg.codegenie.pool.SearchResultMap;
-import br.unifesp.ict.seg.codegenie.pool.SlicePool;
-import br.unifesp.ict.seg.codegenie.pool.SolrPool;
 import br.unifesp.ict.seg.codegenie.preferences.PreferenceConstants;
-import br.unifesp.ict.seg.codegenie.search.solr.MySingleResult;
 import br.unifesp.ict.seg.codegenie.search.solr.SearchQueryCreator;
 import br.unifesp.ict.seg.codegenie.search.solr.SolrSearch;
 import br.unifesp.ict.seg.codegenie.tmp.Debug;
-import br.unifesp.ict.seg.codegenie.views.ResultsView;
+import br.unifesp.ict.seg.codegenie.views.ResultsViewUpdater;
 
 
 public class SearchAction implements IObjectActionDelegate {
@@ -56,10 +42,6 @@ public class SearchAction implements IObjectActionDelegate {
 	 * @see IActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
-		MethodInterfacePool.clear();
-		SearchResultMap.clear();
-		SlicePool.clear();
-		SolrPool.clear();
 		IType selection = (IType) ((TreeSelection)this.selection).getFirstElement();
 		IJavaProject javap = selection.getJavaProject();
 		try {
@@ -91,42 +73,14 @@ public class SearchAction implements IObjectActionDelegate {
 		}
 		SolrSearch searchJob=null;
 		try {
-			searchJob = new SolrSearch(query,javap,this.selection);
+			searchJob = new SolrSearch(sqc.getID(),query,javap,this.selection);
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 			return;
 		}
 		searchJob.buildQuery();
-		List<SingleResult> results = searchJob.performQuery();
-		//TODO remove
-		Debug.debug(getClass(), "updating solr results...");
-		List<MySingleResult> updatedResults = new ArrayList<MySingleResult>();
-		for(SingleResult sr : results){
-			long neweid = MySQLQuery.query(MySQLQuery.fixSolr(sr.getFqn(), sr.getParams()));
-			MySingleResult msr = new MySingleResult(sr,neweid);
-			msr.setTestClass(selection);
-			updatedResults.add(msr);
-		}
-		//register solr results and this query into the pools
-		SolrPool.add(updatedResults);
-		SearchResultMap.add(sqc.getID(),updatedResults,selection,javap);
-		
-		
-		//force showing the code genie view
-		IWorkbench work = PlatformUI.getWorkbench();
-		//bring view to the front
-		try {
-			work.getActiveWorkbenchWindow()
-			.getActivePage()
-			.showView(ResultsView.ID);
-		} catch (PartInitException e) {
-			e.printStackTrace();
-		}
-		//get ResultsView
-		ResultsView view = (ResultsView) work.getActiveWorkbenchWindow()
-				.getActivePage().findView(ResultsView.ID);
-		view.refresh();
-		
+		ResultsViewUpdater rvu = new ResultsViewUpdater(searchJob,sqc);
+		rvu.makeQueryAndUpdateView();
 
 	}
 

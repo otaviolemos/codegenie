@@ -54,8 +54,10 @@ public class ResultsView extends ViewPart {
 	protected Action refresh;
 	protected Action add;
 	protected Action remove;
-	protected Action doubleClickAction;
 	protected Action viewSourceCode;
+	protected Action editQuery;
+	protected Action doubleClickAction;
+	
 	protected boolean canRefresh;
 
 	private static ResultsView current = null;
@@ -155,6 +157,8 @@ public class ResultsView extends ViewPart {
 		manager.add(remove);
 		manager.add(new Separator());
 		manager.add(viewSourceCode);
+		manager.add(new Separator());
+		manager.add(editQuery);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
@@ -162,6 +166,7 @@ public class ResultsView extends ViewPart {
 		manager.add(add);
 		manager.add(remove);
 		manager.add(viewSourceCode);
+		manager.add(editQuery);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
@@ -171,6 +176,7 @@ public class ResultsView extends ViewPart {
 		manager.add(add);
 		manager.add(remove);
 		manager.add(viewSourceCode);
+		manager.add(editQuery);
 	}
 
 
@@ -269,6 +275,19 @@ public class ResultsView extends ViewPart {
 		viewSourceCode.setImageDescriptor(
 				CodeGenieImages.getImageDescriptor(CodeGenieImages.VIEW_CODE));
 
+		editQuery = new Action() {
+			public void run() {
+				ISelection selection = viewer.getSelection();
+				MySingleResult obj = (MySingleResult) ((IStructuredSelection)selection).getFirstElement();
+				ResultsViewUpdater rvu = obj.getResultsViewUpdater();
+				rvu.updateQuery();
+				rvu.makeQueryAndUpdateView();			}
+		};
+		editQuery.setText("Edit query");
+		editQuery.setToolTipText("Change Solr query that will be send to server");
+		editQuery.setImageDescriptor(CodeGenieImages.getImageDescriptor(
+				CodeGenieImages.EDIT_QUERY));
+		
 
 		doubleClickAction = new Action() {
 			public void run() {
@@ -294,7 +313,7 @@ public class ResultsView extends ViewPart {
 				message);
 	}
 
-	private String showInput(String message, String defaultValue){
+	protected String showInput(String message, String defaultValue){
 		InputDialog input = new InputDialog(viewer.getControl().getShell(),
 				"CodeGenie View",
 				message,

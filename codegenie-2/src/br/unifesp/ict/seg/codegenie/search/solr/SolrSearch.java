@@ -20,17 +20,21 @@ public class SolrSearch {
 	private IJavaProject javap;
 	private ISelection testClass;
 	private String query;
+	private Long qid;
 
-	public SolrSearch(String[] query,IJavaProject java, ISelection testClass) throws InstantiationException {
+	public SolrSearch(Long qid,String[] query,IJavaProject java, ISelection testClass) throws InstantiationException {
 		if(query==null || java==null || testClass==null){
 			throw new  InstantiationException("args for new "
 					+getClass().getSimpleName()+" are: " +query+", "
 					+java+", "+testClass);
 		}
+		this.qid=qid;
 		this.querySpec = query;
 		this.javap = java;
 		this.testClass = testClass;
 	}
+	public Long getQID(){return qid;}
+	
 	
 	public void buildQuery(){
 		String[][] solrConditions = new String[5][];
@@ -99,6 +103,12 @@ public class SolrSearch {
 	 */
 	public ISelection getTestClass() {
 		return testClass;
+	}
+	public String getQuery() {
+		return query;
+	}
+	public void setQuery(String newQ) {
+		this.query=newQ;
 	}
 	
 	

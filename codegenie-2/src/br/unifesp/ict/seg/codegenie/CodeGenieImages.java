@@ -22,6 +22,7 @@ public class CodeGenieImages {
 	public static final String YELLOW_IMG = "yellow_method.gif";
 	public static final String GREEN_IMG = "methpub_obj.gif";
 	public static final String VIEW_CODE = "viewcode.png";
+	public static final String EDIT_QUERY = "editquery.png";
 	
 	@SuppressWarnings("deprecation")
 	public static ImageDescriptor getImageDescriptor(String key){
