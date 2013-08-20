@@ -104,6 +104,37 @@ public class ResultsView extends ViewPart {
 	}
 
 	class NameSorter extends ViewerSorter {
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+		 */
+		@Override
+		public int compare(Viewer viewer, Object e1, Object e2) {
+			if(e1 instanceof MySingleResult && e2 instanceof MySingleResult){
+				MySingleResult sr1 = (MySingleResult) e1;
+				MySingleResult sr2 = (MySingleResult) e2;
+				int s1 = sr1.getSuccess();
+				int s2 = sr2.getSuccess();
+				if(s1==-1 || s2==-1){//one of them is not tested
+					if(s1==-1 && s2==-1){
+						return 0;
+					} else if(s1==-1){//s1 is not tested
+						if(s2==sr2.getTotal()){
+							return 1;
+						}
+						return -1;
+					} else { //s2 is not tested
+						if(s1==sr1.getTotal()){
+							return -1;
+						}
+						return 1;
+					}
+				}
+				return sr2.getSuccess()-sr1.getSuccess();
+			}
+			return super.compare(viewer, e1, e2);
+		}
+		
 	}
 
 	/**
@@ -208,7 +239,7 @@ public class ResultsView extends ViewPart {
 					slice.saveAndRebuild();
 					slice.createMethod();
 					slice.saveAndRebuild();
-					obj.setWeaven();
+					obj.setWoven();
 					slice.runTests(obj);
 					showMessage("Slice "+eid+" added");
 					//ResultsView.this.waitAndRefresh();
@@ -306,7 +337,7 @@ public class ResultsView extends ViewPart {
 			}
 		});
 	}
-	private void showMessage(String message) {
+	protected void showMessage(String message) {
 		MessageDialog.openInformation(
 				viewer.getControl().getShell(),
 				"CodeGenie view",

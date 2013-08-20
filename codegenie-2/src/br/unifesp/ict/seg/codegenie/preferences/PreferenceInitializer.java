@@ -30,6 +30,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(CODESYN, true);
 		store.setDefault(ENANT, true);
 		store.setDefault(CODEANT, true);
+		store.setDefault(AUTOTEST, 5);
 	}
 
 }

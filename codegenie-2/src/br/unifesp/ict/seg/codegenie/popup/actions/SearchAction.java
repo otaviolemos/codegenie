@@ -81,7 +81,7 @@ public class SearchAction implements IObjectActionDelegate {
 		searchJob.buildQuery();
 		ResultsViewUpdater rvu = new ResultsViewUpdater(searchJob,sqc);
 		rvu.makeQueryAndUpdateView();
-
+		// TODO adicionar e testar os primeiros resultados (5 colocar nas preferencias)
 	}
 
 	/**

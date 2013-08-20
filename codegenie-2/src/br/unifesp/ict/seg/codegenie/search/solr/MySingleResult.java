@@ -14,7 +14,7 @@ public class MySingleResult {
 	private int failures=-1;
 	private int errors=-1;
 	private int success=-1;
-	private boolean weaven;
+	private boolean woven;
 	private ResultsViewUpdater resultsViewUpdater;
 
 	/**
@@ -110,10 +110,10 @@ public class MySingleResult {
 		if(failures!=-1){
 			ret+=" Failures="+failures+", Errors="+errors+", Success="+success;
 		}
-		if(weaven){
-			ret+=" - currrently weaven";
+		if(woven){
+			ret+=" - currrently woven";
 		} else {
-			ret+=" - currrently unweaven";
+			ret+=" - currrently unwoven";
 		}
 		return ret;
 	}
@@ -167,11 +167,11 @@ public class MySingleResult {
 		return success+errors+failures;
 	}
 
-	public void setUnWeaven() {
-		this.weaven=false;		
+	public void setUnWoven() {
+		this.woven=false;		
 	}
-	public void setWeaven() {
-		this.weaven=true;		
+	public void setWoven() {
+		this.woven=true;		
 	}
 
 	public void setResultsViewUpdater(ResultsViewUpdater resultsViewUpdater) {
@@ -179,6 +179,10 @@ public class MySingleResult {
 	}
 	
 	public ResultsViewUpdater getResultsViewUpdater(){return this.resultsViewUpdater;}
+
+	public boolean isWoven() {
+		return this.woven;
+	}
 	
 
 }

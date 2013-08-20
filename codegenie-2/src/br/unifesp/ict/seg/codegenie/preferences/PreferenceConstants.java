@@ -16,6 +16,7 @@ public class PreferenceConstants {
 	public static final String CODESYN = "codesyn";
 	public static final String ENANT = "enant";
 	public static final String CODEANT = "codeant";
+	public static final String AUTOTEST = "autotest";
 	
 	
 }

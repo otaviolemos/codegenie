@@ -76,6 +76,9 @@ public class CodeGeniePreferences extends FieldEditorPreferencePage implements I
 		BooleanFieldEditor codeant = 
 				new BooleanFieldEditor(PreferenceConstants.CODEANT,
 						"Use code antonyms",getFieldEditorParent());
+		IntegerFieldEditor autotest = 
+				new IntegerFieldEditor(PreferenceConstants.AUTOTEST,
+						"Automatic test first # results",getFieldEditorParent());
 		addField(fileServer);
 		addField(relatedWordServer);
 		addField(sliceServer);
@@ -86,6 +89,7 @@ public class CodeGeniePreferences extends FieldEditorPreferencePage implements I
 		addField(enant);
 		addField(codesyn);
 		addField(codeant);
+		addField(autotest);
 		//addField(listenJUnit);
 	}
 

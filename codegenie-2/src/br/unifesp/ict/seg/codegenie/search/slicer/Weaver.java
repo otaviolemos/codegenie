@@ -52,7 +52,7 @@ public class Weaver extends AbstractProjectEditor {
 
 
 	public boolean weave() throws CoreException{
-		includeInBuilding(sliceID);
+		//includeInBuilding(sliceID);
 		this.resolveIncludedSlice();
 		//create annotation
 		SliceAddedAnn ann = new SliceAddedAnn(sliceID);
@@ -122,7 +122,7 @@ public class Weaver extends AbstractProjectEditor {
 			}
 
 		}
-		excludeFromBuilding(sliceID);
+		//excludeFromBuilding(sliceID);
 		return true;
 	}
 	

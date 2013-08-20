@@ -128,7 +128,13 @@ public class SliceFile extends AbstractProjectEditor{
 	 * @throws CoreException */
 	public void merge() throws IOException, CoreException {
 		createAnnotation();
-		weave.weave();
+		weave.includeInBuilding(eid);
+		try{
+			weave.weave();
+		} catch(NullPointerException npe){ //in case of some problem with the project
+			//do nothing
+		}
+		weave.excludeFromBuilding(eid);
 		cleanFolder();
 	}
 
@@ -412,7 +418,7 @@ public class SliceFile extends AbstractProjectEditor{
 	public static boolean removeSlice(Long eid,MySingleResult obj){
 		SliceFile slice = SlicePool.getByEID(eid);
 		MySingleResult sr=SolrPool.get(eid);
-		sr.setUnWeaven();
+		sr.setUnWoven();
 		try {
 			slice.remove(sr);
 		} catch (IOException e) {

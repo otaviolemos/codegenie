@@ -114,7 +114,7 @@ public class CodeView extends ViewPart {
 					slice.saveAndRebuild();
 					slice.createMethod();
 					slice.saveAndRebuild();
-					obj.setWeaven();
+					obj.setWoven();
 					slice.runTests(obj);
 					showMessage("Slice "+eid+" added");
 					//ResultsView.this.waitAndRefresh();
