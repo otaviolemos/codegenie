@@ -12,9 +12,9 @@ public class SourcererQueryBuilderTest {
 
 	@Test
 	public void querySintaxTest() throws Exception {
-		String m = "";
-		String p = "Collection<String>, double";
-		String r = "";
+		String m = "setSize";
+		String p = "int, double";
+		String r = "void";
 		
 		SourcererQueryBuilder sourcererQueryBuilder = new SourcererQueryBuilder(ConfigProperties.getProperty("aqExperiment.expanders"));
 		SearchAdapter searchAdapter = SearchAdapter.create(ConfigProperties.getProperty("aqExperiment.sourcerer.url"));
@@ -31,5 +31,5 @@ public class SourcererQueryBuilderTest {
 		System.out.println("Expanders: " + ConfigProperties.getProperty("aqExperiment.expanders"));
 		assertTrue(searchResult.getNumFound() >= -1);
 	}
-
+	
 }

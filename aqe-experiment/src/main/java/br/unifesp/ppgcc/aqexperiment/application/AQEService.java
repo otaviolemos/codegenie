@@ -106,7 +106,7 @@ public class AQEService {
 			if (searchResult.getNumFound() == -1) {
 				LogUtils.getLogger().error("Unable to perform search: " + query);
 			} else {
-				results.addAll(searchResult.getResults(0, searchResult.getNumFound()));
+				results.addAll(searchResult.getResults(0, 100));
 			}
 			response.setResultsFromSingleResult(results);
 

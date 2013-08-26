@@ -29,20 +29,10 @@ public class TypeExpander extends Expander {
 		else if("Integer".equalsIgnoreCase(term))
 			this.expandTerm(queryTerm, new String[]{"int"});
 
-		//Float types
-		else if ("double".equalsIgnoreCase(term))
-			this.expandTerm(queryTerm, new String[]{"float","long","int","Integer","short","byte"});
-		else if ("float".equalsIgnoreCase(term))
-			this.expandTerm(queryTerm, new String[]{"long","int","Integer","short","byte"});
+		//Numeric types
+		if (StringUtils.indexOf(",double,float,long,int,Integer,short,byte,", ","+term+",") > -1)
+			this.expandTerm(queryTerm, new String[]{"double","float","long","int","Integer","short","byte"});
 		
-		//Integer types
-		else if ("long".equalsIgnoreCase(term))
-			this.expandTerm(queryTerm, new String[]{"int","Integer","short","byte"});
-		else if ("int".equalsIgnoreCase(term) || "Integer".equalsIgnoreCase(term))
-			this.expandTerm(queryTerm, new String[]{"short","byte"});
-		else if ("short".equalsIgnoreCase(term))
-			this.expandTerm(queryTerm, new String[]{"byte"});
-
 		//Generic types
 		else if (useGeneric(term))
 			this.expandTerm(queryTerm, new String[]{this.removeGeneric(term)});
@@ -67,7 +57,7 @@ public class TypeExpander extends Expander {
 		else if ("Queue".equalsIgnoreCase(term))
 			this.expandTerm(queryTerm, new String[]{"LinkedList","PriorityQueue"});
 		else if ("Map".equalsIgnoreCase(term))
-			this.expandTerm(queryTerm, new String[]{"SortedMap","Hashtable","LinkedHashMap","TreeMap"});
+			this.expandTerm(queryTerm, new String[]{"SortedMap","Hashtable","LinkedHashMap","HashMap","TreeMap"});
 		else if ("SortedMap".equalsIgnoreCase(term))
 			this.expandTerm(queryTerm, new String[]{"TreeMap"});
 	}
