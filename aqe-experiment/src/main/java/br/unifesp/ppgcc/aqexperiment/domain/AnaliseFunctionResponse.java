@@ -1,10 +1,7 @@
 package br.unifesp.ppgcc.aqexperiment.domain;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,8 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
@@ -28,9 +23,6 @@ public class AnaliseFunctionResponse {
 	@GeneratedValue
 	private Long id;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date executionTimestamp;
-
 	private String methodName;
 	
 	//adding additional required fields:
@@ -43,6 +35,10 @@ public class AnaliseFunctionResponse {
 	@Column(name="precis")
 	private Double precision;
 
+	@ManyToOne
+	@JoinColumn(name = "execution")
+	private Execution execution;
+	
 	@ManyToOne
 	@JoinColumn(name = "surveyResponse")
 	private SurveyResponse surveyResponse;
@@ -61,11 +57,10 @@ public class AnaliseFunctionResponse {
 	public AnaliseFunctionResponse(){
 	}
 	
-	public AnaliseFunctionResponse(String methodName, String returnType, String params, SurveyResponse surveyResponse, Date executionTimestamp) {
-		this.executionTimestamp = executionTimestamp;
+	public AnaliseFunctionResponse(String methodName, String returnType, String params, SurveyResponse surveyResponse, Execution execution) {
+		this.execution = execution;
 		this.methodName = methodName;
 		this.surveyResponse = surveyResponse;
-		// adding return type and params from subject
 		this.returnType = returnType;
 		this.params = params;
 	}
@@ -125,12 +120,12 @@ public class AnaliseFunctionResponse {
 		this.results = results;
 	}
 
-	public Date getExecutionTimestamp() {
-		return executionTimestamp;
+	public Execution getExecution() {
+		return execution;
 	}
 
-	public void setExecutionTimestamp(Date executionTimestamp) {
-		this.executionTimestamp = executionTimestamp;
+	public void setExecution(Execution execution) {
+		this.execution = execution;
 	}
 
 	public Integer getTotalResults() {

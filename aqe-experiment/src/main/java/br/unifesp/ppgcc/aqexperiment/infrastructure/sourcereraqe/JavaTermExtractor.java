@@ -2,7 +2,7 @@
  * @author <a href="sbajrach@ics.uci.edu">skb</a>
  *  created: May 13, 2007 
  */
-package br.unifesp.ppgcc.aqexperiment.infrastructure.util;
+package br.unifesp.ppgcc.aqexperiment.infrastructure.sourcereraqe;
 
 import java.util.ArrayList;
 import java.util.Collection;

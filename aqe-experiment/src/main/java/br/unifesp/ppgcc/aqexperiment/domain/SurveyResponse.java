@@ -1,13 +1,11 @@
 package br.unifesp.ppgcc.aqexperiment.domain;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import jxl.Sheet;
 
@@ -20,9 +18,10 @@ public class SurveyResponse {
 	@GeneratedValue
 	private Long id;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date executionTimestamp;
-
+	@ManyToOne
+	@JoinColumn(name = "execution")
+	private Execution execution;
+	
 	private String copiaNome;
 	private String origem;
 	private String conviteEmail;
@@ -201,11 +200,11 @@ public class SurveyResponse {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Date getExecutionTimestamp() {
-		return executionTimestamp;
+	public Execution getExecution() {
+		return execution;
 	}
-	public void setExecutionTimestamp(Date executionTimestamp) {
-		this.executionTimestamp = executionTimestamp;
+	public void setExecution(Execution execution) {
+		this.execution = execution;
 	}
 	public String getCopiaNome() {
 		return copiaNome;

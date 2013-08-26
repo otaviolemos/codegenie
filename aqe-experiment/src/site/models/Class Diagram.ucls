@@ -4,7 +4,7 @@
   <class id="1" language="java" name="br.unifesp.ppgcc.aqexperiment.domain.AnaliseFunction" project="aqe-experiment" 
     file="/aqe-experiment/src/main/java/br/unifesp/ppgcc/aqexperiment/domain/AnaliseFunction.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="787" y="122"/>    
+    <position height="-1" width="-1" x="907" y="155"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -15,7 +15,7 @@
     project="aqe-experiment" 
     file="/aqe-experiment/src/main/java/br/unifesp/ppgcc/aqexperiment/domain/AnaliseFunctionResponse.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="495" y="123"/>    
+    <position height="-1" width="-1" x="553" y="155"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -25,7 +25,7 @@
   <class id="3" language="java" name="br.unifesp.ppgcc.aqexperiment.domain.SurveyResponse" project="aqe-experiment" 
     file="/aqe-experiment/src/main/java/br/unifesp/ppgcc/aqexperiment/domain/SurveyResponse.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="191" y="812"/>    
+    <position height="-1" width="-1" x="115" y="1028"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -53,36 +53,62 @@
       <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <association id="6">    
+  <class id="6" language="java" name="br.unifesp.ppgcc.aqexperiment.domain.Execution" project="aqe-experiment" 
+    file="/aqe-experiment/src/main/java/br/unifesp/ppgcc/aqexperiment/domain/Execution.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="297" y="155"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <association id="7">    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="7" name="results"/>      
-      <multiplicity id="8" minimum="0" maximum="2147483647"/>    
+      <attribute id="8" name="results"/>      
+      <multiplicity id="9" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="9">    
+  <association id="10">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="10" name="relevants"/>      
-      <multiplicity id="11" minimum="0" maximum="2147483647"/>    
+      <attribute id="11" name="relevants"/>      
+      <multiplicity id="12" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="12">    
+  <association id="13">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="13" name="responses"/>      
-      <multiplicity id="14" minimum="0" maximum="2147483647"/>    
+      <attribute id="14" name="responses"/>      
+      <multiplicity id="15" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="15">    
+  <association id="16">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="17" name="execution"/>      
+      <multiplicity id="18" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="19">    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="16" name="surveyResponse"/>      
-      <multiplicity id="17" minimum="0" maximum="1"/>    
+      <attribute id="20" name="surveyResponse"/>      
+      <multiplicity id="21" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="22">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="23" name="execution"/>      
+      <multiplicity id="24" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

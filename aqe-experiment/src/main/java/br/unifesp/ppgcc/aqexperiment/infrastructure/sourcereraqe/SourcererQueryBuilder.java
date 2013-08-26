@@ -1,0 +1,152 @@
+package br.unifesp.ppgcc.aqexperiment.infrastructure.sourcereraqe;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+
+public class SourcererQueryBuilder {
+
+	private AQEApproach aqeApproach;
+
+	public SourcererQueryBuilder(String expanders) throws Exception {
+		aqeApproach = new AQEApproach(expanders);
+	}
+
+	public String getSourcererExpandedQuery(String methodName, String returnType, String params) throws Exception {
+
+		List<QueryTerm> methodNameTerms = this.getMethodNameTerms(methodName);
+		List<QueryTerm> returnTypeTerms = this.getReturnTypeTerms(returnType);
+		List<QueryTerm> paramsTerms = this.getParamsTerms(params);
+
+		// EAQ
+		for (Expander expander : aqeApproach.getExpanders()) {
+			if (expander.isMethodNameExpander())
+				for(QueryTerm queryTerm : methodNameTerms)
+					expander.expandTerm(queryTerm);
+
+			if (expander.isReturnExpander())
+				for(QueryTerm queryTerm : returnTypeTerms)
+					expander.expandTerm(queryTerm);
+
+			if (expander.isParamExpander())
+				for(QueryTerm queryTerm : paramsTerms)
+					expander.expandTerm(queryTerm);
+		}
+
+		String methodPart = this.getMethodNamePart(methodNameTerms);
+		String returnTypePart = (aqeApproach.isRelaxReturn() ? "" : this.getReturnTypePart(returnTypeTerms));
+		String paramsPart = (aqeApproach.isRelaxParams() ? "" : this.getParamsPart(paramsTerms));
+
+		return methodPart + returnTypePart + paramsPart;
+	}
+
+	private List<QueryTerm> getMethodNameTerms(String methodName){
+		String names = JavaTermExtractor.getFQNTermsAsString(methodName);
+		names = JavaTermExtractor.removeDuplicates(names);
+		String[] strTerms = StringUtils.split(names, " ");
+		
+		List<QueryTerm> terms = new ArrayList<QueryTerm>();
+		
+		for(String term : strTerms){
+			terms.add(new QueryTerm(term));
+		}
+		
+		return terms;
+	}
+	
+	private List<QueryTerm> getReturnTypeTerms(String returnType){
+		
+		List<QueryTerm> terms = new ArrayList<QueryTerm>();
+		if(!StringUtils.isBlank(returnType))
+			terms.add(new QueryTerm(StringUtils.trim(returnType)));
+		
+		return terms;
+	}
+	
+	private List<QueryTerm> getParamsTerms(String params){
+		String[] strTerms = StringUtils.split(StringUtils.trim(params),  ",");
+		
+		List<QueryTerm> terms = new ArrayList<QueryTerm>();
+		
+		for(String term : strTerms){
+			terms.add(new QueryTerm(StringUtils.trim(term)));
+		}
+		
+		return terms;
+	}
+	
+	private String getMethodNamePart(List<QueryTerm> methodTerms) throws Exception {
+
+		if(methodTerms.size() == 0)
+			return "";
+
+		String query = "";
+		query += "sname_contents:(" + this.getSourcererQueryPart(methodTerms) + ")";
+		
+		return query;
+	}
+
+	private String getReturnTypePart(List<QueryTerm> returnTypeTerms) {
+
+		if(returnTypeTerms.size() == 0)
+			return "";
+
+		String query = "";
+		query += "\nreturn_sname_contents:(" + this.getSourcererQueryPart(returnTypeTerms) + ")";
+		
+		return query;
+	}
+
+	private String getParamsPart(List<QueryTerm> paramsTerms) {
+
+		boolean sourcererLibBug = paramsTerms.size() == 1 && ")".equals(paramsTerms.get(0)); // entityId in ( 5842071 , 5877324 )
+		if (paramsTerms.size() == 0 || sourcererLibBug)
+			return "";
+
+		String query = "";
+		query += "\nparam_count:" + paramsTerms.size();
+		query += "\nparams_snames_contents:(" + this.getSourcererQueryPart(paramsTerms) + ")";
+
+		return query;
+	}
+	
+	private String getSourcererQueryPart(List<QueryTerm> queryTerms) {
+		String query = "";
+		boolean firstTerm = true;
+		for(QueryTerm queryTerm : queryTerms){
+
+			if(!firstTerm)
+				query += " AND ";
+			else
+				firstTerm = false;
+			
+			boolean firstExpanded = true;
+			for(String expandedTerm : queryTerm.getExpandedTerms()){
+				if(firstExpanded){
+					query += "( " + expandedTerm;
+					firstExpanded = false;
+				} else
+					query += " OR " + expandedTerm;
+			}
+			if(queryTerm.getExpandedTerms().size() > 0)
+				query += " )";
+			
+
+			firstExpanded = true;
+			for(String expandedTerm : queryTerm.getExpandedTermsNot()){
+				if(firstExpanded){
+					query += " AND !( " + expandedTerm;
+					firstExpanded = false;
+				} else
+					query += " OR " + expandedTerm;
+			}
+			if(queryTerm.getExpandedTermsNot().size() > 0)
+				query += " )";
+		}
+
+		return query;
+	}
+
+
+}

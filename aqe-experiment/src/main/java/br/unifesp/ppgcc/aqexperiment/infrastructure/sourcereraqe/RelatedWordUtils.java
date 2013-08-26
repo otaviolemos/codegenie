@@ -1,4 +1,4 @@
-package br.unifesp.ppgcc.aqexperiment.infrastructure.util;
+package br.unifesp.ppgcc.aqexperiment.infrastructure.sourcereraqe;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -7,6 +7,8 @@ import java.util.StringTokenizer;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
+
+import br.unifesp.ppgcc.aqexperiment.infrastructure.util.ConfigProperties;
 
 public class RelatedWordUtils {
 

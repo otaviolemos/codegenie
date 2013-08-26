@@ -1,4 +1,4 @@
-package br.unifesp.ppgcc.aqexperiment.infrastructure.util;
+package br.unifesp.ppgcc.aqexperiment.infrastructure.sourcereraqe;
 
 import java.util.ArrayList;
 import java.util.List;
