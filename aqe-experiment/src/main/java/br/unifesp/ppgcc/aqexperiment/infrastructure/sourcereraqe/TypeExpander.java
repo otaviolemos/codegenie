@@ -8,7 +8,7 @@ public class TypeExpander extends Expander {
 		super.setName(TYPE_EXPANDER);
 		super.setMethodNameExpander(false);
 		super.setParamExpander(true);
-		super.setReturnExpander(false);
+		super.setReturnExpander(true);
 	}
 	
 	public void expandTerm(QueryTerm queryTerm){
