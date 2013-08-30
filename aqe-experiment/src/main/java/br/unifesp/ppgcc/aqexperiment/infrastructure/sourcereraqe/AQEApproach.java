@@ -44,6 +44,10 @@ public class AQEApproach {
 			else
 				desc += ", " + expander.getName();
 		}
+		
+		if(desc == null)
+			return "Whitout expansion";
+
 		return desc;
 	}
 
