@@ -9,9 +9,9 @@ import javax.xml.bind.Unmarshaller;
 import br.unifesp.ppgcc.aqexperiment.infrastructure.util.ConfigProperties;
 
 @SuppressWarnings("restriction")
-public class CodeVacabularyExpander extends Expander {
+public class CodeVocabularyExpander extends Expander {
 
-	public CodeVacabularyExpander() {
+	public CodeVocabularyExpander() {
 		super.setName(CODE_VOCABULARY_EXPANDER);
 		super.setMethodNameExpander(true);
 		super.setParamExpander(false);

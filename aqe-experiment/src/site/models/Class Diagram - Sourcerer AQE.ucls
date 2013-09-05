@@ -78,9 +78,9 @@
       <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="br.unifesp.ppgcc.aqexperiment.infrastructure.sourcereraqe.CodeVacabularyExpander" 
+  <class id="8" language="java" name="br.unifesp.ppgcc.aqexperiment.infrastructure.sourcereraqe.CodeVocabularyExpander" 
     project="aqe-experiment" 
-    file="/aqe-experiment/src/main/java/br/unifesp/ppgcc/aqexperiment/infrastructure/sourcereraqe/CodeVacabularyExpander.java" 
+    file="/aqe-experiment/src/main/java/br/unifesp/ppgcc/aqexperiment/infrastructure/sourcereraqe/CodeVocabularyExpander.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="910" y="145"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 

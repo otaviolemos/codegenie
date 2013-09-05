@@ -10,6 +10,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import br.unifesp.ppgcc.aqexperiment.infrastructure.sourcereraqe.AQEApproach;
+import br.unifesp.ppgcc.aqexperiment.infrastructure.util.ConfigProperties;
 
 @Entity
 @Table(name = "execution")
@@ -28,9 +29,12 @@ public class Execution {
 	public Execution() {
 	}
 
-	public Execution(long executionTimestamp, String expanders) throws Exception {
+	public Execution(long executionTimestamp) throws Exception {
 		this.executionTimestamp = new Date(executionTimestamp);
-		this.autoDescription = new AQEApproach(expanders).getAutoDescription();
+
+		boolean relaxReturn = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxReturn"));
+		boolean relaxParams = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxParams"));
+		this.autoDescription = new AQEApproach(ConfigProperties.getProperty("aqExperiment.expanders"), relaxReturn, relaxParams).getAutoDescription();
 	}
 	
 	public Long getId() {

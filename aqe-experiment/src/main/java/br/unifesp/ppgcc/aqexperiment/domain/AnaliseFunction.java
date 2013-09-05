@@ -38,10 +38,10 @@ public class AnaliseFunction {
 	public AnaliseFunction() {
 	}
 
-	public AnaliseFunction(String description, int number, int surveyNumber, int occurences, Long[] relevantsSolrIds) {
+	public AnaliseFunction(int surveyReponseNumber, String description, int number, int occurences, Long[] relevantsSolrIds) {
+		this.surveyNumber = surveyReponseNumber;
 		this.description = description;
 		this.number = number;
-		this.surveyNumber = surveyNumber;
 		this.occurences = occurences;
 		this.relevantsSolrIds = relevantsSolrIds;
 	}
@@ -52,109 +52,109 @@ public class AnaliseFunction {
 		String returnType = null;
 		String params = null;
 
-		int number = this.getNumber();
-		switch (number) {
-		case 18:
+		int surveyResponseNumber = this.getSurveyNumber();
+		switch (surveyResponseNumber) {
+		case 1:
 			returnType = surveyResponse.getReturn1();
 			methodName = surveyResponse.getMethodName1();
 			params = surveyResponse.getParams1();
 			break;
-		case 23:
+		case 2:
 			returnType = surveyResponse.getReturn2();
 			methodName = surveyResponse.getMethodName2();
 			params = surveyResponse.getParams2();
 			break;
-		case 21:
+		case 3:
 			returnType = surveyResponse.getReturn3();
 			methodName = surveyResponse.getMethodName3();
 			params = surveyResponse.getParams3();
 			break;
-		case 19:
+		case 4:
 			returnType = surveyResponse.getReturn4();
 			methodName = surveyResponse.getMethodName4();
 			params = surveyResponse.getParams4();
 			break;
-		case 32:
+		case 5:
 			returnType = surveyResponse.getReturn5();
 			methodName = surveyResponse.getMethodName5();
 			params = surveyResponse.getParams5();
 			break;
-		case 35:
+		case 6:
 			returnType = surveyResponse.getReturn6();
 			methodName = surveyResponse.getMethodName6();
 			params = surveyResponse.getParams6();
 			break;
-		case 9:
+		case 7:
 			returnType = surveyResponse.getReturn7();
 			methodName = surveyResponse.getMethodName7();
 			params = surveyResponse.getParams7();
 			break;
-		case 10:
+		case 8:
 			returnType = surveyResponse.getReturn8();
 			methodName = surveyResponse.getMethodName8();
 			params = surveyResponse.getParams8();
 			break;
-		case 14:
+		case 9:
 			returnType = surveyResponse.getReturn9();
 			methodName = surveyResponse.getMethodName9();
 			params = surveyResponse.getParams9();
 			break;
-		case 22:
+		case 10:
 			returnType = surveyResponse.getReturn10();
 			methodName = surveyResponse.getMethodName10();
 			params = surveyResponse.getParams10();
 			break;
-		case 24:
+		case 11:
 			returnType = surveyResponse.getReturn11();
 			methodName = surveyResponse.getMethodName11();
 			params = surveyResponse.getParams11();
 			break;
-		case 30:
+		case 12:
 			returnType = surveyResponse.getReturn12();
 			methodName = surveyResponse.getMethodName12();
 			params = surveyResponse.getParams12();
 			break;
-		case 17:
+		case 13:
 			returnType = surveyResponse.getReturn13();
 			methodName = surveyResponse.getMethodName13();
 			params = surveyResponse.getParams13();
 			break;
-		case 5:
+		case 14:
 			returnType = surveyResponse.getReturn14();
 			methodName = surveyResponse.getMethodName14();
 			params = surveyResponse.getParams14();
 			break;
-		case 33:
+		case 15:
+			returnType = surveyResponse.getReturn15();
+			methodName = surveyResponse.getMethodName15();
+			params = surveyResponse.getParams15();
+			break;
+		case 16:
 			returnType = surveyResponse.getReturn16();
 			methodName = surveyResponse.getMethodName16();
 			params = surveyResponse.getParams16();
 			break;
-		case 20:
+		case 17:
 			returnType = surveyResponse.getReturn17();
 			methodName = surveyResponse.getMethodName17();
 			params = surveyResponse.getParams17();
 			break;
-		case 16:
+		case 18:
 			returnType = surveyResponse.getReturn18();
 			methodName = surveyResponse.getMethodName18();
 			params = surveyResponse.getParams18();
 			break;
-		case 11:
+		case 19:
 			returnType = surveyResponse.getReturn19();
 			methodName = surveyResponse.getMethodName19();
 			params = surveyResponse.getParams19();
 			break;
-		case 1:
+		case 20:
 			returnType = surveyResponse.getReturn20();
 			methodName = surveyResponse.getMethodName20();
 			params = surveyResponse.getParams20();
 			break;
-		case 13:
-			returnType = surveyResponse.getReturn20();
-			methodName = surveyResponse.getMethodName20();
-			params = surveyResponse.getParams20();
-			break;
-		case 34:
+		case 21:
 			returnType = surveyResponse.getReturn21();
 			methodName = surveyResponse.getMethodName21();
 			params = surveyResponse.getParams21();

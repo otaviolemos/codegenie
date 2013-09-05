@@ -1,6 +1,6 @@
 package br.unifesp.ppgcc.aqexperiment.infrastructure.sourcereraqe;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertTrue; 
 
 import org.junit.Test;
 
@@ -16,7 +16,9 @@ public class SourcererQueryBuilderTest {
 		String p = "int, double";
 		String r = "void";
 		
-		SourcererQueryBuilder sourcererQueryBuilder = new SourcererQueryBuilder(ConfigProperties.getProperty("aqExperiment.expanders"));
+		boolean relaxReturn = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxReturn"));
+		boolean relaxParams = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxParams"));
+		SourcererQueryBuilder sourcererQueryBuilder = new SourcererQueryBuilder(ConfigProperties.getProperty("aqExperiment.expanders"), relaxReturn, relaxParams);
 		SearchAdapter searchAdapter = SearchAdapter.create(ConfigProperties.getProperty("aqExperiment.sourcerer.url"));
 		SearchResult searchResult = null;
 
@@ -31,5 +33,4 @@ public class SourcererQueryBuilderTest {
 		System.out.println("Expanders: " + ConfigProperties.getProperty("aqExperiment.expanders"));
 		assertTrue(searchResult.getNumFound() >= -1);
 	}
-	
 }

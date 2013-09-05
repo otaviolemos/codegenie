@@ -9,8 +9,8 @@ public class SourcererQueryBuilder {
 
 	private AQEApproach aqeApproach;
 
-	public SourcererQueryBuilder(String expanders) throws Exception {
-		aqeApproach = new AQEApproach(expanders);
+	public SourcererQueryBuilder(String expanders, boolean relaxReturn, boolean relaxParams) throws Exception {
+		aqeApproach = new AQEApproach(expanders, relaxReturn, relaxParams);
 	}
 
 	public String getSourcererExpandedQuery(String methodName, String returnType, String params) throws Exception {

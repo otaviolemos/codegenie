@@ -1,7 +1,6 @@
 package br.unifesp.ppgcc.aqexperiment.application;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,28 +38,39 @@ public class AQEService {
 
 	@Autowired
 	private SurveyResponseRepository surveyResponseRepository;
+	
+	private List<SurveyResponse> surveyResponses;
+	private List<AnaliseFunction> analiseFunctions;
 
 	public void execute() throws Exception {
 
 		//Execution
-		Execution execution = new Execution(System.currentTimeMillis(), ConfigProperties.getProperty("aqExperiment.expanders"));
+		Execution execution = new Execution(System.currentTimeMillis());
 		execution = executionRepository.save(execution);
 
 		// SurveyResponses
 		this.persistSurveyResponses(execution);
-		List<SurveyResponse> surveyResponses = surveyResponseRepository.findAll(execution);
+		surveyResponses = surveyResponseRepository.findAll(execution);
 
-		List<AnaliseFunction> analiseFunctions = analiseFunctionRepository.findAllHardCode();
+		analiseFunctions = analiseFunctionRepository.findAllHardCode();
 
 		for (AnaliseFunction function : analiseFunctions) {
+			if(!this.isValidFunction(function))
+				continue;
 			this.buildRelevants(function);
-			this.buildResponses(surveyResponses, function, execution);
+			this.buildResponses(function, execution);
 			this.processResponses(function);
 
 			analiseFunctionRepository.save(function);
 		}
 	}
 
+	private boolean isValidFunction(AnaliseFunction analiseFunction) throws Exception {
+		if(new Boolean(ConfigProperties.getProperty("aqExperiment.moreOneRelevant")) && analiseFunction.getRelevantsSolrIds().length <= 1)
+			return false;
+		return true;
+	}
+	
 	private void persistSurveyResponses(Execution execution) throws Exception {
 		for (SurveyResponse surveyResponse : surveyResponseRepository.findAllFromSheet()) {
 			if (!surveyResponse.isValid())
@@ -87,13 +97,15 @@ public class AQEService {
 		}
 	}
 
-	private void buildResponses(List<SurveyResponse> surveyResponses, AnaliseFunction function, Execution execution) {
+	private void buildResponses(AnaliseFunction function, Execution execution) {
 		for (SurveyResponse surveyResponse : surveyResponses)
 			function.addResponse(surveyResponse, execution);
 	}
 
 	private void processResponses(AnaliseFunction function) throws Exception {
-		SourcererQueryBuilder sourcererQueryBuilder = new SourcererQueryBuilder(ConfigProperties.getProperty("aqExperiment.expanders"));
+		boolean relaxReturn = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxReturn"));
+		boolean relaxParams = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxParams"));
+		SourcererQueryBuilder sourcererQueryBuilder = new SourcererQueryBuilder(ConfigProperties.getProperty("aqExperiment.expanders"), relaxReturn, relaxParams);
 
 		SearchAdapter searchAdapter = SearchAdapter.create(ConfigProperties.getProperty("aqExperiment.sourcerer.url"));
 		SearchResult searchResult = null;
@@ -135,22 +147,11 @@ public class AQEService {
 		response.setTotalIntersections(totalIntersections);
 	}
 
-	public boolean equalLists(List<String> one, List<String> two) {
-		if (one == null && two == null) {
-			return true;
-		}
+	public List<SurveyResponse> getSurveyResponses() {
+		return surveyResponses;
+	}
 
-		if ((one == null && two != null) || one != null && two == null || one.size() != two.size()) {
-			return false;
-		}
-
-		// to avoid messing the order of the lists we will use a copy
-		// as noted in comments by A. R. S.
-		one = new ArrayList<String>(one);
-		two = new ArrayList<String>(two);
-
-		Collections.sort(one);
-		Collections.sort(two);
-		return one.equals(two);
+	public List<AnaliseFunction> getAnaliseFunctions() {
+		return analiseFunctions;
 	}
 }

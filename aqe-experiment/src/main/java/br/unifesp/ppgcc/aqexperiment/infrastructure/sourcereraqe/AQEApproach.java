@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import br.unifesp.ppgcc.aqexperiment.infrastructure.util.ConfigProperties;
+
 public class AQEApproach {
 
 	private List<Expander> expanders = new ArrayList<Expander>();
@@ -12,7 +14,10 @@ public class AQEApproach {
 	private boolean relaxReturn = false;
 	private boolean relaxParams = false;
 	
-	public AQEApproach(String expanders) throws Exception {
+	public AQEApproach(String expanders, boolean relaxReturn, boolean relaxParams) throws Exception {
+		this.relaxReturn = relaxReturn;
+		this.relaxParams = relaxParams;
+		
 		String[] splitExpanders = StringUtils.split(expanders, ",");
 		
 		for(String expanderName : splitExpanders){
@@ -29,24 +34,34 @@ public class AQEApproach {
 		if(expander != null & StringUtils.trim(expander).equalsIgnoreCase(Expander.WORDNET_EXPANDER))
 			return new WordNetExpander();
 		if(expander != null & StringUtils.trim(expander).equalsIgnoreCase(Expander.CODE_VOCABULARY_EXPANDER))
-			return new CodeVacabularyExpander();
+			return new CodeVocabularyExpander();
 		if(expander != null & StringUtils.trim(expander).equalsIgnoreCase(Expander.TYPE_EXPANDER))
 			return new TypeExpander();
 		
 		return null;
 	}
 	
-	public String getAutoDescription(){
-		String desc = null;
+	public String getAutoDescription() throws Exception {
+		String desc = "";
+		
+		if(this.relaxReturn)
+			desc += "relaxReturn | ";
+		if(this.relaxParams)
+			desc += "relaxParams | ";
+		if(new Boolean(ConfigProperties.getProperty("aqExperiment.moreOneRelevant")))
+			desc += "moreOneR | ";
+		
+		boolean first = true;
 		for(Expander expander : expanders){
-			if(desc == null)
-				desc = expander.getName();
-			else
+			if(first){
+				desc += expander.getName();
+				first = false;
+			}else
 				desc += ", " + expander.getName();
 		}
 		
-		if(desc == null)
-			return "Whitout expansion";
+		if("".equals(desc))
+			desc += "Without expansion";
 
 		return desc;
 	}
