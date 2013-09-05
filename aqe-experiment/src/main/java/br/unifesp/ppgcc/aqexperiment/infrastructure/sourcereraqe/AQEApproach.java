@@ -48,8 +48,6 @@ public class AQEApproach {
 			desc += "relaxReturn | ";
 		if(this.relaxParams)
 			desc += "relaxParams | ";
-		if(new Boolean(ConfigProperties.getProperty("aqExperiment.moreOneRelevant")))
-			desc += "moreOneR | ";
 		
 		boolean first = true;
 		for(Expander expander : expanders){
