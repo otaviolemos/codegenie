@@ -1,9 +1,31 @@
--- Funções diferentes encontradas e Funções encontradas
-select eAutoDescription, count(afrTotalIntersections) as 'different functions found', sum(afrTotalIntersections) as 'functions found' from vwresponses
+-- Approachs
+select Approach, recall, precis,
+       (select count(distinct(afdescription)) from vwresponses where enumber = 1) as 'Functions', Total as 'Queries',
+       (SELECT count(*) from vwsuccess1) 'Responses found',
+       (SELECT count(*) from vwsuccess1) * 100 / Total as '% Responses found'
+from   vwslice1 WHERE Slice = 'General' union
+select Approach, recall, precis,
+       (select count(distinct(afdescription)) from vwresponses where enumber = 2) as 'Functions', Total as 'Queries',
+       (SELECT count(*) from vwsuccess2) 'Responses found',
+       (SELECT count(*) from vwsuccess2) * 100 / Total as '% Responses found'
+from   vwslice2 WHERE Slice = 'General' union
+select Approach, recall, precis,
+       (select count(distinct(afdescription)) from vwresponses where enumber = 3) as 'Functions', Total as 'Queries',
+       (SELECT count(*) from vwsuccess3) 'Responses found',
+       (SELECT count(*) from vwsuccess3) * 100 / Total as '% Responses found'
+from   vwslice3 WHERE Slice = 'General' union
+select Approach, recall, precis,
+       (select count(distinct(afdescription)) from vwresponses where enumber = 4) as 'Functions', Total as 'Queries',
+       (SELECT count(*) from vwsuccess4) 'Responses found',
+       (SELECT count(*) from vwsuccess4) * 100 / Total as '% Responses found'
+from   vwslice4 WHERE Slice = 'General'
+
+-- Diferentes respostas encontradas e Respostas encontradas
+select eAutoDescription, count(afrTotalIntersections) as 'Diferentes respostas encontradas', sum(afrTotalIntersections) as 'Respostas encontradas' from vwresponses
 where eNumber = 1
 and afrTotalIntersections > 0
 UNION
-select eAutoDescription, count(afrTotalIntersections) as 'different functions found', sum(afrTotalIntersections) as 'functions found' from vwresponses
+select eAutoDescription, count(afrTotalIntersections) as 'Diferentes respostas encontradas', sum(afrTotalIntersections) as 'Respostas encontradas' from vwresponses
 where eNumber = 5
 and afrTotalIntersections > 0
 
@@ -17,6 +39,16 @@ UNION
 select eAutoDescription, '36' as 'total', count(distinct(nome)) as 'pessoas beneficiadas', (count(distinct(nome)) * 100 / 36) as '% pessoas beneficiadas' from vwresponses
 where eNumber = 5
 and afrTotalIntersections > 0
+UNION
+select 'Improvement', '36' as 'total', count(distinct(nome)) as 'pessoas beneficiadas', (count(distinct(nome)) * 100 / 36) as '% pessoas beneficiadas' from vwresponses
+where eNumber = 5
+and afrTotalIntersections > 0
+and concat(nome, afDescription, afrTotalIntersections) not in (select concat(nome, afDescription, afrTotalIntersections) from vwresponses where eNumber = 1 and afrTotalIntersections > 0)
+UNION
+select 'Improvement - Distinct functions', '36' as 'total', count(distinct(nome)) as 'pessoas beneficiadas', (count(distinct(nome)) * 100 / 36) as '% pessoas beneficiadas' from vwresponses
+where eNumber = 5
+and afrTotalIntersections > 0
+and concat(nome, afDescription) not in (select concat(nome, afDescription) from vwresponses where eNumber = 1 and afrTotalIntersections > 0)
 UNION
 select 'Only expansions', '36' as 'total', count(distinct(nome)) as 'pessoas beneficiadas', (count(distinct(nome)) * 100 / 36) as '% pessoas beneficiadas' from vwresponses
 where eNumber = 5
@@ -33,15 +65,25 @@ group by  eAutoDescription, nome
 -- Funções --
 
 -- % Funções encontradas
-select eAutoDescription, '15' as 'total', count(distinct(afDescription)) as 'functions found', (count(distinct(afDescription)) * 100 / 15) as '% functions found' from vwresponses
+select eAutoDescription, (select count(distinct(afdescription)) from vwresponses where enumber = 1) as 'total', count(distinct(afDescription)) as 'functions found', (count(distinct(afDescription)) * 100 / 15) as '% functions found' from vwresponses
 where eNumber = 1
 and afrTotalIntersections > 0
 UNION
-select eAutoDescription, '15' as 'total', count(distinct(afDescription)) as 'functions found', (count(distinct(afDescription)) * 100 / 15) as '% functions found' from vwresponses
+select eAutoDescription, (select count(distinct(afdescription)) from vwresponses where enumber = 5) as 'total', count(distinct(afDescription)) as 'functions found', (count(distinct(afDescription)) * 100 / 15) as '% functions found' from vwresponses
 where eNumber = 5
 and afrTotalIntersections > 0
 UNION
-select 'Only expansions', '15' as 'total', count(distinct(afDescription)) as 'functions found', (count(distinct(afDescription)) * 100 / 15) as '% functions found' from vwresponses
+select 'Improvement', (select count(distinct(afdescription)) from vwresponses where enumber = 5) as 'total', count(distinct(afDescription)) as 'functions found', (count(distinct(afDescription)) * 100 / 15) as '% functions found' from vwresponses
+where eNumber = 5
+and afrTotalIntersections > 0
+and concat(nome, afDescription, afrTotalIntersections) not in (select concat(nome, afDescription, afrTotalIntersections) from vwresponses where eNumber = 1 and afrTotalIntersections > 0)
+UNION
+select 'Improvement - Distinct functions', (select count(distinct(afdescription)) from vwresponses where enumber = 5) as 'total', count(distinct(afDescription)) as 'functions found', (count(distinct(afDescription)) * 100 / 15) as '% functions found' from vwresponses
+where eNumber = 5
+and afrTotalIntersections > 0
+and concat(nome, afDescription) not in (select concat(nome, afDescription) from vwresponses where eNumber = 1 and afrTotalIntersections > 0)
+UNION
+select 'Only expansions', (select count(distinct(afdescription)) from vwresponses where enumber = 5) as 'total', count(distinct(afDescription)) as 'functions found', (count(distinct(afDescription)) * 100 / 15) as '% functions found' from vwresponses
 where eNumber = 5
 and afrTotalIntersections > 0
 and afDescription not in (select afDescription from vwresponses where eNumber = 1 and afrTotalIntersections > 0)
@@ -154,3 +196,39 @@ where t1.Slice = t2.Slice
 and   t1.Slice = t3.Slice
 and   t1.Slice = t4.Slice
 and   t1.Slice = t5.Slice
+
+-- Resultados
+
+-- Listas
+select t1.nome, t1.afrMethodName, t1.afrReturnType, t1.afrParams,
+       COALESCE(t2.afrPrecis,0) as 'precis', COALESCE(t2.afrRecall,0) as 'recall'
+from
+(select * from vwresponses where enumber = 1) as t1 left outer join
+(select * from vwresponses where enumber = 5 and afrTotalIntersections > 0) as t2
+on (t1.nome = t2.nome and t1.afDescription = t2.afDescription)
+order by 1, 2
+
+-- Médias
+select count(*) as total, count(t2.afrPrecis) as 'success', avg(t2.afrPrecis) as presic, avg(t2.afrRecall) as recall
+from
+(select * from vwresponses where enumber = 1) as t1 left outer join
+(select * from vwresponses where enumber = 1 and afrTotalIntersections > 0) as t2
+on (t1.nome = t2.nome and t1.afDescription = t2.afDescription)
+UNION
+select count(*) as total, count(t2.afrPrecis) as 'success', avg(t2.afrPrecis) as presic, avg(t2.afrRecall) as recall
+from
+(select * from vwresponses where enumber = 1) as t1 left outer join
+(select * from vwresponses where enumber = 5 and afrTotalIntersections > 0) as t2
+on (t1.nome = t2.nome and t1.afDescription = t2.afDescription)
+UNION
+select count(*) as total, count(t2.afrPrecis) as 'success', avg(t2.afrPrecis) as presic, avg(t2.afrRecall) as recall
+from
+(select * from vwresponses where enumber = 1) as t1 left outer join
+(select * from vwresponses where enumber = 6 and afrTotalIntersections > 0) as t2
+on (t1.nome = t2.nome and t1.afDescription = t2.afDescription)
+UNION
+select count(*) as total, count(t2.afrPrecis) as 'success', avg(t2.afrPrecis) as presic, avg(t2.afrRecall) as recall
+from
+(select * from vwresponses where enumber = 1) as t1 left outer join
+(select * from vwresponses where enumber = 7 and afrTotalIntersections > 0) as t2
+on (t1.nome = t2.nome and t1.afDescription = t2.afDescription)

@@ -81,4 +81,16 @@ public class AQEServiceTest {
 		boolean moreOneRelevant = new Boolean(ConfigProperties.getProperty("aqExperiment.moreOneRelevant"));
 		assertTrue(moreOneRelevant ? total21 == 12 : total21 == 21);
 	}
+	
+	@Test
+	public void responseResultTest() throws Exception {
+		AnaliseFunctionResponse response = service.getAnaliseFunctionResponse("Guilherme Moreira", "reverse");
+		
+		System.out.println("Relevants: "+response.getTotalRelevants());
+		System.out.println("Results: "+response.getTotalResults());
+		System.out.println("Intersections: "+response.getTotalIntersections());
+		System.out.println("Query: "+response.getSourcererQuery());
+		
+		assertTrue(response != null);
+	}
 }

@@ -6,11 +6,28 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import br.unifesp.ppgcc.aqexperiment.domain.AnaliseFunction;
+import br.unifesp.ppgcc.aqexperiment.infrastructure.util.ConfigProperties;
 
 @Repository("analiseFunctionRepository")
 public class AnaliseFunctionRepository extends BaseRepository<AnaliseFunction>{
 
-	public List<AnaliseFunction> findAllHardCode() throws Exception {
+	public List<AnaliseFunction> findAllValides() throws Exception {
+		List<AnaliseFunction> analiseFunctions = new ArrayList<AnaliseFunction>();
+		for(AnaliseFunction analiseFunction : this.findAllHardCode()){
+			if(!this.isValidFunction(analiseFunction))
+				continue;
+			analiseFunctions.add(analiseFunction);
+		}
+		return analiseFunctions;
+	}
+
+	private boolean isValidFunction(AnaliseFunction analiseFunction) throws Exception {
+		if(new Boolean(ConfigProperties.getProperty("aqExperiment.moreOneRelevant")) && analiseFunction.getRelevantsSolrIds().length <= 1)
+			return false;
+		return true;
+	}
+	
+	private List<AnaliseFunction> findAllHardCode() throws Exception {
 		List<AnaliseFunction> functions = new ArrayList<AnaliseFunction>();
 		
 		functions.add(new AnaliseFunction(1, "Scaling an image", 18, 8, new Long[]{176149l, 1447122l, 1472532l, 5854427l, 5861459l, 5895494l}));

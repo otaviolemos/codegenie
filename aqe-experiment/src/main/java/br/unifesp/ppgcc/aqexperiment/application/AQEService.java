@@ -18,7 +18,6 @@ import br.unifesp.ppgcc.aqexperiment.infrastructure.ExecutionRepository;
 import br.unifesp.ppgcc.aqexperiment.infrastructure.SurveyResponseRepository;
 import br.unifesp.ppgcc.aqexperiment.infrastructure.sourcereraqe.SourcererQueryBuilder;
 import br.unifesp.ppgcc.aqexperiment.infrastructure.util.ConfigProperties;
-import br.unifesp.ppgcc.aqexperiment.infrastructure.util.LogUtils;
 import edu.uci.ics.sourcerer.services.search.adapter.SearchAdapter;
 import edu.uci.ics.sourcerer.services.search.adapter.SearchResult;
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
@@ -45,6 +44,15 @@ public class AQEService {
 	public void execute() throws Exception {
 
 		//Execution
+		Execution execution = this.setupExecution();
+
+		for (AnaliseFunction analiseFunction : analiseFunctions) {
+			this.process(analiseFunction, execution);
+		}
+	}
+
+	private Execution setupExecution() throws Exception {
+		//Execution
 		Execution execution = new Execution(System.currentTimeMillis());
 		execution = executionRepository.save(execution);
 
@@ -52,23 +60,17 @@ public class AQEService {
 		this.persistSurveyResponses(execution);
 		surveyResponses = surveyResponseRepository.findAll(execution);
 
-		analiseFunctions = analiseFunctionRepository.findAllHardCode();
-
-		for (AnaliseFunction function : analiseFunctions) {
-			if(!this.isValidFunction(function))
-				continue;
-			this.buildRelevants(function);
-			this.buildResponses(function, execution);
-			this.processResponses(function);
-
-			analiseFunctionRepository.save(function);
-		}
+		analiseFunctions = analiseFunctionRepository.findAllValides();
+		
+		return execution;
 	}
+	
+	private void process(AnaliseFunction analiseFunction, Execution execution) throws Exception {
+		this.buildRelevants(analiseFunction);
+		this.buildResponses(analiseFunction, execution);
+		this.processResponses(analiseFunction);
 
-	private boolean isValidFunction(AnaliseFunction analiseFunction) throws Exception {
-		if(new Boolean(ConfigProperties.getProperty("aqExperiment.moreOneRelevant")) && analiseFunction.getRelevantsSolrIds().length <= 1)
-			return false;
-		return true;
+		analiseFunctionRepository.save(analiseFunction);
 	}
 	
 	private void persistSurveyResponses(Execution execution) throws Exception {
@@ -88,10 +90,10 @@ public class AQEService {
 		for (long entityId : function.getRelevantsSolrIds()) {
 			String query = "entity_id:" + entityId;
 			searchResult = searchAdapter.search(query);
-			if (searchResult.getNumFound() == -1) {
-				LogUtils.getLogger().error("Unable to perform search: " + query);
-				continue;
-			}
+
+			if (searchResult.getNumFound() == -1)
+				throw new Exception("Unable to perform search: " + query);
+
 			SingleResult singleResult = searchResult.getResults(0, 1).get(0);
 			function.getRelevants().add(new SolrResult(singleResult));
 		}
@@ -115,11 +117,11 @@ public class AQEService {
 
 			String query = sourcererQueryBuilder.getSourcererExpandedQuery(response.getMethodName(), response.getReturnType(), response.getParams());
 			searchResult = searchAdapter.search(query);
-			if (searchResult.getNumFound() == -1) {
-				LogUtils.getLogger().error("Unable to perform search: " + query);
-			} else {
-				results.addAll(searchResult.getResults(0, 100));
-			}
+			if (searchResult.getNumFound() == -1)
+				throw new Exception("Unable to perform search: " + query);
+
+			response.setSourcererQuery(query);
+			results.addAll(searchResult.getResults(0, 100));
 			response.setResultsFromSingleResult(results);
 
 			this.calculateRecallAndPrecision(response, function);
@@ -147,6 +149,15 @@ public class AQEService {
 		response.setTotalIntersections(totalIntersections);
 	}
 
+
+	public AnaliseFunctionResponse getAnaliseFunctionResponse(String responseName, String responseMethodName){
+		for(AnaliseFunction analiseFunction : this.analiseFunctions)
+			for(AnaliseFunctionResponse response : analiseFunction.getResponses())
+				if(response.getSurveyResponse().getNome().equals(responseName) && response.getMethodName().equals(responseMethodName))
+					return response;
+		return null;
+	}
+	
 	public List<SurveyResponse> getSurveyResponses() {
 		return surveyResponses;
 	}

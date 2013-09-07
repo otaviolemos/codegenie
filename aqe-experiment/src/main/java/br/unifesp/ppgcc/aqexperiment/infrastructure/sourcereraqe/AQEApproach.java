@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import br.unifesp.ppgcc.aqexperiment.infrastructure.util.ConfigProperties;
-
 public class AQEApproach {
 
 	private List<Expander> expanders = new ArrayList<Expander>();
@@ -58,7 +56,7 @@ public class AQEApproach {
 				desc += ", " + expander.getName();
 		}
 		
-		if("".equals(desc))
+		if("".equals(desc) || desc.endsWith(" | "))
 			desc += "Without expansion";
 
 		return desc;

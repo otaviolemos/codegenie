@@ -48,6 +48,9 @@ public class AnaliseFunctionResponse {
 	private Integer totalResults;
 	
 	private Integer totalIntersections;
+	
+	@Column(name = "sourcererQuery", nullable = true, length = 2000)
+	private String sourcererQuery;
 
 //	@OneToMany
 //	@JoinColumn(name = "analiseFunctionResponse")
@@ -166,6 +169,14 @@ public class AnaliseFunctionResponse {
 
 	public void setParams(String params) {
 		this.params = params;
+	}
+
+	public String getSourcererQuery() {
+		return sourcererQuery;
+	}
+
+	public void setSourcererQuery(String sourcererQuery) {
+		this.sourcererQuery = sourcererQuery;
 	}
 	
 }

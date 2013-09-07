@@ -12,9 +12,9 @@ public class SourcererQueryBuilderTest {
 
 	@Test
 	public void querySintaxTest() throws Exception {
-		String m = "setSize";
-		String p = "int, double";
-		String r = "void";
+		String m = "reverse";
+		String p = "String";
+		String r = "String";
 		
 		boolean relaxReturn = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxReturn"));
 		boolean relaxParams = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxParams"));
@@ -31,6 +31,7 @@ public class SourcererQueryBuilderTest {
 		System.out.println("Query\n" + query);
 		System.out.println("\nReturn: " + searchResult.getNumFound());
 		System.out.println("Expanders: " + ConfigProperties.getProperty("aqExperiment.expanders"));
-		assertTrue(searchResult.getNumFound() >= -1);
+
+		assertTrue(searchResult.getNumFound() != -1);
 	}
 }
