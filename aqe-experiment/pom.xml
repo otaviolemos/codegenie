@@ -94,6 +94,13 @@
 			<version>1.0</version>
 		</dependency>
 
+		<!-- sourcerer-aqe -->
+		<dependency>
+			<groupId>br.unifesp.ppgcc</groupId>
+			<artifactId>sourcerer-aqe</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
