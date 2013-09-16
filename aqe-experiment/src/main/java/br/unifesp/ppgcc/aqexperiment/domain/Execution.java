@@ -9,8 +9,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import br.unifesp.ppgcc.aqexperiment.infrastructure.sourcereraqe.AQEApproach;
 import br.unifesp.ppgcc.aqexperiment.infrastructure.util.ConfigProperties;
+import br.unifesp.ppgcc.sourcereraqe.infrastructure.AQEApproach;
 
 @Entity
 @Table(name = "execution")
@@ -34,7 +34,10 @@ public class Execution {
 
 		boolean relaxReturn = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxReturn"));
 		boolean relaxParams = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxParams"));
-		this.autoDescription = new AQEApproach(ConfigProperties.getProperty("aqExperiment.expanders"), relaxReturn, relaxParams).getAutoDescription();
+		String urlServices = ConfigProperties.getProperty("aqExperiment.related-words-service.url");
+		String expanders = ConfigProperties.getProperty("aqExperiment.expanders");
+
+		this.autoDescription = new AQEApproach(urlServices, expanders, relaxReturn, relaxParams).getAutoDescription();
 	}
 	
 	public Long getId() {

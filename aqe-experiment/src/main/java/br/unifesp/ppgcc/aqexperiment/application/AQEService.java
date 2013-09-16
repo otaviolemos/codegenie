@@ -16,8 +16,8 @@ import br.unifesp.ppgcc.aqexperiment.infrastructure.AnaliseFunctionRepository;
 import br.unifesp.ppgcc.aqexperiment.infrastructure.AnaliseFunctionResponseRepository;
 import br.unifesp.ppgcc.aqexperiment.infrastructure.ExecutionRepository;
 import br.unifesp.ppgcc.aqexperiment.infrastructure.SurveyResponseRepository;
-import br.unifesp.ppgcc.aqexperiment.infrastructure.sourcereraqe.SourcererQueryBuilder;
 import br.unifesp.ppgcc.aqexperiment.infrastructure.util.ConfigProperties;
+import br.unifesp.ppgcc.sourcereraqe.infrastructure.SourcererQueryBuilder;
 import edu.uci.ics.sourcerer.services.search.adapter.SearchAdapter;
 import edu.uci.ics.sourcerer.services.search.adapter.SearchResult;
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
@@ -107,7 +107,10 @@ public class AQEService {
 	private void processResponses(AnaliseFunction function) throws Exception {
 		boolean relaxReturn = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxReturn"));
 		boolean relaxParams = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxParams"));
-		SourcererQueryBuilder sourcererQueryBuilder = new SourcererQueryBuilder(ConfigProperties.getProperty("aqExperiment.expanders"), relaxReturn, relaxParams);
+		String urlServices = ConfigProperties.getProperty("aqExperiment.related-words-service.url");
+		String expanders = ConfigProperties.getProperty("aqExperiment.expanders");
+		
+		SourcererQueryBuilder sourcererQueryBuilder = new SourcererQueryBuilder(urlServices, expanders, relaxReturn, relaxParams);
 
 		SearchAdapter searchAdapter = SearchAdapter.create(ConfigProperties.getProperty("aqExperiment.sourcerer.url"));
 		SearchResult searchResult = null;
