@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project name="sourcerer-aqe" default="build">
+
+	<!-- Propriedades -->
+	<property name="version" value="1.0.0" />
+	<property name="bin" location="../bin" />
+	<property name="dist" location="../dist" />
+
+	<!-- Build do aplicativo -->
+	<target name="build">
+		<jar destfile="${dist}/sourcerer-aqe-${version}.jar" basedir="${bin}"/>
+	</target>
+
+</project>
