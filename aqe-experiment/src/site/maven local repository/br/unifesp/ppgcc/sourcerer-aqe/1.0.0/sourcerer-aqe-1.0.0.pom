@@ -1,0 +1,8 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>br.unifesp.ppgcc</groupId>
+  <artifactId>sourcerer-aqe</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+  <name>Sourcerer AQE</name>
+</project>
