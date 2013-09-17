@@ -1,60 +1,58 @@
 package br.unifesp.sjc.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 
-import br.unifesp.sjc.dao.RelatedDAO;
-import edu.smu.tspell.wordnet.AdjectiveSynset;
-import edu.smu.tspell.wordnet.NounSynset;
-import edu.smu.tspell.wordnet.Synset;
-import edu.smu.tspell.wordnet.SynsetType;
-import edu.smu.tspell.wordnet.VerbSynset;
-import edu.smu.tspell.wordnet.WordNetDatabase;
-import edu.smu.tspell.wordnet.WordSense;
+import org.apache.commons.lang.StringUtils;
+
+import br.unifesp.ppgcc.sourcereraqe.infrastructure.SourcererQueryBuilder;
 
 public class SearchServlet extends HttpServlet {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	private static final int NOUN_SYNS = 0;
-	private static final int VERB_SYNS = 1;
-	private static final int ADJ_SYNS = 2;
-	private static final int CODE_SYNS = 3;
-	private static final int NOUN_ANTS = 4;
-	private static final int VERB_ANTS = 5;
-	private static final int ADJ_ANTS = 6;
-	private static final int CODE_ANTS = 7;
 
 	public SearchServlet() {
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		doGet(req, resp);
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-		String ret = request.getParameter("return");
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String returnType = request.getParameter("return");
 		String methodName = request.getParameter("methodName");
 		String params = request.getParameter("params");
-		String wordNet = request.getParameter("wordNet");
-		System.out.println("");
-
+		String w = request.getParameter("w");
+		String c = request.getParameter("c");
+		String t = request.getParameter("t");
+		
+		String relatedWordsServiceUrl = getServletContext().getInitParameter("aqExperiment.related-words-service.url");
+        String expanders = w + "," + c + "," + t;
+        expanders = StringUtils.replace(expanders, "null,", "");
+        expanders = StringUtils.replace(expanders, ",null", "");
+        expanders = StringUtils.replace(expanders, "null", "");
+		
+		String query = "";
+		try {
+			SourcererQueryBuilder builder = new SourcererQueryBuilder(relatedWordsServiceUrl, expanders, false, false);
+			query = builder.getSourcererExpandedQuery(methodName, returnType, params);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		String sourcererUrl = getServletContext().getInitParameter("aqExperiment.sourcerer.url") + "/sorl/select/?q="+query+"&rows=100&indent=on";
+		
+//		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+//		dispatcher.forward(request, response);
+		
+		 String urlWithSessionID = response.encodeRedirectURL(sourcererUrl);
+		 response.sendRedirect( urlWithSessionID );
+		
 	}
 }

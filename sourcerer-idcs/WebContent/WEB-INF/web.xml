@@ -13,6 +13,15 @@
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
 
+	<context-param>
+		<param-name>aqExperiment.sourcerer.url</param-name>
+		<param-value>http://192.241.180.208:8080</param-value>
+	</context-param>
+	<context-param>
+		<param-name>aqExperiment.related-words-service.url</param-name>
+		<param-value>http://192.241.180.208:8080/related-words-service</param-value>
+	</context-param>
+
 	<servlet>
 		<servlet-name>search</servlet-name>
 		<servlet-class>br.unifesp.sjc.servlet.SearchServlet</servlet-class>
