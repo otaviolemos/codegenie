@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<project name="related-words-service" default="build">
+<project name="sourcerer-idcs" default="build">
 
 	<!-- Propriedades -->
 	<property name="web" location="../WebContent" />
@@ -8,7 +8,7 @@
 
 	<!-- Build do aplicativo -->
 	<target name="build">
-		<war destfile="${dist}/related-words-service.war" webxml="${web}/WEB-INF/web.xml" basedir="${web}" />
+		<war destfile="${dist}/sourcerer-idcs.war" webxml="${web}/WEB-INF/web.xml" basedir="${web}" />
 	</target>
 
 </project>
