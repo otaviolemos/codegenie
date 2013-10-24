@@ -12,11 +12,14 @@ import br.unifesp.ppgcc.sourcereraqe.domain.WordNetExpander;
 
 public class AQEApproach {
 
+	private boolean tagCloud = false;
+
 	private List<Expander> expanders = new ArrayList<Expander>();
 
 	private boolean relaxReturn = false;
 	private boolean relaxParams = false;
 	private String relatedWordsServiceUrl;
+
 	
 	public AQEApproach(String relatedWordsServiceUrl, String expanders, boolean relaxReturn, boolean relaxParams) throws Exception {
 		this.relaxReturn = relaxReturn;
@@ -35,6 +38,12 @@ public class AQEApproach {
 		}
 	}
 	
+	public AQEApproach() throws Exception {
+		this.tagCloud = true;
+		this.relaxReturn = false;
+		this.relaxParams = false;
+	}
+	
 	private Expander getExpander(String expander){
 		if(expander != null & StringUtils.trim(expander).equalsIgnoreCase(Expander.WORDNET_EXPANDER))
 			return new WordNetExpander(this.relatedWordsServiceUrl);
@@ -48,6 +57,9 @@ public class AQEApproach {
 	
 	public String getAutoDescription() throws Exception {
 		String desc = "";
+		
+		if(this.tagCloud)
+			return "Tag Cloud";
 		
 		if(this.relaxReturn)
 			desc += "relaxReturn | ";
@@ -91,6 +103,10 @@ public class AQEApproach {
 				return true;
 		}
 		return false;
+	}
+
+	public boolean isTagCloud() {
+		return tagCloud;
 	}
 
 	public List<Expander> getExpanders() {

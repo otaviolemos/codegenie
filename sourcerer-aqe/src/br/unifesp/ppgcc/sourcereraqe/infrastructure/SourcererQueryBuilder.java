@@ -15,6 +15,10 @@ public class SourcererQueryBuilder {
 		aqeApproach = new AQEApproach(relatedWordsServiceUrl, expanders, relaxReturn, relaxParams);
 	}
 
+	public SourcererQueryBuilder() throws Exception {
+		aqeApproach = new AQEApproach();
+	}
+
 	public String getSourcererExpandedQuery(String methodName, String returnType, String params) throws Exception {
 
 		List<QueryTerm> methodNameTerms = this.getMethodNameTerms(methodName);

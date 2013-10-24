@@ -3,7 +3,7 @@
 <project name="sourcerer-aqe" default="build">
 
 	<!-- Propriedades -->
-	<property name="version" value="1.0.0" />
+	<property name="version" value="1.0.1" />
 	<property name="bin" location="../bin" />
 	<property name="dist" location="../dist" />
 
