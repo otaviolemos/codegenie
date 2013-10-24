@@ -32,12 +32,14 @@ public class Execution {
 	public Execution(long executionTimestamp) throws Exception {
 		this.executionTimestamp = new Date(executionTimestamp);
 
+		boolean tagCloud = new Boolean(ConfigProperties.getProperty("aqExperiment.tagCloud"));
 		boolean relaxReturn = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxReturn"));
 		boolean relaxParams = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxParams"));
 		String urlServices = ConfigProperties.getProperty("aqExperiment.related-words-service.url");
 		String expanders = ConfigProperties.getProperty("aqExperiment.expanders");
 
-		this.autoDescription = new AQEApproach(urlServices, expanders, relaxReturn, relaxParams).getAutoDescription();
+		AQEApproach aqeApproach = tagCloud ? new AQEApproach() : new AQEApproach(urlServices, expanders, relaxReturn, relaxParams);
+		this.autoDescription = aqeApproach.getAutoDescription();
 	}
 	
 	public Long getId() {

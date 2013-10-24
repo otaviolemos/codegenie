@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import br.unifesp.ppgcc.aqexperiment.domain.helper.TagCloudMutantQuery;
+
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 
 
@@ -28,9 +30,8 @@ public class AnaliseFunctionResponse {
 	//adding additional required fields:
 	private String returnType;
 	private String params;
-	
 
-	private Double recall;
+	private Double recall = 0d;
 	
 	@Column(name="precis")
 	private Double precision;
@@ -51,6 +52,8 @@ public class AnaliseFunctionResponse {
 	
 	@Column(name = "sourcererQuery", nullable = true, length = 2000)
 	private String sourcererQuery;
+	
+	private String frequenciesRank;
 
 //	@OneToMany
 //	@JoinColumn(name = "analiseFunctionResponse")
@@ -68,6 +71,19 @@ public class AnaliseFunctionResponse {
 		this.params = params;
 	}
 	
+	public AnaliseFunctionResponse(AnaliseFunctionResponse response, TagCloudMutantQuery tagCloudMutantQuery) {
+		this.methodName = tagCloudMutantQuery.getMutantMethodName();
+		this.returnType = response.getReturnType();
+		this.params = response.getParams();
+		this.frequenciesRank = tagCloudMutantQuery.getFrequenciesRank();
+	}
+
+	public AnaliseFunctionResponse(AnaliseFunctionResponse testResponse){
+		this.methodName = testResponse.getMethodName();
+		this.frequenciesRank = testResponse.getFrequenciesRank();
+		this.recall = testResponse.getRecall();
+	}
+
 	public void setResultsFromSingleResult(List<SingleResult> relevants) {
 		this.results = new ArrayList<SolrResult>();
 		for(SingleResult singleResult : relevants)
@@ -178,5 +194,12 @@ public class AnaliseFunctionResponse {
 	public void setSourcererQuery(String sourcererQuery) {
 		this.sourcererQuery = sourcererQuery;
 	}
-	
+
+	public String getFrequenciesRank() {
+		return frequenciesRank;
+	}
+
+	public void setFrequenciesRank(String frequenciesRank) {
+		this.frequenciesRank = frequenciesRank;
+	}
 }

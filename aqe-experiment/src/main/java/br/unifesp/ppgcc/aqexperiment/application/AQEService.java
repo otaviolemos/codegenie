@@ -12,11 +12,14 @@ import br.unifesp.ppgcc.aqexperiment.domain.AnaliseFunctionResponse;
 import br.unifesp.ppgcc.aqexperiment.domain.Execution;
 import br.unifesp.ppgcc.aqexperiment.domain.SolrResult;
 import br.unifesp.ppgcc.aqexperiment.domain.SurveyResponse;
+import br.unifesp.ppgcc.aqexperiment.domain.helper.TagCloudMutantQuery;
+import br.unifesp.ppgcc.aqexperiment.domain.helper.TagCloudWord;
 import br.unifesp.ppgcc.aqexperiment.infrastructure.AnaliseFunctionRepository;
 import br.unifesp.ppgcc.aqexperiment.infrastructure.AnaliseFunctionResponseRepository;
 import br.unifesp.ppgcc.aqexperiment.infrastructure.ExecutionRepository;
 import br.unifesp.ppgcc.aqexperiment.infrastructure.SurveyResponseRepository;
 import br.unifesp.ppgcc.aqexperiment.infrastructure.util.ConfigProperties;
+import br.unifesp.ppgcc.aqexperiment.infrastructure.util.TagCloudHelper;
 import br.unifesp.ppgcc.sourcereraqe.infrastructure.SourcererQueryBuilder;
 import edu.uci.ics.sourcerer.services.search.adapter.SearchAdapter;
 import edu.uci.ics.sourcerer.services.search.adapter.SearchResult;
@@ -68,7 +71,12 @@ public class AQEService {
 	private void process(AnaliseFunction analiseFunction, Execution execution) throws Exception {
 		this.buildRelevants(analiseFunction);
 		this.buildResponses(analiseFunction, execution);
-		this.processResponses(analiseFunction);
+		
+		boolean tagCloud = new Boolean(ConfigProperties.getProperty("aqExperiment.tagCloud"));
+		if(tagCloud)
+			this.processTagCloudResponses(analiseFunction);
+		else
+			this.processResponses(analiseFunction);
 
 		analiseFunctionRepository.save(analiseFunction);
 	}
@@ -111,26 +119,65 @@ public class AQEService {
 		String expanders = ConfigProperties.getProperty("aqExperiment.expanders");
 		
 		SourcererQueryBuilder sourcererQueryBuilder = new SourcererQueryBuilder(urlServices, expanders, relaxReturn, relaxParams);
-
 		SearchAdapter searchAdapter = SearchAdapter.create(ConfigProperties.getProperty("aqExperiment.sourcerer.url"));
-		SearchResult searchResult = null;
 
 		for (AnaliseFunctionResponse response : function.getResponses()) {
-			List<SingleResult> results = new ArrayList<SingleResult>();
 
-			String query = sourcererQueryBuilder.getSourcererExpandedQuery(response.getMethodName(), response.getReturnType(), response.getParams());
-			searchResult = searchAdapter.search(query);
-			if (searchResult.getNumFound() == -1)
-				throw new Exception("Unable to perform search: " + query);
-
-			response.setSourcererQuery(query);
-			results.addAll(searchResult.getResults(0, 100));
-			response.setResultsFromSingleResult(results);
-
-			this.calculateRecallAndPrecision(response, function);
+			this.updateResponseWithSearch(sourcererQueryBuilder, searchAdapter, response, function);
 		}
 	}
 
+	private void processTagCloudResponses(AnaliseFunction function) throws Exception{
+		SourcererQueryBuilder sourcererQueryBuilder = new SourcererQueryBuilder();
+		SearchAdapter searchAdapter = SearchAdapter.create(ConfigProperties.getProperty("aqExperiment.sourcerer.url"));
+
+		for (AnaliseFunctionResponse response : function.getResponses()) {
+
+			//Original
+			this.updateResponseWithSearch(sourcererQueryBuilder, searchAdapter, response, function);
+
+			if(response.getRecall() > 0)
+				continue;
+			
+			//MutantResponse
+			AnaliseFunctionResponse mutantResponse = new AnaliseFunctionResponse();
+
+			List<List<TagCloudWord>> allWordsList = TagCloudHelper.getAllWordsList(response.getMethodName());
+			List<TagCloudMutantQuery> tagCloudMutantQueries = TagCloudHelper.getTagCloudMutantQueries(allWordsList);
+			for (TagCloudMutantQuery tagCloudMutantQuery : tagCloudMutantQueries) {
+				AnaliseFunctionResponse testResponse = new AnaliseFunctionResponse(response, tagCloudMutantQuery);
+				this.updateResponseWithSearch(sourcererQueryBuilder, searchAdapter, testResponse, function);
+				
+				if(testResponse.getRecall() > mutantResponse.getRecall())
+					mutantResponse = new AnaliseFunctionResponse(testResponse);
+			}
+			
+			if(mutantResponse.getRecall() > 0){
+				response.setMethodName(mutantResponse.getMethodName());
+				response.setFrequenciesRank(mutantResponse.getFrequenciesRank());
+				this.updateResponseWithSearch(sourcererQueryBuilder, searchAdapter, response, function);
+			}
+		}
+	}
+	
+	private void updateResponseWithSearch(SourcererQueryBuilder sourcererQueryBuilder, SearchAdapter searchAdapter, AnaliseFunctionResponse response, AnaliseFunction function) throws Exception {
+		SearchResult searchResult = null;
+		List<SingleResult> results = new ArrayList<SingleResult>();
+
+		
+		String query = sourcererQueryBuilder.getSourcererExpandedQuery(response.getMethodName(), response.getReturnType(), response.getParams());
+		searchResult = searchAdapter.search(query);
+		if (searchResult.getNumFound() == -1)
+			throw new Exception("Unable to perform search: " + query);
+
+		
+		response.setSourcererQuery(query);
+		results.addAll(searchResult.getResults(0, 100));
+		response.setResultsFromSingleResult(results);
+
+		this.calculateRecallAndPrecision(response, function);
+	}
+	
 	private void calculateRecallAndPrecision(AnaliseFunctionResponse response, AnaliseFunction function) {
 
 		int totalRelevants = function.getRelevants().size();
