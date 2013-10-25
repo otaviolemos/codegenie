@@ -55,6 +55,8 @@ public class AnaliseFunctionResponse {
 	
 	private String frequenciesRank;
 
+	private String originalMethodName;
+
 //	@OneToMany
 //	@JoinColumn(name = "analiseFunctionResponse")
 	@Transient
@@ -202,4 +204,13 @@ public class AnaliseFunctionResponse {
 	public void setFrequenciesRank(String frequenciesRank) {
 		this.frequenciesRank = frequenciesRank;
 	}
+
+	public String getOriginalMethodName() {
+		return originalMethodName;
+	}
+
+	public void setOriginalMethodName(String originalMethodName) {
+		this.originalMethodName = originalMethodName;
+	}
+	
 }

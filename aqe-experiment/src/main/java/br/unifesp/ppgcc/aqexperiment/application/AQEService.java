@@ -153,6 +153,7 @@ public class AQEService {
 			}
 			
 			if(mutantResponse.getRecall() > 0){
+				response.setOriginalMethodName(response.getMethodName());
 				response.setMethodName(mutantResponse.getMethodName());
 				response.setFrequenciesRank(mutantResponse.getFrequenciesRank());
 				this.updateResponseWithSearch(sourcererQueryBuilder, searchAdapter, response, function);
