@@ -25,6 +25,22 @@ public class SourcererQueryBuilder {
 		List<QueryTerm> returnTypeTerms = this.getReturnTypeTerms(returnType);
 		List<QueryTerm> paramsTerms = this.getParamsTerms(params);
 
+		if(methodNameTerms.size() > 1){
+			List<QueryTerm> methodFilteredNameTerms = new ArrayList<QueryTerm>(); 
+			for (QueryTerm methodQueryTerm : methodNameTerms) {
+				boolean use = true;
+				for (QueryTerm paramTerm : paramsTerms) {
+					if (methodQueryTerm.getExpandedTerms().get(0).equalsIgnoreCase(paramTerm.getExpandedTerms().get(0))){
+						use = false;
+						break;
+					}
+				}
+				if(use)
+					methodFilteredNameTerms.add(methodQueryTerm);
+			}
+			methodNameTerms = new ArrayList<QueryTerm>(methodFilteredNameTerms);
+		}
+		
 		// EAQ
 		for (Expander expander : aqeApproach.getExpanders()) {
 			if (expander.isMethodNameExpander())
