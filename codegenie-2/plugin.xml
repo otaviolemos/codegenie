@@ -84,5 +84,24 @@
             class="br.unifesp.ict.seg.codegenie.preferences.PreferenceInitializer">
       </initializer>
    </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+        <viewerContribution 
+          id="semid2"
+        targetID="#CompilationUnitEditorContext"> 
+    <menu
+               id="mondego.codegenie.editormenu"
+               label="CodeGenie2"
+               path="additions">
+            <separator name="separator"/>
+        </menu>
+    <action
+            id="criarTagCloudsAction" 
+            label="Generate tag cloud 2"
+            menubarPath="mondego.codegenie.editormenu/separator" 
+              class="br.unifesp.ict.seg.codegenie.search.tagcloud.CreateTagCloudAction"> 
+        </action> 
+              </viewerContribution> 
+   </extension>
    
 </plugin>

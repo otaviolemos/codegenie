@@ -14,8 +14,11 @@ Import-Package: org.eclipse.jdt.core,
  org.eclipse.jdt.junit,
  org.eclipse.jdt.junit.launcher,
  org.eclipse.jdt.junit.model,
+ org.eclipse.jface.text,
  org.eclipse.search.ui,
- org.eclipse.search.ui.text
+ org.eclipse.search.ui.text,
+ org.eclipse.ui.texteditor
 Bundle-ClassPath: lib/sourcerer-search.jar,
  lib/mysql-connector-java-5.1.7-bin.jar,
+ lib/cloudio.jar,
  .
