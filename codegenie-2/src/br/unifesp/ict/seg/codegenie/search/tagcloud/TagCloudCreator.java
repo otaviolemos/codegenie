@@ -1,9 +1,7 @@
 package br.unifesp.ict.seg.codegenie.search.tagcloud;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -82,7 +80,7 @@ public class TagCloudCreator {
     String[] untokenizedTerms = justFqn.split("[.]");
     double weight = MAX_WEIGHT;
     for (int i = 0; i < untokenizedTerms.length; i++) {
-      for (Iterator iterator = synonyms.iterator(); iterator.hasNext();) {
+      for (Iterator<Term> iterator = synonyms.iterator(); iterator.hasNext();) {
         Term synonym = (Term) iterator.next();
         if (untokenizedTerms[i].toUpperCase().contains(
             synonym.getTerm().toUpperCase())) {
@@ -152,7 +150,8 @@ public class TagCloudCreator {
         }
         replaceButton.setEnabled(true);
         String terms = "";
-        for (Iterator iterator = selection.toList().iterator(); iterator
+        
+        for (Iterator<Term> iterator = selection.toList().iterator(); iterator
             .hasNext();) {
           Term selectedTerm = (Term) iterator.next();
           terms += selectedTerm.getTerm() + " ";

@@ -52,6 +52,7 @@ public class SearchAction implements IObjectActionDelegate {
 		}
 		//given the IType that is selected, build the solr query
 		SearchQueryCreator sqc = new SearchQueryCreator(selection);
+		//TODO JAR-AQE is going to form the query later on instead
 		sqc.formQuery();
 		sqc.getMethodInterface();
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
@@ -73,6 +74,7 @@ public class SearchAction implements IObjectActionDelegate {
 		}
 		SolrSearch searchJob=null;
 		try {
+			//search Job = new SolrSearch(sqc.getID,extQuery,javap,this.selection);
 			searchJob = new SolrSearch(sqc.getID(),query,javap,this.selection);
 		} catch (InstantiationException e) {
 			e.printStackTrace();

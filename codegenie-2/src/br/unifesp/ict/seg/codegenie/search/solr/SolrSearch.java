@@ -11,8 +11,9 @@ import edu.uci.ics.sourcerer.services.search.adapter.SearchAdapter;
 import edu.uci.ics.sourcerer.services.search.adapter.SearchResult;
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 
+import br.unifesp.ict.seg.codegenie.Activator;
+import br.unifesp.ict.seg.codegenie.preferences.PreferenceConstants;
 import br.unifesp.ict.seg.codegenie.tmp.Debug;
-import br.unifesp.ict.seg.codegenie.tmp.Servers;
 
 public class SolrSearch {
 
@@ -21,6 +22,7 @@ public class SolrSearch {
 	private ISelection testClass;
 	private String query;
 	private Long qid;
+	private String server;
 
 	public SolrSearch(Long qid,String[] query,IJavaProject java, ISelection testClass) throws InstantiationException {
 		if(query==null || java==null || testClass==null){
@@ -32,6 +34,7 @@ public class SolrSearch {
 		this.querySpec = query;
 		this.javap = java;
 		this.testClass = testClass;
+		this.server = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.SOLR_SERVER);
 	}
 	public Long getQID(){return qid;}
 	
@@ -80,7 +83,6 @@ public class SolrSearch {
 	}
 	
 	public List<SingleResult> performQuery(){
-		String server = Servers.solr;//+Servers.solrPath+query;
 		SearchAdapter s = SearchAdapter.create(server);
 	    SearchResult srcResult = s.search(query);
 	    int numFound = srcResult.getNumFound();

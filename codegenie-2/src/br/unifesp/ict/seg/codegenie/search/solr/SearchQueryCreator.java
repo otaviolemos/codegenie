@@ -24,6 +24,7 @@ import br.unifesp.ict.seg.codegenie.Activator;
 import br.unifesp.ict.seg.codegenie.pool.MethodInterfacePool;
 import br.unifesp.ict.seg.codegenie.search.CGMethodInterface;
 import br.unifesp.ict.seg.codegenie.search.relatedwords.RelatedWordUtils;
+import br.unifesp.ict.seg.codegenie.tmp.Debug;
 
 /**imported from original codegenie-vocab*/
 public class SearchQueryCreator {
@@ -41,6 +42,8 @@ public class SearchQueryCreator {
 	//pre stores the information for late work
 	IType selection;
 	String[] query;
+	//TODO JAR-AQE
+	//String extQuery;
 	private long id;
 	private CGMethodInterface mi;
 	private Boolean isStatic;
@@ -221,6 +224,11 @@ public class SearchQueryCreator {
 		String[] ret = { wantedPackageName, wantedClassName, wantedMethodName,
 				returnSN, myParamSNs };
 		query = ret;
+		Debug.debug(getClass(),"wanted package name is: "+wantedPackageName);
+		Debug.debug(getClass(),"wanted class name is: "+wantedClassName);
+		Debug.debug(getClass(),"wanted method name is: "+wantedMethodName);
+		Debug.debug(getClass(),"wanted return is: "+returnSN);
+		Debug.debug(getClass(),"wanted params are: "+myParamSNs);
 		MethodInterfacePool.add(this);
 		return ret;
 	}
@@ -246,6 +254,12 @@ public class SearchQueryCreator {
 		//query[4] is parameters
 		query[1] = RelatedWordUtils.getRelatedAsQueryPart(query[1], enSyn, codeSyn, enAnt, codeAnt);
 		query[2] = RelatedWordUtils.getRelatedAsQueryPart(query[2], enSyn, codeSyn, enAnt, codeAnt);
+		//TODO here comes the AQE jar.
+		/*
+		SourcererQueryBuilder sqb = new SourcererQueryBuilder(String relatedWordsServerUrl,String expanders,bool relaxReturn,bool relaxParam);
+		extQuery = sqb.getSourcererExpandedQuery(String methodName, String returnType, String params);
+		 * */
+		
 	}
 
 
