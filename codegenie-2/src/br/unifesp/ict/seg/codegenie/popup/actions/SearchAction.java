@@ -52,7 +52,6 @@ public class SearchAction implements IObjectActionDelegate {
 		}
 		//given the IType that is selected, build the solr query
 		SearchQueryCreator sqc = new SearchQueryCreator(selection);
-		//TODO JAR-AQE is going to form the query later on instead
 		sqc.formQuery();
 		sqc.getMethodInterface();
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
@@ -62,19 +61,20 @@ public class SearchAction implements IObjectActionDelegate {
 		boolean codeant = store.getBoolean(PreferenceConstants.CODEANT);
 		sqc.expandQuery(ensyn, codesyn, enant, codeant);
 		lastQID = sqc.getID();
+		//TODO AQE: sqc.getQuery will return a single string
 		String[] query = sqc.getQuery();
 		if(query == null){
 			Debug.errDebug(SearchAction.this.getClass(), "Unable to build Solr query");
 			return;
 		}
-		
+		//TODO AQE: just show query string
 		Debug.debug(SearchAction.this.getClass(), "Query params are:");
 		for(int i=0;i<query.length;++i){
 			Debug.debug(SearchAction.this.getClass(), "\t"+i+" => "+query[i]);	
 		}
 		SolrSearch searchJob=null;
 		try {
-			//search Job = new SolrSearch(sqc.getID,extQuery,javap,this.selection);
+			//TODO AQE: query used as param will be a single query, no need for pre-processing
 			searchJob = new SolrSearch(sqc.getID(),query,javap,this.selection);
 		} catch (InstantiationException e) {
 			e.printStackTrace();
@@ -83,7 +83,6 @@ public class SearchAction implements IObjectActionDelegate {
 		searchJob.buildQuery();
 		ResultsViewUpdater rvu = new ResultsViewUpdater(searchJob,sqc);
 		rvu.makeQueryAndUpdateView();
-		// TODO adicionar e testar os primeiros resultados (5 colocar nas preferencias)
 	}
 
 	/**

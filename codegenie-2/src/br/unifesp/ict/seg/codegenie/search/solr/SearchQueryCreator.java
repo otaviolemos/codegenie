@@ -19,12 +19,15 @@ import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 import br.unifesp.ict.seg.codegenie.Activator;
 import br.unifesp.ict.seg.codegenie.pool.MethodInterfacePool;
+import br.unifesp.ict.seg.codegenie.preferences.PreferenceConstants;
 import br.unifesp.ict.seg.codegenie.search.CGMethodInterface;
 import br.unifesp.ict.seg.codegenie.search.relatedwords.RelatedWordUtils;
 import br.unifesp.ict.seg.codegenie.tmp.Debug;
+import br.unifesp.ppgcc.sourcereraqe.domain.Expander;
 
 /**imported from original codegenie-vocab*/
 public class SearchQueryCreator {
@@ -42,7 +45,7 @@ public class SearchQueryCreator {
 	//pre stores the information for late work
 	IType selection;
 	String[] query;
-	//TODO JAR-AQE
+	//TODO AQE: uncomment
 	//String extQuery;
 	private long id;
 	private CGMethodInterface mi;
@@ -247,19 +250,22 @@ public class SearchQueryCreator {
 	}
 
 	public void expandQuery(boolean enSyn, boolean codeSyn, boolean enAnt, boolean codeAnt){
-		//query[0] is package name
-		//query[1] is class name
-		//query[2] is method name
-		//query[3] is return type name
-		//query[4] is parameters
 		query[1] = RelatedWordUtils.getRelatedAsQueryPart(query[1], enSyn, codeSyn, enAnt, codeAnt);
-		query[2] = RelatedWordUtils.getRelatedAsQueryPart(query[2], enSyn, codeSyn, enAnt, codeAnt);
-		//TODO here comes the AQE jar.
-		/*
-		SourcererQueryBuilder sqb = new SourcererQueryBuilder(String relatedWordsServerUrl,String expanders,bool relaxReturn,bool relaxParam);
-		extQuery = sqb.getSourcererExpandedQuery(String methodName, String returnType, String params);
-		 * */
+		query[2] = RelatedWordUtils.getRelatedAsQueryPart(query[2], enSyn, codeSyn, enAnt, codeAnt);		
+	}
+	
+	public void explandQuery(boolean worldnet, boolean code, boolean type){
+		//TODO AQE: here comes the AQE jar function.
 		
+				/*
+				IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		    	String url = store.getString(PreferenceConstants.RELATED_WORD_SERVER); 
+		    	String expanders = ""; //","+Expander.CODE_VOCABULARY_EXPANDER+","+Expander.TYPE_EXPANDER+","+Expander.WORDNET_EXPANDER;
+		    	if()
+				SourcererQueryBuilder sqb = new SourcererQueryBuilder(url,String expanders,true,true);
+				SourcererQueryBuilder sqb = new SourcererQueryBuilder(String relatedWordsServerUrl,String expanders,bool relaxReturn,bool relaxParam);
+				extQuery = sqb.getSourcererExpandedQuery(String methodName, String returnType, String params);
+				*/
 	}
 
 
@@ -290,6 +296,7 @@ public class SearchQueryCreator {
 	}
 
 	public String[] getQuery() {
+		//TODO AQE: return extQuery;
 		return query;
 	}
 

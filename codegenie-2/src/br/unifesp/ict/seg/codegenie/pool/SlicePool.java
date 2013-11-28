@@ -19,11 +19,7 @@ public class SlicePool {
 	public static SliceFile getByQID(long qid) {
 		return getByEID(getEID(qid));
 	}
-	
-	public static void clear() {
-		//TODO
-		
-	}
+
 	
 	public static Long getEID(Long qid){
 		Set<Long> set = map.get(qid);

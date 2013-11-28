@@ -17,6 +17,7 @@ import br.unifesp.ict.seg.codegenie.tmp.Debug;
 
 public class SolrSearch {
 
+	//TODO AQE: remove querySpec
 	private String[] querySpec;
 	private IJavaProject javap;
 	private ISelection testClass;
@@ -24,6 +25,7 @@ public class SolrSearch {
 	private Long qid;
 	private String server;
 
+	//TODO AQE: remove constructor
 	public SolrSearch(Long qid,String[] query,IJavaProject java, ISelection testClass) throws InstantiationException {
 		if(query==null || java==null || testClass==null){
 			throw new  InstantiationException("args for new "
@@ -36,9 +38,23 @@ public class SolrSearch {
 		this.testClass = testClass;
 		this.server = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.SOLR_SERVER);
 	}
+	//TODO AQE: new constructor
+	public SolrSearch(Long qid,String query,IJavaProject java, ISelection testClass) throws InstantiationException {
+		if(query==null || java==null || testClass==null){
+			throw new  InstantiationException("args for new "
+					+getClass().getSimpleName()+" are: " +query+", "
+					+java+", "+testClass);
+		}
+		this.qid=qid;
+		this.query = query;
+		this.javap = java;
+		this.testClass = testClass;
+		this.server = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.SOLR_SERVER);
+	}
+	
 	public Long getQID(){return qid;}
 	
-	
+	//TODO AQE: remove method
 	public void buildQuery(){
 		String[][] solrConditions = new String[5][];
 		solrConditions[0]=null;
@@ -55,7 +71,7 @@ public class SolrSearch {
 		this.buildQuery(solrConditions);
 	}
 	
-	
+	//TODO AQE: remove method
 	private void buildQuery(String[][] solrConditions){
 		Debug.debug(getClass(), "building query with solr conditions...");
 		StringBuilder strb = new StringBuilder();
