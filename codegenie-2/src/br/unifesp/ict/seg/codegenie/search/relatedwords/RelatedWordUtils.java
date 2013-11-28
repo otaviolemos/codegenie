@@ -11,11 +11,15 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import br.unifesp.ict.seg.codegenie.Activator;
+import br.unifesp.ict.seg.codegenie.preferences.PreferenceConstants;
 
+//TODO remove class
 public class RelatedWordUtils {
 
-  private static String url = "snake.ics.uci.edu:8080";
+  private static String url =  Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.RELATED_WORD_SERVER);
 
+  /*
   public static String getRelatedAsQueryPart(String terms, boolean enSyn, boolean codeSyn, boolean enAnt, boolean codeAnt) {
     String ret = "";
     StringTokenizer tkn = new StringTokenizer(terms);
@@ -150,5 +154,6 @@ public class RelatedWordUtils {
     
     return ret;
   }
+  */
 
 }

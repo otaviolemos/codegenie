@@ -1,5 +1,7 @@
 package br.unifesp.ict.seg.codegenie.search.relatedwords;
 
+//TODO remove class
+
  import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;

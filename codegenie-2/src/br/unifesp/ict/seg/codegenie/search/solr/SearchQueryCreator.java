@@ -46,7 +46,6 @@ public class SearchQueryCreator {
 	//pre stores the information for late work
 	IType selection;
 	String[] query;
-	//TODO AQE: uncomment
 	String extQuery;
 	private long id;
 	private CGMethodInterface mi;
@@ -251,15 +250,9 @@ public class SearchQueryCreator {
 		return existingClass;
 	}
 
-	public void expandQuery(boolean enSyn, boolean codeSyn, boolean enAnt, boolean codeAnt){
-		query[1] = RelatedWordUtils.getRelatedAsQueryPart(query[1], enSyn, codeSyn, enAnt, codeAnt);
-		query[2] = RelatedWordUtils.getRelatedAsQueryPart(query[2], enSyn, codeSyn, enAnt, codeAnt);		
-	}
+	
 
 	public void expandQuery(boolean worldnet, boolean code, boolean type){
-		//TODO AQE: here comes the AQE jar function.
-
-
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		String url = store.getString(PreferenceConstants.RELATED_WORD_SERVER); 
 		String expanders = "";
@@ -269,11 +262,9 @@ public class SearchQueryCreator {
 		if(expanders!=""){
 			expanders=expanders.substring(1);//remove first comma
 		}
-		//SourcererQueryBuilder sqb = new SourcererQueryBuilder(String relatedWordsServerUrl,String expanders,bool relaxReturn,bool relaxParam);
 		SourcererQueryBuilder sqb;
 		try {
 			sqb = new SourcererQueryBuilder(url,expanders,true,true);
-			//extQuery = sqb.getSourcererExpandedQuery(String methodName, String returnType, String params);
 			//query[2],query[3],query[4]//method name, return type, params type
 			extQuery = sqb.getSourcererExpandedQuery(query[2],query[3],query[4]);
 		} catch (Exception e) {
@@ -313,9 +304,7 @@ public class SearchQueryCreator {
 		}
 	}
 
-	//TODO AQE: query now is a single string
 	public String getQuery() {
-		//TODO AQE: return extQuery;
 		return extQuery;
 	}
 

@@ -56,36 +56,27 @@ public class SearchAction implements IObjectActionDelegate {
 		sqc.getMethodInterface();
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		boolean ensyn = store.getBoolean(PreferenceConstants.ENSYN);
-		boolean enant = store.getBoolean(PreferenceConstants.ENANT);
 		boolean codesyn = store.getBoolean(PreferenceConstants.CODESYN);
-		boolean codeant = store.getBoolean(PreferenceConstants.CODEANT);
 		boolean type = true;
-		//TODO AQE: new expandQuery
 		sqc.expandQuery(ensyn, codesyn, type);
-		//sqc.expandQuery(ensyn, codesyn, enant, codeant);
 		
 		lastQID = sqc.getID();
-		//TODO AQE: sqc.getQuery will return a single string
 		String query = sqc.getQuery();
-		//String[] query = sqc.getQuery();
 		if(query == null){
 			Debug.errDebug(SearchAction.this.getClass(), "Unable to build Solr query");
 			return;
 		}
-		//TODO AQE: just show query string
 		Debug.debug(SearchAction.this.getClass(), "Query params are:");
 		Debug.debug(SearchAction.this.getClass(), "\t => "+query);	
 		
 		SolrSearch searchJob=null;
 		try {
-			//TODO AQE: query used as param will be a single query, no need for pre-processing
 			searchJob = new SolrSearch(sqc.getID(),query,javap,this.selection);
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 			return;
 		}
-		//TODO AQE: query is already build
-		//searchJob.buildQuery();
+
 		ResultsViewUpdater rvu = new ResultsViewUpdater(searchJob,sqc);
 		rvu.makeQueryAndUpdateView();
 	}
