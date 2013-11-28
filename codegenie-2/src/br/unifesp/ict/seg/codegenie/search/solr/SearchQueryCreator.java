@@ -28,6 +28,7 @@ import br.unifesp.ict.seg.codegenie.search.CGMethodInterface;
 import br.unifesp.ict.seg.codegenie.search.relatedwords.RelatedWordUtils;
 import br.unifesp.ict.seg.codegenie.tmp.Debug;
 import br.unifesp.ppgcc.sourcereraqe.domain.Expander;
+import br.unifesp.ppgcc.sourcereraqe.infrastructure.SourcererQueryBuilder;
 
 /**imported from original codegenie-vocab*/
 public class SearchQueryCreator {
@@ -46,7 +47,7 @@ public class SearchQueryCreator {
 	IType selection;
 	String[] query;
 	//TODO AQE: uncomment
-	//String extQuery;
+	String extQuery;
 	private long id;
 	private CGMethodInterface mi;
 	private Boolean isStatic;
@@ -162,6 +163,7 @@ public class SearchQueryCreator {
 		//String myParamSNs = "(";
 		String myParamSNs = "";
 
+		//TODO AQE: maybe these "AND"'s will be replaced by ",", at least for the param keys
 		for (Iterator it = parameters.iterator(); it.hasNext();) {
 			ITypeBinding itb = ((Expression) it.next()).resolveTypeBinding();
 			myParamKeys += itb.getKey();
@@ -253,19 +255,35 @@ public class SearchQueryCreator {
 		query[1] = RelatedWordUtils.getRelatedAsQueryPart(query[1], enSyn, codeSyn, enAnt, codeAnt);
 		query[2] = RelatedWordUtils.getRelatedAsQueryPart(query[2], enSyn, codeSyn, enAnt, codeAnt);		
 	}
-	
-	public void explandQuery(boolean worldnet, boolean code, boolean type){
+
+	public void expandQuery(boolean worldnet, boolean code, boolean type){
 		//TODO AQE: here comes the AQE jar function.
+
+
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		String url = store.getString(PreferenceConstants.RELATED_WORD_SERVER); 
+		String expanders = "";
+		if(worldnet)expanders+=","+Expander.WORDNET_EXPANDER;
+		if(code)expanders+=","+Expander.CODE_VOCABULARY_EXPANDER;
+		if(type)expanders+=","+Expander.TYPE_EXPANDER;
+		if(expanders!=""){
+			expanders=expanders.substring(1);//remove first comma
+		}
+		//SourcererQueryBuilder sqb = new SourcererQueryBuilder(String relatedWordsServerUrl,String expanders,bool relaxReturn,bool relaxParam);
+		SourcererQueryBuilder sqb;
+		try {
+			sqb = new SourcererQueryBuilder(url,expanders,true,true);
+			//extQuery = sqb.getSourcererExpandedQuery(String methodName, String returnType, String params);
+			//query[2],query[3],query[4]//method name, return type, params type
+			extQuery = sqb.getSourcererExpandedQuery(query[2],query[3],query[4]);
+		} catch (Exception e) {
+			Debug.debug(getClass(),e.getMessage());
+			extQuery = "";
+		}
 		
-				/*
-				IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		    	String url = store.getString(PreferenceConstants.RELATED_WORD_SERVER); 
-		    	String expanders = ""; //","+Expander.CODE_VOCABULARY_EXPANDER+","+Expander.TYPE_EXPANDER+","+Expander.WORDNET_EXPANDER;
-		    	if()
-				SourcererQueryBuilder sqb = new SourcererQueryBuilder(url,String expanders,true,true);
-				SourcererQueryBuilder sqb = new SourcererQueryBuilder(String relatedWordsServerUrl,String expanders,bool relaxReturn,bool relaxParam);
-				extQuery = sqb.getSourcererExpandedQuery(String methodName, String returnType, String params);
-				*/
+		
+		
+
 	}
 
 
@@ -295,9 +313,10 @@ public class SearchQueryCreator {
 		}
 	}
 
-	public String[] getQuery() {
+	//TODO AQE: query now is a single string
+	public String getQuery() {
 		//TODO AQE: return extQuery;
-		return query;
+		return extQuery;
 	}
 
 	public Long getID() {

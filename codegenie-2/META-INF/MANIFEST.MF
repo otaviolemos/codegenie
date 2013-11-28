@@ -21,4 +21,6 @@ Import-Package: org.eclipse.jdt.core,
 Bundle-ClassPath: lib/sourcerer-search.jar,
  lib/mysql-connector-java-5.1.7-bin.jar,
  lib/cloudio.jar,
+ lib/aqe.jar,
+ lib/commons-lang-2.6.jar,
  .
