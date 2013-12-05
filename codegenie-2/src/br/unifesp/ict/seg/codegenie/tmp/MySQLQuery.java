@@ -10,6 +10,7 @@ import br.unifesp.ict.seg.codegenie.tmp.Servers;
 
 public class MySQLQuery {
 
+	/*
 	public static String fixSolr(String fqn, String params){
 		return "SELECT entity_id FROM entities WHERE fqn='"
 				+fqn+"' AND params='"+params+"';";
@@ -45,4 +46,5 @@ public class MySQLQuery {
 		}
 		return "-1";
 	}
+	*/
 }

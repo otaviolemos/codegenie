@@ -52,8 +52,9 @@ public class ResultsViewUpdater {
 		int limit = store.getInt(PreferenceConstants.AUTOTEST);
 		HashSet<MySingleResult> totest = new HashSet<MySingleResult>();
 		for(SingleResult sr : results){
-			long neweid = MySQLQuery.query(MySQLQuery.fixSolr(sr.getFqn(), sr.getParams()));
-			MySingleResult msr = new MySingleResult(sr,neweid);
+			//long neweid = MySQLQuery.query(MySQLQuery.fixSolr(sr.getFqn(), sr.getParams()));
+			//MySingleResult msr = new MySingleResult(sr,neweid);
+			MySingleResult msr = new MySingleResult(sr,sr.getEntityID());
 			msr.setTestClass(selection);
 			updatedResults.add(msr);
 			msr.setResultsViewUpdater(this);

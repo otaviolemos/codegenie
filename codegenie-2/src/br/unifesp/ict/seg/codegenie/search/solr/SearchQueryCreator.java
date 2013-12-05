@@ -25,7 +25,6 @@ import br.unifesp.ict.seg.codegenie.Activator;
 import br.unifesp.ict.seg.codegenie.pool.MethodInterfacePool;
 import br.unifesp.ict.seg.codegenie.preferences.PreferenceConstants;
 import br.unifesp.ict.seg.codegenie.search.CGMethodInterface;
-import br.unifesp.ict.seg.codegenie.search.relatedwords.RelatedWordUtils;
 import br.unifesp.ict.seg.codegenie.tmp.Debug;
 import br.unifesp.ppgcc.sourcereraqe.domain.Expander;
 import br.unifesp.ppgcc.sourcereraqe.infrastructure.SourcererQueryBuilder;
@@ -166,12 +165,19 @@ public class SearchQueryCreator {
 		for (Iterator it = parameters.iterator(); it.hasNext();) {
 			ITypeBinding itb = ((Expression) it.next()).resolveTypeBinding();
 			myParamKeys += itb.getKey();
+
 			myParamFQNs = it.hasNext() ? myParamFQNs + itb.getQualifiedName()
 					//+ "," : myParamFQNs + itb.getQualifiedName();
-					+ " AND " : myParamFQNs + itb.getQualifiedName();
+					+ " , " : myParamFQNs + itb.getQualifiedName();
 			//myParamSNs = it.hasNext() ? myParamSNs + itb.getName() + ","
-			myParamSNs = it.hasNext() ? myParamSNs + itb.getName() + " AND "
+			myParamSNs = it.hasNext() ? myParamSNs + itb.getName() + " , "
 					: myParamSNs + itb.getName();
+//			myParamFQNs = it.hasNext() ? myParamFQNs + itb.getQualifiedName()
+//					//+ "," : myParamFQNs + itb.getQualifiedName();
+//					+ " AND " : myParamFQNs + itb.getQualifiedName();
+//			//myParamSNs = it.hasNext() ? myParamSNs + itb.getName() + ","
+//			myParamSNs = it.hasNext() ? myParamSNs + itb.getName() + " AND "
+//					: myParamSNs + itb.getName();
 		}
 
 		myParamKeys += ")";
@@ -254,7 +260,7 @@ public class SearchQueryCreator {
 
 	public void expandQuery(boolean worldnet, boolean code, boolean type){
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		String url = store.getString(PreferenceConstants.RELATED_WORD_SERVER); 
+		String url = store.getString(PreferenceConstants.RELATED_WORD_SERVER)+"/related-words-service"; 
 		String expanders = "";
 		if(worldnet)expanders+=","+Expander.WORDNET_EXPANDER;
 		if(code)expanders+=","+Expander.CODE_VOCABULARY_EXPANDER;
@@ -263,6 +269,7 @@ public class SearchQueryCreator {
 			expanders=expanders.substring(1);//remove first comma
 		}
 		SourcererQueryBuilder sqb;
+		Debug.debug(getClass(), "using related words service url = "+url);
 		try {
 			sqb = new SourcererQueryBuilder(url,expanders,true,true);
 			//query[2],query[3],query[4]//method name, return type, params type
