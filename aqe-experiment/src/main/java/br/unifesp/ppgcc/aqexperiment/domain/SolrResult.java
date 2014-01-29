@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.StringUtils;
+
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
 
 @Entity
@@ -43,6 +45,10 @@ public class SolrResult {
 		if(obj instanceof SolrResult)
 			return this.getEntityID() != null ? this.getEntityID().equals( ((SolrResult)obj).getEntityID() ) : false;
 		return super.equals(obj);
+	}
+	
+	public boolean isVoidReturn(){
+		return "void".equalsIgnoreCase(StringUtils.trim(returnFqn));
 	}
 	
 	//accessors

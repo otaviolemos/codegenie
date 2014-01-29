@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang.StringUtils;
+
 import br.unifesp.ppgcc.aqexperiment.domain.helper.TagCloudMutantQuery;
 
 import edu.uci.ics.sourcerer.services.search.adapter.SingleResult;
@@ -86,6 +88,14 @@ public class AnaliseFunctionResponse {
 		this.recall = testResponse.getRecall();
 	}
 
+	public boolean isVoidReturn(){
+		return "void".equalsIgnoreCase(StringUtils.trim(returnType));
+	}
+	
+	public int getTotalParams(){
+		return StringUtils.split(StringUtils.trim(params),  ",").length;
+	}
+	
 	public void setResultsFromSingleResult(List<SingleResult> relevants) {
 		this.results = new ArrayList<SolrResult>();
 		for(SingleResult singleResult : relevants)

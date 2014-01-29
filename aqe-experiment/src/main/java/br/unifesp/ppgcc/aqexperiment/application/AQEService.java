@@ -115,10 +115,11 @@ public class AQEService {
 	private void processResponses(AnaliseFunction function) throws Exception {
 		boolean relaxReturn = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxReturn"));
 		boolean relaxParams = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxParams"));
+		boolean filterMethodNameTermsByParameter = new Boolean(ConfigProperties.getProperty("aqExperiment.filterMethodNameTermsByParameter"));
 		String urlServices = ConfigProperties.getProperty("aqExperiment.related-words-service.url");
 		String expanders = ConfigProperties.getProperty("aqExperiment.expanders");
 		
-		SourcererQueryBuilder sourcererQueryBuilder = new SourcererQueryBuilder(urlServices, expanders, relaxReturn, relaxParams);
+		SourcererQueryBuilder sourcererQueryBuilder = new SourcererQueryBuilder(urlServices, expanders, relaxReturn, relaxParams, filterMethodNameTermsByParameter);
 		SearchAdapter searchAdapter = SearchAdapter.create(ConfigProperties.getProperty("aqExperiment.sourcerer.url"));
 
 		for (AnaliseFunctionResponse response : function.getResponses()) {
@@ -181,25 +182,44 @@ public class AQEService {
 	
 	private void calculateRecallAndPrecision(AnaliseFunctionResponse response, AnaliseFunction function) {
 
-		int totalRelevants = function.getRelevants().size();
+		List<SolrResult> contextRelevants = this.getContextRelevants(response, function);
+		
+		int totalContextRelevants = contextRelevants.size();
 		int totalResults = response.getResults().size();
 		int totalIntersections = 0;
 
-		for (SolrResult relevant : function.getRelevants()) {
+		for (SolrResult relevant : contextRelevants) {
 			if (response.getResults().contains(relevant))
 				totalIntersections++;
 		}
 
-		double recall = totalRelevants == 0 ? 0 : new Double(totalIntersections) / new Double(totalRelevants);
+		double recall = totalContextRelevants == 0 ? 0 : new Double(totalIntersections) / new Double(totalContextRelevants);
 		double precision = totalResults == 0 ? 0 : new Double(totalIntersections) / new Double(totalResults);
 
 		response.setRecall(recall);
 		response.setPrecision(precision);
-		response.setTotalRelevants(totalRelevants);
+		response.setTotalRelevants(totalContextRelevants);
 		response.setTotalResults(totalResults);
 		response.setTotalIntersections(totalIntersections);
 	}
 
+
+	private List<SolrResult> getContextRelevants(AnaliseFunctionResponse response, AnaliseFunction function) {
+		List<SolrResult> contextRelevants = new ArrayList<SolrResult>();
+
+		for(SolrResult solrResult : function.getRelevants()){
+			
+			//discard rules
+			if(solrResult.isVoidReturn() && !response.isVoidReturn())
+				continue;
+			if(solrResult.getParamCount() != response.getTotalParams())
+				continue;
+			
+			contextRelevants.add(solrResult);
+		}
+		
+		return contextRelevants;
+	}
 
 	public AnaliseFunctionResponse getAnaliseFunctionResponse(String responseName, String responseMethodName){
 		for(AnaliseFunction analiseFunction : this.analiseFunctions)
