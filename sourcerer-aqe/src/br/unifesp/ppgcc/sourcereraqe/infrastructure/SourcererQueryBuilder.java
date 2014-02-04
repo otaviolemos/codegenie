@@ -11,8 +11,8 @@ public class SourcererQueryBuilder {
 
 	private AQEApproach aqeApproach;
 
-	public SourcererQueryBuilder(String relatedWordsServiceUrl, String expanders, boolean relaxReturn, boolean relaxParams) throws Exception {
-		aqeApproach = new AQEApproach(relatedWordsServiceUrl, expanders, relaxReturn, relaxParams);
+	public SourcererQueryBuilder(String relatedWordsServiceUrl, String expanders, boolean relaxReturn, boolean relaxParams, boolean contextRelevants, boolean filterMethodNameTermsByParameter) throws Exception {
+		aqeApproach = new AQEApproach(relatedWordsServiceUrl, expanders, relaxReturn, relaxParams, contextRelevants, filterMethodNameTermsByParameter);
 	}
 
 	public SourcererQueryBuilder() throws Exception {
@@ -25,22 +25,10 @@ public class SourcererQueryBuilder {
 		List<QueryTerm> returnTypeTerms = this.getReturnTypeTerms(returnType);
 		List<QueryTerm> paramsTerms = this.getParamsTerms(params);
 
-		if(methodNameTerms.size() > 1){
-			List<QueryTerm> methodFilteredNameTerms = new ArrayList<QueryTerm>(); 
-			for (QueryTerm methodQueryTerm : methodNameTerms) {
-				boolean use = true;
-				for (QueryTerm paramTerm : paramsTerms) {
-					if (methodQueryTerm.getExpandedTerms().get(0).equalsIgnoreCase(paramTerm.getExpandedTerms().get(0))){
-						use = false;
-						break;
-					}
-				}
-				if(use)
-					methodFilteredNameTerms.add(methodQueryTerm);
-			}
-			methodNameTerms = new ArrayList<QueryTerm>(methodFilteredNameTerms);
-		}
-		
+		//Filter method names by parameter
+		if(aqeApproach.isFilterMethodNameTermsByParameter())
+			methodNameTerms = this.getFilteredMethodNameTermsByParameter(methodNameTerms, paramsTerms);
+
 		// EAQ
 		for (Expander expander : aqeApproach.getExpanders()) {
 			if (expander.isMethodNameExpander())
@@ -63,6 +51,25 @@ public class SourcererQueryBuilder {
 		return methodPart + returnTypePart + paramsPart;
 	}
 
+	private List<QueryTerm> getFilteredMethodNameTermsByParameter(List<QueryTerm> methodNameTerms, List<QueryTerm> paramsTerms){
+		if (methodNameTerms.size() <= 1 )
+			return methodNameTerms;
+		
+		List<QueryTerm> filteredMethodNameTermsByParameter = new ArrayList<QueryTerm>();
+		for (QueryTerm methodQueryTerm : methodNameTerms) {
+			boolean useMethodNameTerm = true;
+			for (QueryTerm paramTerm : paramsTerms) {
+				if (methodQueryTerm.getExpandedTerms().get(0).equalsIgnoreCase(paramTerm.getExpandedTerms().get(0))){
+					useMethodNameTerm = false;
+					break;
+				}
+			}
+			if(useMethodNameTerm)
+				filteredMethodNameTermsByParameter.add(methodQueryTerm);
+		}
+		return filteredMethodNameTermsByParameter;
+	}
+	
 	private List<QueryTerm> getMethodNameTerms(String methodName){
 		String names = JavaTermExtractor.getFQNTermsAsString(methodName);
 		names = JavaTermExtractor.removeDuplicates(names);
@@ -169,6 +176,5 @@ public class SourcererQueryBuilder {
 
 		return query;
 	}
-
 
 }

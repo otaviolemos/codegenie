@@ -18,12 +18,16 @@ public class AQEApproach {
 
 	private boolean relaxReturn = false;
 	private boolean relaxParams = false;
+	private boolean contextRelevants = true;
+	private boolean filterMethodNameTermsByParameter = true;
 	private String relatedWordsServiceUrl;
 
 	
-	public AQEApproach(String relatedWordsServiceUrl, String expanders, boolean relaxReturn, boolean relaxParams) throws Exception {
+	public AQEApproach(String relatedWordsServiceUrl, String expanders, boolean relaxReturn, boolean relaxParams, boolean contextRelevants, boolean filterMethodNameTermsByParameter) throws Exception {
 		this.relaxReturn = relaxReturn;
 		this.relaxParams = relaxParams;
+		this.contextRelevants = contextRelevants;
+		this.filterMethodNameTermsByParameter = filterMethodNameTermsByParameter;
 		this.relatedWordsServiceUrl = relatedWordsServiceUrl;
 		
 		String[] splitExpanders = StringUtils.split(expanders, ",");
@@ -42,6 +46,8 @@ public class AQEApproach {
 		this.tagCloud = true;
 		this.relaxReturn = false;
 		this.relaxParams = false;
+		this.contextRelevants = true;
+		this.filterMethodNameTermsByParameter = true;
 	}
 	
 	private Expander getExpander(String expander){
@@ -65,6 +71,10 @@ public class AQEApproach {
 			desc += "relaxReturn | ";
 		if(this.relaxParams)
 			desc += "relaxParams | ";
+		if(this.contextRelevants)
+			desc += "contextRelevants | ";
+		if(this.filterMethodNameTermsByParameter)
+			desc += "filterMethodNameTermsByParameter | ";
 		
 		boolean first = true;
 		for(Expander expander : expanders){
@@ -119,6 +129,14 @@ public class AQEApproach {
 
 	public boolean isRelaxReturn() {
 		return relaxReturn;
+	}
+
+	public boolean isContextRelevants() {
+		return contextRelevants;
+	}
+
+	public boolean isFilterMethodNameTermsByParameter() {
+		return filterMethodNameTermsByParameter;
 	}
 	
 }
