@@ -115,11 +115,12 @@ public class AQEService {
 	private void processResponses(AnaliseFunction function) throws Exception {
 		boolean relaxReturn = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxReturn"));
 		boolean relaxParams = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxParams"));
+		boolean contextRelevants = new Boolean(ConfigProperties.getProperty("aqExperiment.contextRelevants"));
 		boolean filterMethodNameTermsByParameter = new Boolean(ConfigProperties.getProperty("aqExperiment.filterMethodNameTermsByParameter"));
 		String urlServices = ConfigProperties.getProperty("aqExperiment.related-words-service.url");
 		String expanders = ConfigProperties.getProperty("aqExperiment.expanders");
 		
-		SourcererQueryBuilder sourcererQueryBuilder = new SourcererQueryBuilder(urlServices, expanders, relaxReturn, relaxParams, filterMethodNameTermsByParameter);
+		SourcererQueryBuilder sourcererQueryBuilder = new SourcererQueryBuilder(urlServices, expanders, relaxReturn, relaxParams, contextRelevants, filterMethodNameTermsByParameter);
 		SearchAdapter searchAdapter = SearchAdapter.create(ConfigProperties.getProperty("aqExperiment.sourcerer.url"));
 
 		for (AnaliseFunctionResponse response : function.getResponses()) {
@@ -180,7 +181,7 @@ public class AQEService {
 		this.calculateRecallAndPrecision(response, function);
 	}
 	
-	private void calculateRecallAndPrecision(AnaliseFunctionResponse response, AnaliseFunction function) {
+	private void calculateRecallAndPrecision(AnaliseFunctionResponse response, AnaliseFunction function) throws Exception {
 
 		List<SolrResult> contextRelevants = this.getContextRelevants(response, function);
 		
@@ -204,7 +205,13 @@ public class AQEService {
 	}
 
 
-	private List<SolrResult> getContextRelevants(AnaliseFunctionResponse response, AnaliseFunction function) {
+	private List<SolrResult> getContextRelevants(AnaliseFunctionResponse response, AnaliseFunction function) throws Exception {
+		
+		//Check if use or not this method
+		boolean enable = new Boolean(ConfigProperties.getProperty("aqExperiment.contextRelevants"));
+		if(!enable)
+			return function.getRelevants();
+		
 		List<SolrResult> contextRelevants = new ArrayList<SolrResult>();
 
 		for(SolrResult solrResult : function.getRelevants()){

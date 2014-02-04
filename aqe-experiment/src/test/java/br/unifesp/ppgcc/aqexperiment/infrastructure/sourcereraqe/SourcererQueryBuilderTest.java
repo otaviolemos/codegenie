@@ -19,10 +19,11 @@ public class SourcererQueryBuilderTest {
 		
 		boolean relaxReturn = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxReturn"));
 		boolean relaxParams = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxParams"));
+		boolean contextRelevants = new Boolean(ConfigProperties.getProperty("aqExperiment.contextRelevants"));
 		boolean filterMethodNameTermsByParameter = new Boolean(ConfigProperties.getProperty("aqExperiment.filterMethodNameTermsByParameter"));
 		String urlServices = ConfigProperties.getProperty("aqExperiment.related-words-service.url");
 		String expanders = ConfigProperties.getProperty("aqExperiment.expanders");
-		SourcererQueryBuilder sourcererQueryBuilder = new SourcererQueryBuilder(urlServices, expanders, relaxReturn, relaxParams, filterMethodNameTermsByParameter);
+		SourcererQueryBuilder sourcererQueryBuilder = new SourcererQueryBuilder(urlServices, expanders, relaxReturn, relaxParams, contextRelevants, filterMethodNameTermsByParameter);
 		SearchAdapter searchAdapter = SearchAdapter.create(ConfigProperties.getProperty("aqExperiment.sourcerer.url"));
 		SearchResult searchResult = null;
 
