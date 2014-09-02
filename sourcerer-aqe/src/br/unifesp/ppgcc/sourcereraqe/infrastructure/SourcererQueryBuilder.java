@@ -44,6 +44,7 @@ public class SourcererQueryBuilder {
 					expander.expandTerm(queryTerm);
 		}
 
+		this.prioritizeOrininalTerms(methodNameTerms);
 		String methodPart = this.getMethodNamePart(methodNameTerms);
 		String returnTypePart = (aqeApproach.isRelaxReturn() ? "" : this.getReturnTypePart(returnTypeTerms));
 		String paramsPart = (aqeApproach.isRelaxParams() ? "" : this.getParamsPart(paramsTerms));
@@ -51,6 +52,13 @@ public class SourcererQueryBuilder {
 		return methodPart + returnTypePart + paramsPart;
 	}
 
+	private void prioritizeOrininalTerms(List<QueryTerm> queryTerms){
+		for(QueryTerm queryTerm : queryTerms){
+			String originalTerm = queryTerm.getExpandedTerms().get(0);
+			queryTerm.getExpandedTerms().set(0, originalTerm + "^100");
+		}
+	}
+	
 	private List<QueryTerm> getFilteredMethodNameTermsByParameter(List<QueryTerm> methodNameTerms, List<QueryTerm> paramsTerms){
 		if (methodNameTerms.size() <= 1 )
 			return methodNameTerms;
