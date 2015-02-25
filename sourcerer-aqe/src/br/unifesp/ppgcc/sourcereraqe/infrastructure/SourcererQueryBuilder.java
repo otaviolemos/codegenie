@@ -49,13 +49,13 @@ public class SourcererQueryBuilder {
 		String returnTypePart = (aqeApproach.isRelaxReturn() ? "" : this.getReturnTypePart(returnTypeTerms));
 		String paramsPart = (aqeApproach.isRelaxParams() ? "" : this.getParamsPart(paramsTerms));
 
-		return methodPart + returnTypePart + paramsPart;
+		return (methodPart + returnTypePart + paramsPart).replaceAll("\\[\\]", "\\\\[\\\\]");
 	}
 
 	private void prioritizeOrininalTerms(List<QueryTerm> queryTerms){
 		for(QueryTerm queryTerm : queryTerms){
 			String originalTerm = queryTerm.getExpandedTerms().get(0);
-			queryTerm.getExpandedTerms().set(0, originalTerm + "^100");
+			queryTerm.getExpandedTerms().set(0, originalTerm + "^10");
 		}
 	}
 	

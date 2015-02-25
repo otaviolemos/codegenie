@@ -7,6 +7,7 @@ public abstract class Expander {
 	public static final String WORDNET_EXPANDER = "WordNet";
 	public static final String CODE_VOCABULARY_EXPANDER = "CodeVocabulary";
 	public static final String TYPE_EXPANDER = "Type";
+	public static final String CODE_EXCHANGE_EXPANDER = "CodeExchange";
 	
 	private String name;
 	private boolean isMethodNameExpander;
