@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import br.unifesp.ppgcc.sourcereraqe.domain.CodeExchangeExpander;
 import br.unifesp.ppgcc.sourcereraqe.domain.CodeVocabularyExpander;
 import br.unifesp.ppgcc.sourcereraqe.domain.Expander;
+import br.unifesp.ppgcc.sourcereraqe.domain.TLLExpander;
 import br.unifesp.ppgcc.sourcereraqe.domain.TypeExpander;
 import br.unifesp.ppgcc.sourcereraqe.domain.WordNetExpander;
 
@@ -22,7 +23,8 @@ public class AQEApproach {
 	private boolean contextRelevants = true;
 	private boolean filterMethodNameTermsByParameter = true;
 	private String relatedWordsServiceUrl;
-	private int recommendations = 30;
+	private int recommendationsCE = 30;
+	private int recommendationsTLL = 30;
 
 	
 	public AQEApproach(String relatedWordsServiceUrl, String expanders, boolean relaxReturn, boolean relaxParams, boolean contextRelevants, boolean filterMethodNameTermsByParameter) throws Exception {
@@ -53,8 +55,10 @@ public class AQEApproach {
 	}
 	
 	private Expander getExpander(String expander){
+	  if(expander != null && StringUtils.trim(expander).equalsIgnoreCase(Expander.TLL_EXPANDER))
+      return new TLLExpander(recommendationsTLL);
 	  if(expander != null && StringUtils.trim(expander).equalsIgnoreCase(Expander.CODE_EXCHANGE_EXPANDER))
-	      return new CodeExchangeExpander(recommendations);
+	      return new CodeExchangeExpander(recommendationsCE);
 		if(expander != null && StringUtils.trim(expander).equalsIgnoreCase(Expander.WORDNET_EXPANDER))
 			return new WordNetExpander(this.relatedWordsServiceUrl);
 		if(expander != null && StringUtils.trim(expander).equalsIgnoreCase(Expander.CODE_VOCABULARY_EXPANDER))

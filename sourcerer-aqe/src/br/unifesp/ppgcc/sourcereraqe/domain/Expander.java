@@ -8,6 +8,7 @@ public abstract class Expander {
 	public static final String CODE_VOCABULARY_EXPANDER = "CodeVocabulary";
 	public static final String TYPE_EXPANDER = "Type";
 	public static final String CODE_EXCHANGE_EXPANDER = "CodeExchange";
+	public static final String TLL_EXPANDER = "TLL";
 	
 	private String name;
 	private boolean isMethodNameExpander;
