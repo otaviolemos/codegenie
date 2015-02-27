@@ -88,18 +88,8 @@
 		</dependency>
 
 		<!-- sourcerer-search -->
-		<dependency>
-			<groupId>edu.uci.ics.sourcerer</groupId>
-			<artifactId>sourcerer-search</artifactId>
-			<version>1.0</version>
-		</dependency>
 
 		<!-- sourcerer-aqe -->
-		<dependency>
-			<groupId>br.unifesp.ppgcc</groupId>
-			<artifactId>sourcerer-aqe</artifactId>
-			<version>1.0.1</version>
-		</dependency>
 
 	</dependencies>
 

@@ -169,13 +169,14 @@ public class AQEService {
 
 		
 		String query = sourcererQueryBuilder.getSourcererExpandedQuery(response.getMethodName(), response.getReturnType(), response.getParams());
+		
 		searchResult = searchAdapter.search(query);
 		if (searchResult.getNumFound() == -1)
 			throw new Exception("Unable to perform search: " + query);
 
 		
 		response.setSourcererQuery(query);
-		results.addAll(searchResult.getResults(0, 100));
+		results.addAll(searchResult.getResults(0, 35));
 		response.setResultsFromSingleResult(results);
 
 		this.calculateRecallAndPrecision(response, function);

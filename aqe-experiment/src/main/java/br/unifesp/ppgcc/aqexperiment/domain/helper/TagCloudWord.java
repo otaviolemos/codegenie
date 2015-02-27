@@ -30,7 +30,6 @@ public class TagCloudWord implements Comparable<TagCloudWord>{
 		this.word = this.getUpperCaseFirstChar(word);
 	}
 
-	@Override
 	public int compareTo(TagCloudWord o) {
 		if(this.isOriginalWord())
 			return 1;
