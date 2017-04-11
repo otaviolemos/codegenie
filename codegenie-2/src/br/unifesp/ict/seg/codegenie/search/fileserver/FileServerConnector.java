@@ -20,7 +20,7 @@ public class FileServerConnector {
 	public FileServerConnector(long id, int type){
 		if(type==ENTITY){
 			IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-			fileServer = store.getString(PreferenceConstants.FILE_SERVER)+"/FileServer?entityID=";
+			fileServer = store.getString(PreferenceConstants.FILE_SERVER)+"/file-server?entityID=";
 		}
 		this.ID=id;
 	}

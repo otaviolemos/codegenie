@@ -8,7 +8,7 @@ import br.unifesp.ppgcc.sourcereraqe.infrastructure.QueryTerm;
 
 public class TLLExpander extends Expander {
   
-  private int recommendations = 5;
+  private int recommendations = 10;
   String inputFile = "SEWordSim-r2.db";
   WordSimDBFacade facade = new WordSimDBFacade(inputFile);
 
@@ -24,8 +24,9 @@ public class TLLExpander extends Expander {
   public void expandTerm(QueryTerm queryTerm) throws Exception {
     String stemmedWord = facade.stemWord(queryTerm.getExpandedTerms().get(0));
     List<String> related = facade.findTopNWords(stemmedWord, recommendations);
-    if(related != null)
-      queryTerm.getExpandedTerms().addAll(facade.findTopNWords(stemmedWord, recommendations));
+    if(related != null) 
+      queryTerm.getExpandedTerms().addAll(related);
+        
   }
 
 }

@@ -24,7 +24,7 @@ public class Main {
 			LogUtils.getLogger().info("Service");
 			AQEService service = (AQEService) ctx.getBean("AQEService");
 			service.execute();
-
+		
 		} catch (Exception e) {
 			LogUtils.getLogger().error(e);
 			e.printStackTrace();

@@ -1,7 +1,13 @@
 package br.unifesp.ppgcc.sourcereraqe.infrastructure;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -11,8 +17,8 @@ public class SourcererQueryBuilder {
 
 	private AQEApproach aqeApproach;
 
-	public SourcererQueryBuilder(String relatedWordsServiceUrl, String expanders, boolean relaxReturn, boolean relaxParams, boolean contextRelevants, boolean filterMethodNameTermsByParameter) throws Exception {
-		aqeApproach = new AQEApproach(relatedWordsServiceUrl, expanders, relaxReturn, relaxParams, contextRelevants, filterMethodNameTermsByParameter);
+	public SourcererQueryBuilder(String relatedWordsServiceUrl, String expanders, boolean relaxReturn, boolean relaxParams, boolean contextRelevants, boolean filterMethodNameTermsByParameter, boolean reduceMethodNameTerms) throws Exception {
+		aqeApproach = new AQEApproach(relatedWordsServiceUrl, expanders, relaxReturn, relaxParams, contextRelevants, filterMethodNameTermsByParameter, reduceMethodNameTerms);
 	}
 
 	public SourcererQueryBuilder() throws Exception {
@@ -29,6 +35,10 @@ public class SourcererQueryBuilder {
 		if(aqeApproach.isFilterMethodNameTermsByParameter())
 			methodNameTerms = this.getFilteredMethodNameTermsByParameter(methodNameTerms, paramsTerms);
 
+		//Reduce number of terms
+		if(aqeApproach.reduceMethodNameTerms()) 
+			methodNameTerms = this.getReducedMethodNameTerms(methodNameTerms);
+		
 		// EAQ
 		for (Expander expander : aqeApproach.getExpanders()) {
 			if (expander.isMethodNameExpander())
@@ -78,6 +88,66 @@ public class SourcererQueryBuilder {
 		return filteredMethodNameTermsByParameter;
 	}
 	
+	private List<QueryTerm> getReducedMethodNameTerms(List<QueryTerm> methodNameTerms) {
+		if (methodNameTerms.size() <= 1 )
+			return methodNameTerms;
+		
+		List<QueryTerm> reducedNameTerms = new ArrayList<QueryTerm>(methodNameTerms);
+		
+		int numOfTermsToBeRemoved = methodNameTerms.size() - aqeApproach.getDesiredNumberOfMethodTerms();
+		
+		if(numOfTermsToBeRemoved > 0) {
+			Map<Integer, Integer> sizeMap = getMapOfTerms(methodNameTerms);
+			Iterator<Integer> iter = sizeMap.keySet().iterator();
+			int next = iter.next();
+			for(int i = 0; i < numOfTermsToBeRemoved; i++) {
+				reducedNameTerms.remove(methodNameTerms.get(next));
+				if(iter.hasNext())
+					next = iter.next();
+			}
+		}
+		return reducedNameTerms;
+	}
+	
+	public LinkedHashMap<Integer, Integer> sortHashMapByValues(
+	        HashMap<Integer, Integer> passedMap) {
+	    List<Integer> mapKeys = new ArrayList<>(passedMap.keySet());
+	    List<Integer> mapValues = new ArrayList<>(passedMap.values());
+	    Collections.sort(mapValues);
+	    Collections.sort(mapKeys);
+
+	    LinkedHashMap<Integer, Integer> sortedMap =
+	        new LinkedHashMap<>();
+
+	    Iterator<Integer> valueIt = mapValues.iterator();
+	    while (valueIt.hasNext()) {
+	        Integer val = valueIt.next();
+	        Iterator<Integer> keyIt = mapKeys.iterator();
+
+	        while (keyIt.hasNext()) {
+	            Integer key = keyIt.next();
+	            Integer comp1 = passedMap.get(key);
+	            Integer comp2 = val;
+
+	            if (comp1.equals(comp2)) {
+	                keyIt.remove();
+	                sortedMap.put(key, val);
+	                break;
+	            }
+	        }
+	    }
+	    return sortedMap;
+	}
+	
+	private Map<Integer, Integer> getMapOfTerms(List<QueryTerm> methodNameTerms) {
+		HashMap<Integer,Integer> sizeMap = new HashMap<Integer, Integer>();
+		for(int i = 0; i < methodNameTerms.size(); i++)  
+			sizeMap.put(i, methodNameTerms.get(i).getExpandedTerms().get(0).length());
+		
+		sizeMap = sortHashMapByValues(sizeMap);
+		return sizeMap;
+	}
+
 	private List<QueryTerm> getMethodNameTerms(String methodName){
 		String names = JavaTermExtractor.getFQNTermsAsString(methodName);
 		names = JavaTermExtractor.removeDuplicates(names);

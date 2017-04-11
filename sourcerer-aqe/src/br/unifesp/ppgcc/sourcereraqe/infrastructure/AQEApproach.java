@@ -25,13 +25,20 @@ public class AQEApproach {
 	private String relatedWordsServiceUrl;
 	private int recommendationsCE = 30;
 	private int recommendationsTLL = 30;
+	private int desiredNumberOfMethodTerms = 2;
+	private boolean reduceMethodNameTerms = false;
 
 	
-	public AQEApproach(String relatedWordsServiceUrl, String expanders, boolean relaxReturn, boolean relaxParams, boolean contextRelevants, boolean filterMethodNameTermsByParameter) throws Exception {
+	public boolean reduceMethodNameTerms() {
+		return reduceMethodNameTerms;
+	}
+
+	public AQEApproach(String relatedWordsServiceUrl, String expanders, boolean relaxReturn, boolean relaxParams, boolean contextRelevants, boolean filterMethodNameTermsByParameter, boolean reduceMethodNameTerms) throws Exception {
 		this.relaxReturn = relaxReturn;
 		this.relaxParams = relaxParams;
 		this.contextRelevants = contextRelevants;
 		this.filterMethodNameTermsByParameter = filterMethodNameTermsByParameter;
+		this.reduceMethodNameTerms = reduceMethodNameTerms;
 		this.relatedWordsServiceUrl = relatedWordsServiceUrl;
 		
 		String[] splitExpanders = StringUtils.split(expanders, ",");
@@ -52,6 +59,7 @@ public class AQEApproach {
 		this.relaxParams = false;
 		this.contextRelevants = true;
 		this.filterMethodNameTermsByParameter = true;
+		this.reduceMethodNameTerms = false;
 	}
 	
 	private Expander getExpander(String expander){
@@ -144,6 +152,14 @@ public class AQEApproach {
 
 	public boolean isFilterMethodNameTermsByParameter() {
 		return filterMethodNameTermsByParameter;
+	}
+
+	public int getDesiredNumberOfMethodTerms() {
+		return desiredNumberOfMethodTerms;
+	}
+
+	public void setDesiredNumberOfMethodTerms(int desiredNumberOfMethodTerms) {
+		this.desiredNumberOfMethodTerms = desiredNumberOfMethodTerms;
 	}
 	
 }

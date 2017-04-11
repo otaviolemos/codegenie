@@ -33,9 +33,9 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Academicos/Workspace/codegenie-2/lib/sourcerer-search.jar"/>
-	<classpathentry kind="lib" path="C:/Academicos/Workspace/lib/sourcerer-aqe.jar"/>
-	<classpathentry kind="lib" path="C:/Academicos/Workspace/TestLeeExpansor/lib/CodeExchangeAPI.jar"/>
-	<classpathentry kind="lib" path="C:/Academicos/Workspace/lib/SEWordSim.jar"/>
+	<classpathentry kind="lib" path="/Users/otaviolemos/Documents/workspace/codegenie/lib/sourcerer-search.jar"/>
+	<classpathentry kind="lib" path="/Users/otaviolemos/Documents/workspace/codegenie/lib/sourcerer-aqe.jar"/>
+	<classpathentry kind="lib" path="/Users/otaviolemos/Documents/workspace/codegenie/lib/sqlite-jdbc-3.14.2.1.jar"/>
+	<classpathentry kind="lib" path="/Users/otaviolemos/Documents/workspace/codegenie/lib/CodeExchange-v1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

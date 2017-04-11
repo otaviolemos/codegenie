@@ -5,7 +5,7 @@ import br.unifesp.ppgcc.sourcereraqe.infrastructure.QueryTerm;
 
 public class CodeExchangeExpander extends Expander {
   
-  private int recommendations = 30;
+  private int recommendations = 10;
 
   public CodeExchangeExpander(int rec) {
     super.setName(CODE_EXCHANGE_EXPANDER);

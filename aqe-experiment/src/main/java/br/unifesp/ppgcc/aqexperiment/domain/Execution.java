@@ -37,10 +37,11 @@ public class Execution {
 		boolean relaxParams = new Boolean(ConfigProperties.getProperty("aqExperiment.relaxParams"));
 		boolean contextRelevants = new Boolean(ConfigProperties.getProperty("aqExperiment.contextRelevants"));
 		boolean filterMethodNameTermsByParameter = new Boolean(ConfigProperties.getProperty("aqExperiment.filterMethodNameTermsByParameter"));
+		boolean reduceMethodNameTerms = new Boolean(ConfigProperties.getProperty("aqExperiment.reduceMethodNameTerms"));
 		String urlServices = ConfigProperties.getProperty("aqExperiment.related-words-service.url");
 		String expanders = ConfigProperties.getProperty("aqExperiment.expanders");
 
-		AQEApproach aqeApproach = tagCloud ? new AQEApproach() : new AQEApproach(urlServices, expanders, relaxReturn, relaxParams, contextRelevants, filterMethodNameTermsByParameter);
+		AQEApproach aqeApproach = tagCloud ? new AQEApproach() : new AQEApproach(urlServices, expanders, relaxReturn, relaxParams, contextRelevants, filterMethodNameTermsByParameter, reduceMethodNameTerms);
 		this.autoDescription = aqeApproach.getAutoDescription();
 	}
 	
